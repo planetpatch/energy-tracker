@@ -1,0 +1,95 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "CAPITOL HEAT AND POWER PLANT"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.37743577193791, 43.07884051000643]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Charter Street Heating and Cooling Plant"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.40505797193819, 43.070688054163185]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Blount Generating Station"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.37384821426488, 43.07911805820363]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "West Campus Cogeneration Facility"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.42520784866777, 43.07530812738072]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Nine Springs Substation"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.35863722802495, 43.03844519344121]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Diesel Generator (approximate coords)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.37452454380077, 43.08029055392326]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Galactic Wind (approximate coords)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.331921, 43.101597]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sycamore (approximate coords)"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.3128373517642, 43.113434843121134]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Dane County Airport Solar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.32672332366758, 43.16014372639337]
+      }
+    }
+  ]
+}
