@@ -4,7 +4,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "CAPITOL HEAT AND POWER PLANT"
+        "name": "Capitol Heat and Power Plant"
       },
       "geometry": {
         "type": "Point",
@@ -54,7 +54,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Diesel Generator (approximate coords)"
+        "name": "Diesel Generator)"
       },
       "geometry": {
         "type": "Point",
@@ -64,7 +64,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Galactic Wind (approximate coords)"
+        "name": "Galactic Wind"
       },
       "geometry": {
         "type": "Point",
@@ -74,7 +74,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Sycamore (approximate coords)"
+        "name": "Sycamore"
       },
       "geometry": {
         "type": "Point",

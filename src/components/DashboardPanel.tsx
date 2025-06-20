@@ -6,11 +6,12 @@ type ZCTAFeature = Feature<Geometry, GeoJsonProperties>;
 
 interface DashboardPanelProps {
     selectedZcta: ZCTAFeature | null;
+    plantsInSelectedZcta: string[]; // <--- NEW PROP!
     hoveredZcta: ZCTAFeature | null;
     plantsInHoveredZcta: string[];
 }
 
-const DashboardPanel: React.FC<DashboardPanelProps> = ({ selectedZcta, hoveredZcta, plantsInHoveredZcta }) => {
+const DashboardPanel: React.FC<DashboardPanelProps> = ({ selectedZcta, plantsInSelectedZcta, hoveredZcta, plantsInHoveredZcta }) => {
     // Determine which ZCTA to display primary info for (clicked takes precedence over hover for primary ZCTA info)
     const displayPrimaryZcta = selectedZcta || hoveredZcta;
     const displayPrimaryZctaCode = displayPrimaryZcta ? (displayPrimaryZcta.properties as any)?.ZCTA5CE10 || (displayPrimaryZcta.properties as any)?.ZCTA5CE20 : null;
@@ -40,7 +41,19 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({ selectedZcta, hoveredZc
             {selectedZcta ? (
                 <div className="selected-info-section">
                     <h3>Selected ZCTA: {displayPrimaryZctaCode || 'N/A'}</h3>
-                    {/* You can add more details for the clicked ZCTA here if desired, e.g., land/water area */}
+                    {/* Add more details for the clicked ZCTA here if desired, e.g., land/water area */}
+                    {plantsInSelectedZcta.length > 0 ? ( // <--- Display plants for selected ZCTA
+                        <>
+                            <h4>Energy Plants:</h4>
+                            <ul>
+                                {plantsInSelectedZcta.map((plantName, index) => (
+                                    <li key={index}>{plantName}</li>
+                                ))}
+                            </ul>
+                        </>
+                    ) : (
+                        <p>No known energy plants in this ZCTA.</p>
+                    )}
                     <p>Click on other ZCTAs or hover for plant info.</p>
                 </div>
             ) : (
@@ -53,14 +66,14 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({ selectedZcta, hoveredZc
                     position: fixed;
                     top: 20px;
                     right: 20px;
-                    width: 280px; /* Increased width to accommodate plant names */
-                    max-height: calc(100vh - 40px); /* Adjust max-height */
-                    background-color: rgba(255, 255, 255, 0.95); /* Slightly less transparent */
+                    width: 280px;
+                    max-height: calc(100vh - 40px);
+                    background-color: rgba(255, 255, 255, 0.95);
                     padding: 20px;
                     border-radius: 8px;
                     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
                     z-index: 1000;
-                    overflow-y: auto; /* Allow scrolling for many plants */
+                    overflow-y: auto;
                 }
                 h2 {
                     margin-top: 0;
@@ -76,6 +89,12 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({ selectedZcta, hoveredZc
                     color: #0056b3;
                     font-size: 1.4em;
                     font-weight: bold;
+                }
+                h4 { /* Added style for H4 for plants list */
+                    margin-top: 10px;
+                    margin-bottom: 5px;
+                    color: #555;
+                    font-size: 1.1em;
                 }
                 p {
                     margin-bottom: 5px;
@@ -96,12 +115,12 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({ selectedZcta, hoveredZc
                     color: #333;
                 }
                 .hover-info-section, .selected-info-section {
-                    margin-bottom: 20px; /* Space between sections */
+                    margin-bottom: 20px;
                     padding-bottom: 15px;
-                    border-bottom: 1px dashed #ddd; /* Separator */
+                    border-bottom: 1px dashed #ddd;
                 }
                 .selected-info-section:last-child, .hover-info-section:last-child {
-                    border-bottom: none; /* No border for the last section */
+                    border-bottom: none;
                 }
             `}</style>
         </div>
