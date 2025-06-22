@@ -4,7 +4,14 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Capitol Heat and Power Plant"
+        "name": "Capitol Heat and Power Plant",
+        "utilityName": "State of Wisconsin",
+        "cityName": "Madison",
+        "techDesc": "Petroleum Liquids",
+        "primarySource": "Petroleum",
+        "sectorName": "Commercial Non-CHP",
+        "installedMW": 2.0,
+        "totalMW": 2.0
       },
       "geometry": {
         "type": "Point",
@@ -14,7 +21,14 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Charter Street Heating and Cooling Plant"
+        "name": "Charter Street Heating and Cooling Plant",
+        "utilityName": "State of Wisconsin",
+        "cityName": "Madison",
+        "techDesc": "Natural Gas Steam Turbine; Petroleum Liquids;",
+        "primarySource": "Natural Gas",
+        "sectorName": "Commercial CHP",
+        "installedMW": 11.0,
+        "totalMW": 11.0
       },
       "geometry": {
         "type": "Point",
@@ -24,7 +38,14 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Blount Generating Station"
+        "name": "Blount Generating Station",
+        "utilityName": "Madison Gas & Electric Co",
+        "cityName": "Madison",
+        "techDesc": "Natural Gas Steam Turbine",
+        "primarySource": "Natural Gas",
+        "sectorName": "Electric Utility",
+        "installedMW": 100.0,
+        "totalMW": 95.7
       },
       "geometry": {
         "type": "Point",
@@ -34,7 +55,14 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "West Campus Cogeneration Facility"
+        "name": "West Campus Cogeneration Facility",
+        "utilityName": "Madison Gas & Electric Co",
+        "cityName": "Madison",
+        "techDesc": "Natural Gas Fired Combined Cycle",
+        "primarySource": "Natural Gas",
+        "sectorName": "Electric Utility",
+        "installedMW": 169.3,
+        "totalMW": 129.1
       },
       "geometry": {
         "type": "Point",
@@ -44,7 +72,14 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Nine Springs Substation"
+        "name": "Nine Springs Substation",
+        "utilityName": "Madison Gas & Electric Co",
+        "cityName": "Madison",
+        "techDesc": "Natural Gas Fired Combustion Turbine",
+        "primarySource": "Natural Gas",
+        "sectorName": "Electric Utility",
+        "installedMW": 16.2,
+        "totalMW": 11.4
       },
       "geometry": {
         "type": "Point",
@@ -54,7 +89,14 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Diesel Generator)"
+        "name": "Diesel Generator",
+        "utilityName": "Madison Gas & Electric Co",
+        "cityName": "Madison",
+        "techDesc": "Petroleum Liquids",
+        "primarySource": "Petroleum",
+        "sectorName": "Electric Utility",
+        "installedMW": 54.0,
+        "totalMW": 52.5
       },
       "geometry": {
         "type": "Point",
@@ -64,7 +106,14 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Galactic Wind"
+        "name": "Galactic Wind",
+        "utilityName": "Galactic Wind",
+        "cityName": "Waunakee",
+        "techDesc": "Onshore Wind Turbine",
+        "primarySource": "Wind",
+        "sectorName": "Commercial Non-CHP",
+        "installedMW": 9.9,
+        "totalMW": 9.9
       },
       "geometry": {
         "type": "Point",
@@ -74,7 +123,14 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Sycamore"
+        "name": "Sycamore",
+        "utilityName": "Madison Gas & Electric Co",
+        "cityName": "Madison",
+        "techDesc": "Natural Gas Fired Combustion Turbine",
+        "primarySource": "Natural Gas",
+        "sectorName": "Electric Utility",
+        "installedMW": 41.6,
+        "totalMW": 30.3
       },
       "geometry": {
         "type": "Point",
@@ -84,11 +140,494 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "Dane County Airport Solar"
+        "name": "Dane County Airport Solar",
+        "utilityName": "Unknown/Not Provided",
+        "cityName": "Unknown/Not Provided",
+        "techDesc": "Solar Photovoltaic",
+        "primarySource": "Solar",
+        "sectorName": "Unknown/Not Provided",
+        "installedMW": null,
+        "totalMW": null
       },
       "geometry": {
         "type": "Point",
         "coordinates": [-89.32672332366758, 43.16014372639337]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Fitchburg MGE",
+        "utilityName": "Madison Gas & Electric Co",
+        "cityName": "Madison",
+        "techDesc": "Natural Gas Fired Combustion Turbine",
+        "primarySource": "Natural Gas",
+        "sectorName": "Electric Utility",
+        "installedMW": 57.6,
+        "totalMW": 33.8
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.46007025252861, 43.01441554244599]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "O’brien Solar Fields",
+        "utilityName": "Madison Gas & Electric Co",
+        "cityName": "Fitchburg",
+        "techDesc": "Solar Photovoltaic",
+        "primarySource": "Solar",
+        "sectorName": "Electric Utility",
+        "installedMW": 22.1,
+        "totalMW": 22.1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.45769391797887, 42.997692914938945]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Epic Verona",
+        "utilityName": "Epic Hosting, LLC",
+        "cityName": "Verona",
+        "techDesc": "Petroleum Liquids; Solar Photovoltaic;",
+        "primarySource": "Petroleum",
+        "sectorName": "Commercial Non-CHP",
+        "installedMW": 46.4,
+        "totalMW": 45.8
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.568320688373, 42.99678538456912]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tyto Solar",
+        "utilityName": "Madison Gas & Electric Co",
+        "cityName": "Fitchburg",
+        "techDesc": "Solar Photovoltaic",
+        "primarySource": "Solar",
+        "sectorName": "Electric Utility",
+        "installedMW": 6.0,
+        "totalMW": 6.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.37701364312878, 42.9886409201222]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Strix Solar",
+        "utilityName": "Madison Gas & Electric Co",
+        "cityName": "Fitchburg",
+        "techDesc": "Solar Photovoltaic",
+        "primarySource": "Solar",
+        "sectorName": "Electric Utility",
+        "installedMW": 6.0,
+        "totalMW": 6.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.39314953489037, 42.97212655879792]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hermsdorf Solar",
+        "utilityName": "Madison Gas & Electric Co",
+        "cityName": "Madison",
+        "techDesc": "Solar Photovoltaic",
+        "primarySource": "Solar",
+        "sectorName": "Electric Utility",
+        "installedMW": 8.0,
+        "totalMW": 8.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.2573617823783, 43.06001403352212]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Dane County Solar LLC",
+        "utilityName": "Dane County Solar LLC",
+        "cityName": "Cottage Grove",
+        "techDesc": "Solar Photovoltaic",
+        "primarySource": "Solar",
+        "sectorName": "IPP Non-CHP",
+        "installedMW": 17.3,
+        "totalMW": 17.3
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.23974266561959, 43.04807715411854]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "More Field Solar",
+        "utilityName": "Madison Gas & Electric Co",
+        "cityName": "Middleton",
+        "techDesc": "Solar Photovoltaic",
+        "primarySource": "Solar",
+        "sectorName": "Electric Utility",
+        "installedMW": 5.6,
+        "totalMW": 5.6
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.53104681215363, 43.11673230307131]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "EnTech Solutions Middleton Digester",
+        "utilityName": "Middleton Biogas Solar, LLC",
+        "cityName": "Middleton",
+        "techDesc": "Batteries; Solar Photovoltaic;",
+        "primarySource": "Solar",
+        "sectorName": "IPP Non-CHP",
+        "installedMW": 2.2,
+        "totalMW": 2.2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.54484519857014, 43.12394788196812]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Argyle",
+        "utilityName": "City of Argyle - (WI)",
+        "cityName": "Argyle",
+        "techDesc": "Conventional Hydroelectric; Petroleum Liquids;",
+        "primarySource": "Petroleum",
+        "sectorName": "Electric Utility",
+        "installedMW": 2.3,
+        "totalMW": 2.1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.87489217124387, 42.70158923667664]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Albany Solar",
+        "utilityName": "Wisconsin Power & Light Co",
+        "cityName": "Broadhead",
+        "techDesc": "Solar Photovoltaic",
+        "primarySource": "Solar",
+        "sectorName": "Electric Utility",
+        "installedMW": 50.0,
+        "totalMW": 50.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.37477698233971, 42.66381467922624]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ameresco Janesville",
+        "utilityName": "AMERESCO Janesville LLC",
+        "cityName": "Janesville",
+        "techDesc": "Landfill Gas",
+        "primarySource": "Biomass",
+        "sectorName": "IPP Non-CHP",
+        "installedMW": 3.0,
+        "totalMW": 3.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.02089214300426, 42.70549993441961]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "North Rock",
+        "utilityName": "Wisconsin Power & Light Co",
+        "cityName": "Edgerton",
+        "techDesc": "Solar Photovoltaic",
+        "primarySource": "Solar",
+        "sectorName": "Electric Utility",
+        "installedMW": 50.0,
+        "totalMW": 50.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.10161152961882, 42.810223989015995]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "RockGen Energy Center",
+        "utilityName": "Dairyland Power Coop",
+        "cityName": "Cambridge",
+        "techDesc": "Natural Gas Fired Combustion Turbine",
+        "primarySource": "Natural Gas",
+        "sectorName": "Electric Utility",
+        "installedMW": 561.0,
+        "totalMW": 489.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.04891657379727, 42.976247261991574]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Crawfish River",
+        "utilityName": "Wisconsin Power & Light Co",
+        "cityName": "Jefferson",
+        "techDesc": "Solar Photovoltaic",
+        "primarySource": "Solar",
+        "sectorName": "Electric Utility",
+        "installedMW": 75.0,
+        "totalMW": 75.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-88.87636036880595, 42.99796317852283]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hackbarth Solar WI, LLC",
+        "utilityName": "Wisconsin Electric Power Co",
+        "cityName": "Fort Atkinson",
+        "techDesc": "Solar Photovoltaic",
+        "primarySource": "Solar",
+        "sectorName": "Electric Utility",
+        "installedMW": 5.0,
+        "totalMW": 5.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-88.87575927565616, 42.88649523135437]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Jones Dairy",
+        "utilityName": "Wisconsin Electric Power Co",
+        "cityName": "Fort Atkinson",
+        "techDesc": "Solar Photovoltaic",
+        "primarySource": "Solar",
+        "sectorName": "Electric Utility",
+        "installedMW": 2.3,
+        "totalMW": 2.3
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-88.85060351328626, 42.91721675518852]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Whitewater Generating Station",
+        "utilityName": "Wisconsin Electric Power Co",
+        "cityName": "Whitewater",
+        "techDesc": "Natural Gas Fired Combined Cycle",
+        "primarySource": "Natural Gas",
+        "sectorName": "Electric Utility",
+        "installedMW": 283.5,
+        "totalMW": 261.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-88.72984809512057, 42.85581627592508]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Deertrack Park Gas Recovery",
+        "utilityName": "WM Renewable Energy LLC",
+        "cityName": "Watertown",
+        "techDesc": "Landfill Gas",
+        "primarySource": "Biomass",
+        "sectorName": "IPP Non-CHP",
+        "installedMW": 6.4,
+        "totalMW": 6.4
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-88.74891025470036, 43.08949189448247]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "WE Energies Concord Station",
+        "utilityName": "Wisconsin Electric Power Co",
+        "cityName": "Watertown",
+        "techDesc": "Natural Gas Fired Combustion Turbine",
+        "primarySource": "Natural Gas",
+        "sectorName": "Electric Utility",
+        "installedMW": 381.6,
+        "totalMW": 367.2
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-88.69077836575103, 43.16594558391687]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Beaver Dam Solar",
+        "utilityName": "Wisconsin Power & Light Co",
+        "cityName": "Dodge",
+        "techDesc": "Solar Photovoltaic",
+        "primarySource": "Solar",
+        "sectorName": "Electric Utility",
+        "installedMW": 50.0,
+        "totalMW": 50.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-88.77520841053176, 43.49622184252681]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Glacier Hills",
+        "utilityName": "Wisconsin Electric Power Co",
+        "cityName": "Cambria",
+        "techDesc": "Onshore Wind Turbine",
+        "primarySource": "Wind",
+        "sectorName": "Electric Utility",
+        "installedMW": 162.0,
+        "totalMW": 162.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.15083368350209, 43.56459509039146]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Portage Solar Plant",
+        "utilityName": "Portage Solar Plant",
+        "cityName": "Portage",
+        "techDesc": "Solar Photovoltaic",
+        "primarySource": "Solar",
+        "sectorName": "IPP Non-CHP",
+        "installedMW": 11.8,
+        "totalMW": 10.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.24476973929882, 43.60812990043288]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Portage Industrial Battery",
+        "utilityName": "Wisconsin Power & Light Co",
+        "cityName": "Portage",
+        "techDesc": "Batteries",
+        "primarySource": "Battery Storage",
+        "sectorName": "Electric Utility",
+        "installedMW": 5.0,
+        "totalMW": 5.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.4918004561596, 43.555993804706034]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Columbia (Alliant Wisconsin Generating Center)",
+        "utilityName": "Wisconsin Power & Light Co",
+        "cityName": "Pardeville",
+        "techDesc": "Conventional Steam Coal",
+        "primarySource": "Coal",
+        "sectorName": "Electric Utility",
+        "installedMW": 1112.0,
+        "totalMW": 1131.9
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.41891035379008, 43.48613237006346]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Alliant Energy Dam Prairie du Sac",
+        "utilityName": "Wisconsin Power & Light Co",
+        "cityName": "Prairie du Sac",
+        "techDesc": "Conventional Hydroelectric",
+        "primarySource": "Hydroelectric",
+        "sectorName": "Electric Utility",
+        "installedMW": 33.4,
+        "totalMW": 29.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.72854932185685, 43.30920745539996]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bear Creek",
+        "utilityName": "Wisconsin Power & Light Co",
+        "cityName": "Lone Rock",
+        "techDesc": "Solar Photovoltaic",
+        "primarySource": "Solar",
+        "sectorName": "Electric Utility",
+        "installedMW": 50.0,
+        "totalMW": 50.0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-90.2123246295532, 43.19635602464884]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kilbourn (Alliant)",
+        "utilityName": "Wisconsin Power & Light Co",
+        "cityName": "Wisconsin Dells",
+        "techDesc": "Conventional Hydroelectric",
+        "primarySource": "Hydroelectric",
+        "sectorName": "Electric Utility",
+        "installedMW": 9.7,
+        "totalMW": 9.5
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-89.77918629730307, 43.62565033713262]
       }
     }
   ]
