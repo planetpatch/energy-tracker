@@ -55,3 +55,31 @@ h1 {
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
+/* >>>>>>>>>>>>>>>>>>>>> START OF CHANGES <<<<<<<<<<<<<<<<<<<<< */
+
+/* Renamed from .solar-plant-icon to .custom-plant-icon to be generic for all custom image markers */
+.custom-plant-icon {
+  /* These dimensions define the size of the div itself */
+  width: 18px;
+  height: 18px;
+  /* Make the div circular, although the image inside will also be made circular */
+  border-radius: 50%;
+  /* Optional: Add a border similar to your circle markers */
+  border: 1px solid #000;
+  /* Ensure background of the div is transparent if you only want to see the image */
+  background-color: transparent;
+  /* Center the image within the div if it's smaller or misaligned */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* This applies to the Leaflet-generated div that wraps the icon. */
+/* It removes any default background or border from Leaflet's divIcon wrapper */
+.leaflet-div-icon {
+  background: transparent;
+  border: none;
+}
+
+/* >>>>>>>>>>>>>>>>>>>>> END OF CHANGES <<<<<<<<<<<<<<<<<<<<< */

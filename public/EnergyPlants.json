@@ -141,13 +141,13 @@
       "type": "Feature",
       "properties": {
         "name": "Dane County Airport Solar",
-        "utilityName": "Unknown/Not Provided",
-        "cityName": "Unknown/Not Provided",
+        "utilityName": "Madison Gas & Electric Co",
+        "cityName": "Madison",
         "techDesc": "Solar Photovoltaic",
         "primarySource": "Solar",
-        "sectorName": "Unknown/Not Provided",
-        "installedMW": null,
-        "totalMW": null
+        "sectorName": "Electric Utility",
+        "installedMW": "10.8",
+        "totalMW": "10.8"
       },
       "geometry": {
         "type": "Point",
