@@ -46,8 +46,8 @@ interface MapComponentProps {
 }
 
 const MapComponent: React.FC<MapComponentProps> = ({
-  initialCenter = [44.5, -89.5],
-  initialZoom = 7,
+  initialCenter = [43.073051, -89.401230],
+  initialZoom = 10,
   onFeatureClick,
   onZCTAHover,
   programmaticZctaFeature,
@@ -210,7 +210,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
       const bounds = layerToHighlight.getBounds();
       console.log(`Attempt ${attempt}: Bounds for ZCTA ${targetZctaCode}:`, bounds);
       if (bounds.isValid()) {
-          leafletMapRef.current.fitBounds(bounds, { padding: [50, 50] });
+          leafletMapRef.current.fitBounds(bounds, { padding: [80, 80] });
           console.log(`Attempt ${attempt}: Map successfully fit to bounds for ZCTA ${targetZctaCode}.`);
       } else {
           console.warn(`Attempt ${attempt}: Invalid bounds for ZCTA ${targetZctaCode}. Cannot fit map to bounds. Falling back to view at center.`);

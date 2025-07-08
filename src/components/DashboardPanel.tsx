@@ -3,11 +3,19 @@
 
 import type React from "react"
 import { useState } from "react"
-// Removed direct geojson imports. Point is used within PlantFeature in types.ts.
-// import type { Feature, Geometry, GeoJsonProperties, Point } from "geojson"
+import type { ZCTAFeature, PlantFeature, PlantProperties } from '../types';
 
-// >>>>>>>>>>>>>>>>>>>>>> IMPORT SHARED TYPES <<<<<<<<<<<<<<<<<<<<<<<
-import type { ZCTAFeature, PlantFeature, PlantProperties } from '../types'; // Import from types.ts
+// >>>>>>>>>>>>>>>>>>>>>> IMPORT ICON PATHS AGAIN <<<<<<<<<<<<<<<<<<<<<<<
+import {
+    SOLAR_ICON_PATH,
+    NATURAL_GAS_ICON_PATH,
+    WIND_ICON_PATH,
+    PETROLEUM_ICON_PATH,
+    COAL_ICON_PATH,
+    INDUSTRIAL_BATTERY_ICON_PATH,
+    HYDROELECTRIC_ICON_PATH
+} from '../map/icons'; 
+// >>>>>>>>>>>>>>>>>>>>>> END IMPORT ICON PATHS <<<<<<<<<<<<<<<<<<<<<<<
 
 interface DashboardPanelProps {
   selectedZcta: ZCTAFeature | null
@@ -26,17 +34,13 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({
 }) => {
   const [zipCodeInput, setZipCodeInput] = useState<string>("")
   const [expandedPlantIndex, setExpandedPlantIndex] = useState<number | null>(null);
+  const [hoveredPlantIndex, setHoveredPlantIndex] = useState<number | null>(null);
 
-  // Helper function to get ZCTA code from feature
   const getZctaCode = (feature: ZCTAFeature | null): string => {
     if (!feature) return "N/A"
-    // Cast properties to MyZCTASpecificProperties if needed for specific properties
-    const properties = feature.properties as PlantProperties; // This type is wrong, should be ZCTAProperties
-    // Correction based on ZCTA type:
     const zctaProperties = feature.properties as ZCTAFeature['properties'];
     return zctaProperties?.ZCTA5CE10 || zctaProperties?.ZCTA5CE20 || "N/A"
   }
-
 
   const handleSubmit = () => {
     if (zipCodeInput.trim()) {
@@ -48,33 +52,106 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({
     setExpandedPlantIndex(expandedPlantIndex === index ? null : index);
   };
 
+  // >>>>>>>>>>>>>>>>>>>>>> HELPER TO GET ICON PATH (USING IMPORTED CONSTANTS) <<<<<<<<<<<<<<<<<<<<<<<
+  const getSourceIconPath = (primarySource?: string | null): string | null => {
+      switch (primarySource) {
+          case "Solar": return SOLAR_ICON_PATH;
+          case "Natural Gas": return NATURAL_GAS_ICON_PATH;
+          case "Wind": return WIND_ICON_PATH;
+          case "Petroleum": return PETROLEUM_ICON_PATH;
+          case "Coal": return COAL_ICON_PATH;
+          case "Battery Storage": return INDUSTRIAL_BATTERY_ICON_PATH; // Assuming this source name from your JSON
+          case "Hydroelectric": return HYDROELECTRIC_ICON_PATH; // Assuming this source name from your JSON
+          default: return null; // No icon for unknown source
+      }
+  };
+  // >>>>>>>>>>>>>>>>>>>>>> END HELPER <<<<<<<<<<<<<<<<<<<<<<<
+
   const renderPlantList = (plants: PlantFeature[]) => {
     if (plants.length === 0) {
-      return <p>No known energy plants in this ZCTA.</p>;
+      return <p style={{ color: 'black' }}>No known energy plants in this ZCTA.</p>;
     }
     return (
       <ul>
-        {plants.map((plant, index) => (
-          <li key={plant.properties.name || `plant-${index}`} onClick={() => handlePlantClick(index)} className="plant-item">
-            {/* Properties are now guaranteed to conform to MyPlantSpecificProperties */}
-            <strong>{plant.properties.name || 'Unnamed Plant'}</strong>
-            {expandedPlantIndex === index && (
-              <div className="plant-details">
-                <p><strong>Utility:</strong> {plant.properties.utilityName || 'N/A'}</p>
-                <p><strong>City:</strong> {plant.properties.cityName || 'N/A'}</p>
-                <p><strong>Technology:</strong> {plant.properties.techDesc || 'N/A'}</p>
-                <p><strong>Source:</strong> {plant.properties.primarySource || 'N/A'}</p>
-                <p><strong>Sector:</strong> {plant.properties.sectorName || 'N/A'}</p>
-                <p><strong>Installed MW:</strong> {plant.properties.installedMW ?? 'N/A'}</p>
-                <p><strong>Total MW:</strong> {plant.properties.totalMW ?? 'N/A'}</p>
+        {plants.map((plant, index) => {
+          const sourceIconPath = getSourceIconPath(plant.properties.primarySource);
+          
+          const plantContentBaseStyle: React.CSSProperties = {
+            display: 'flex',
+            alignItems: 'center',
+            padding: '8px 12px',
+            backgroundColor: '#007bff',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            transition: 'background-color 0.2s',
+            width: '100%',
+            boxSizing: 'border-box',
+          };
+
+          const plantContentHoverStyle: React.CSSProperties = hoveredPlantIndex === index ? {
+            backgroundColor: '#0056b3',
+          } : {};
+
+          const combinedPlantContentStyle = { ...plantContentBaseStyle, ...plantContentHoverStyle };
+
+          return (
+            <li 
+              key={plant.properties.name || `plant-${index}`} 
+              style={{ marginBottom: '5px' }}
+              onMouseEnter={() => setHoveredPlantIndex(index)}
+              onMouseLeave={() => setHoveredPlantIndex(null)}
+            >
+              <div 
+                onClick={() => handlePlantClick(index)} 
+                style={combinedPlantContentStyle}
+                className="plant-item-content"
+              >
+                {sourceIconPath && (
+                  <img 
+                    src={sourceIconPath} 
+                    alt={plant.properties.primarySource || 'Energy Source'} 
+                    className="plant-source-icon"
+                    style={{ 
+                      width: '18px', 
+                      height: '18px', 
+                      borderRadius: '50%', // This makes the icon a circle
+                      marginRight: '12px'
+                    }}
+                  />
+                )}
+                <button type="button" style={{ 
+                    background: 'none', 
+                    border: 'none', 
+                    padding: '0', 
+                    margin: '0', 
+                    font: 'inherit', 
+                    color: 'white', 
+                    textAlign: 'left', 
+                    width: '100%', 
+                    cursor: 'pointer',
+                    flexGrow: 1, 
+                }}>
+                  {plant.properties.name || 'Unnamed Plant'}
+                </button>
               </div>
-            )}
-          </li>
-        ))}
+              
+              {expandedPlantIndex === index && (
+                <div style={{ color: 'black' }}>
+                  <p><strong>City:</strong> {plant.properties.cityName || 'N/A'}</p>
+                  <p><strong>Utility:</strong> {plant.properties.utilityName || 'N/A'}</p>
+                  <p><strong>Sector:</strong> {plant.properties.sectorName || 'N/A'}</p>
+                  <p><strong>Technology:</strong> {plant.properties.techDesc || 'N/A'}</p>
+                  <p><strong>Source:</strong> {plant.properties.primarySource || 'N/A'}</p>
+                  <p><strong>Installed MW:</strong> {plant.properties.installedMW ?? 'N/A'}</p>
+                  <p><strong>Total MW:</strong> {plant.properties.totalMW ?? 'N/A'}</p>
+                </div>
+              )}
+            </li>
+          );
+        })}
       </ul>
     );
   };
-
 
   return (
     <div className="dashboard-panel">
@@ -98,16 +175,14 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({
       </div>
 
       {selectedZcta ? (
-        <div className="selected-info-section">
+        <div style={{ color: 'black' }}>
           <h3>Selected ZCTA: {getZctaCode(selectedZcta)}</h3>
-          <h4>Energy Plants:</h4>
           {renderPlantList(plantsInSelectedZcta)}
           <p className="instruction-text">Click on other ZCTAs or hover for plant info.</p>
         </div>
       ) : hoveredZcta ? (
         <div className="hover-info-section">
           <h3>Hovered ZCTA: {getZctaCode(hoveredZcta)}</h3>
-          <h4>Energy Plants:</h4>
           {renderPlantList(plantsInHoveredZcta)}
           <p className="instruction-text">Click to select this ZCTA.</p>
         </div>
@@ -165,28 +240,62 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({
                     padding: 0;
                     margin: 10px 0 0 0;
                 }
-                li {
-                    background-color: #e9e9e9;
-                    margin-bottom: 5px;
-                    padding: 8px;
-                    border-radius: 4px;
-                    font-size: 0.9em;
-                    color: #333;
-                    cursor: pointer;
-                    transition: background-color 0.2s;
-                }
-                li:hover {
-                    background-color: #e0e0e0;
-                }
-                .hover-info-section, .selected-info-section {
-                    margin-bottom: 20px;
-                    padding-bottom: 15px;
-                    border-bottom: 1px dashed #ddd;
-                }
-                .selected-info-section:last-child, .hover-info-section:last-child {
-                    border-bottom: none;
+                .plant-list-item { 
+                    margin-bottom: 5px; 
                 }
 
+                .plant-item-content {
+                    /* These styles are applied via inline style for dynamic hover, but keeping class for reference */
+                    display: flex;
+                    align-items: center;
+                    padding: 8px 12px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    transition: background-color 0.2s;
+                    width: 100%;
+                    box-sizing: border-box;
+                    /* Background color will be set dynamically via inline style */
+                }
+
+                .plant-source-icon {
+                    margin-right: 8px;
+                    object-fit: cover;
+                    border: 1px solid rgba(255, 255, 255, 0.5);
+                    flex-shrink: 0;
+                    /* border-radius is now applied inline to ensure it's a circle */
+                }
+
+                button { 
+                    padding: 8px 12px;
+                    background-color: #007bff;
+                    color: white;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-size: 1em;
+                    transition: background-color 0.2s;
+                }
+                button:hover {
+                    background-color: #0056b3;
+                }
+
+                .plant-details button { 
+                    background: none;
+                    border: none;
+                    padding: 0;
+                    margin: 0;
+                    font: inherit;
+                    color: white;
+                    text-align: left;
+                    width: 100%;
+                    flex-grow: 1;
+                    cursor: pointer;
+                }
+                .plant-details button:focus { 
+                    outline: none; 
+                    box-shadow: none;
+                }
+                
                 .zip-input-section {
                     margin-bottom: 20px;
                     padding-bottom: 15px;
@@ -205,27 +314,21 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({
                     color: #555;
                 }
                 .zip-input-section button {
-                    padding: 8px 12px;
-                    background-color: #007bff;
-                    color: white;
-                    border: none;
-                    border-radius: 4px;
-                    cursor: pointer;
-                    font-size: 1em;
                     margin-top: 10px;
-                }
-                .zip-input-section button:hover {
-                    background-color: #0056b3;
                 }
                 .plant-details {
                     margin-top: 10px;
                     padding-top: 10px;
                     border-top: 1px solid #ccc;
                     font-size: 0.85em;
-                    color: #555;
+                    color: black;
                 }
                 .plant-details p {
                     margin-bottom: 3px;
+                    color: black;
+                }
+                .no-plants-text {
+                    color: black !important;
                 }
             `}</style>
     </div>

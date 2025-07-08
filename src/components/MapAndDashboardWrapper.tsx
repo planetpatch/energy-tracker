@@ -10,7 +10,7 @@ import type { Feature, FeatureCollection, GeoJsonProperties, Geometry } from "ge
 import type { PlantFeature, ZCTAFeature, PlantProperties } from '../types';
 import { getZctaCodeFromFeature } from '../utils/geo';
 
-const ZCTA_GEOJSON_PATH = "/t.json"
+const ZCTA_GEOJSON_PATH = "/dc.json"
 
 const DynamicMapComponent = dynamic(() => import("./Map"), {
   ssr: false,
