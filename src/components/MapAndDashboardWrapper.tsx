@@ -22,7 +22,11 @@ const DynamicMapComponent = dynamic(() => import("./Map"), {
 
 import DashboardPanel from "./DashboardPanel"
 
-const MapAndDashboardWrapper: React.FC = () => {
+interface MapAndDashboardWrapperProps {
+  initialLocation?: string;
+}
+
+const MapAndDashboardWrapper: React.FC<MapAndDashboardWrapperProps> = ({ initialLocation }) => {
   const [selectedZcta, setSelectedZcta] = useState<ZCTAFeature | null>(null)
   const [plantsInSelectedZcta, setPlantsInSelectedZcta] = useState<PlantFeature[]>([])
 
@@ -39,6 +43,30 @@ const MapAndDashboardWrapper: React.FC = () => {
   const [allZctaGeojsonData, setAllZctaGeojsonData] = useState<FeatureCollection | null>(null);
   const allZctaFeaturesMapRef = useRef<Map<string, ZCTAFeature>>(new Map());
 
+
+  const handleZipCodeSubmit = useCallback((zipCode: string) => {
+    // We can extract a 5-digit zip from a longer address string if needed
+    const zipMatch = zipCode.match(/\d{5}/);
+    const searchKey = zipMatch ? zipMatch[0] : zipCode;
+
+    const foundZcta = allZctaFeaturesMapRef.current.get(searchKey);
+
+    console.log("MapAndDashboardWrapper: Searching for ZIP:", searchKey, "in map of size:", allZctaFeaturesMapRef.current.size);
+    console.log("MapAndDashboardWrapper: Found ZCTA:", foundZcta);
+
+    if (foundZcta) {
+      setProgrammaticZctaFeature(foundZcta);
+      setSelectedZcta(foundZcta);
+      setPlantsInSelectedZcta([]);
+      setHoveredZcta(null);
+      setPlantsInHoveredZcta([]);
+    } else {
+      alert(`ZIP Code ${searchKey} not found in ZCTA data or not in Wisconsin.`);
+      setProgrammaticZctaFeature(null);
+      setSelectedZcta(null);
+      setPlantsInSelectedZcta([]);
+    }
+  }, []);
 
   ReactUseEffect(() => {
     console.log("MapAndDashboardWrapper: Fetching ZCTA GeoJSON data...");
@@ -61,18 +89,25 @@ const MapAndDashboardWrapper: React.FC = () => {
         }
         setAllZctaGeojsonData(finalGeojsonData);
 
+        const newMap = new Map<string, ZCTAFeature>();
         finalGeojsonData.features.forEach(feature => {
             const zctaCode = getZctaCodeFromFeature(feature as ZCTAFeature);
             if (zctaCode) {
-              allZctaFeaturesMapRef.current.set(zctaCode, feature as ZCTAFeature);
+              newMap.set(zctaCode, feature as ZCTAFeature);
             }
         });
+        allZctaFeaturesMapRef.current = newMap;
         console.log(`MapAndDashboardWrapper: ZCTA GeoJSON data loaded and lookup map populated with ${allZctaFeaturesMapRef.current.size} features.`);
+        
+        // If there's an initial location, process it after the data is loaded.
+        if (initialLocation) {
+          handleZipCodeSubmit(initialLocation);
+        }
       })
       .catch((error) => {
         console.error("MapAndDashboardWrapper: Error loading ZCTA GeoJSON for lookup:", error)
       })
-  }, []);
+  }, [initialLocation, handleZipCodeSubmit]); // Rerun if initialLocation changes (though it shouldn't)
 
   const handleZCTAClick = useCallback((feature: ZCTAFeature, plants: PlantFeature[]) => {
     console.log("MapAndDashboardWrapper: ZCTA Clicked:", getZctaCodeFromFeature(feature));
@@ -97,26 +132,6 @@ const MapAndDashboardWrapper: React.FC = () => {
     [programmaticZctaFeature],
   )
 
-  const handleZipCodeSubmit = useCallback((zipCode: string) => {
-    const foundZcta = allZctaFeaturesMapRef.current.get(zipCode);
-
-    console.log("MapAndDashboardWrapper: Searching for ZIP:", zipCode, "in map of size:", allZctaFeaturesMapRef.current.size);
-    console.log("MapAndDashboardWrapper: Found ZCTA:", foundZcta);
-
-    if (foundZcta) {
-      setProgrammaticZctaFeature(foundZcta);
-      setSelectedZcta(foundZcta);
-      setPlantsInSelectedZcta([]);
-      setHoveredZcta(null);
-      setPlantsInHoveredZcta([]);
-    } else {
-      alert(`ZIP Code ${zipCode} not found in ZCTA data or not in Wisconsin.`);
-      setProgrammaticZctaFeature(null);
-      setSelectedZcta(null);
-      setPlantsInSelectedZcta([]);
-    }
-  }, []);
-
   return (
     <div className="map-dashboard-container">
       <div className="map-area">
@@ -139,7 +154,7 @@ const MapAndDashboardWrapper: React.FC = () => {
         .map-dashboard-container {
           display: flex;
           flex-direction: column;
-          height: 100vh;
+          height: calc(100vh - 64px); /* Adjust height for the header */
           width: 100%;
           padding: 0;
           box-sizing: border-box;
