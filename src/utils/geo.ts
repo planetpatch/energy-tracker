@@ -1,6 +1,9 @@
 // src/utils/geo.ts
-
-import type { Point, Polygon, MultiPolygon, Feature, GeoJsonProperties, Geometry } from 'geojson'; // Added Feature and GeoJsonProperties
+import type { ZCTAFeature } from '@/types';
+import type {
+  Point, Polygon, MultiPolygon,
+  //Feature, GeoJsonProperties, Geometry
+} from 'geojson'; // Added Feature and GeoJsonProperties
 
 /**
  * Checks if a point is inside a polygon.
@@ -73,8 +76,8 @@ function isPointInSinglePolygon(x: number, y: number, polygonCoords: number[][][
  * @returns The 5-digit ZCTA code or "N/A" if not found.
  */
 // Renamed to getZctaCodeFromFeature to match your desired import name.
-export function getZctaCodeFromFeature(feature: Feature<Geometry, GeoJsonProperties> | null): string {
+export function getZctaCodeFromFeature(feature: ZCTAFeature | null): string {
   if (!feature) return "N/A";
-  const properties = feature.properties as any; // Using 'any' as GeoJsonProperties is generic
+  const properties = feature.properties; // Using 'any' as GeoJsonProperties is generic
   return properties?.ZCTA5CE10 || properties?.ZCTA5CE20 || "N/A";
 }
