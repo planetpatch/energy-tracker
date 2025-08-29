@@ -1,11 +1,20 @@
+// src/components/MapAndDashboardWrapper.tsx
 "use client"
 
 import type React from "react"
-import { useState, useCallback } from "react"
+import { useState, useCallback, useRef, useEffect as ReactUseEffect } from "react"
 import dynamic from "next/dynamic"
-import type { Feature, Geometry, GeoJsonProperties } from "geojson"
+import type { Feature, FeatureCollection, GeoJsonProperties, Geometry } from "geojson"
 
-// Dynamically import MapComponent with SSR disabled
+// >>>>>>>>>>>>>>>>>>>>>> IMPORT SHARED TYPES <<<<<<<<<<<<<<<<<<<<<<<
+import type {
+  PlantFeature, ZCTAFeature
+  // PlantProperties,
+ } from '../types';
+import { getZctaCodeFromFeature } from '../utils/geo';
+
+const ZCTA_GEOJSON_PATH = "/dc.json"
+
 const DynamicMapComponent = dynamic(() => import("./Map"), {
   ssr: false,
   loading: () => <p>Loading map...</p>,
@@ -13,51 +22,128 @@ const DynamicMapComponent = dynamic(() => import("./Map"), {
 
 import DashboardPanel from "./DashboardPanel"
 
-type ZCTAFeature = Feature<Geometry, GeoJsonProperties>
-
 const MapAndDashboardWrapper: React.FC = () => {
-  const [selectedZcta, setSelectedZcta] = useState<ZCTAFeature | null>(null) // For clicked ZCTA
-  const [hoveredZcta, setHoveredZcta] = useState<ZCTAFeature | null>(null)   // For hovered ZCTA
-  const [plantsInHoveredZcta, setPlantsInHoveredZcta] = useState<string[]>([]) // Plant names in hovered ZCTA
+  const [selectedZcta, setSelectedZcta] = useState<ZCTAFeature | null>(null)
+  const [plantsInSelectedZcta, setPlantsInSelectedZcta] = useState<PlantFeature[]>([])
 
-  // Callback for when a ZCTA is CLICKED (updates dashboard with ZCTA code)
-  const handleZCTAClick = useCallback((feature: ZCTAFeature) => {
+  const [hoveredZcta, setHoveredZcta] = useState<ZCTAFeature | null>(null)
+  const [plantsInHoveredZcta, setPlantsInHoveredZcta] = useState<PlantFeature[]>([])
+
+  const [programmaticZctaFeature, setProgrammaticZctaFeature] = useState<ZCTAFeature | null>(null)
+
+  const selectedZctaRef = useRef(selectedZcta)
+  ReactUseEffect(() => {
+    selectedZctaRef.current = selectedZcta
+  }, [selectedZcta])
+
+  const [allZctaGeojsonData, setAllZctaGeojsonData] = useState<FeatureCollection | null>(null);
+  const allZctaFeaturesMapRef = useRef<Map<string, ZCTAFeature>>(new Map());
+
+
+  ReactUseEffect(() => {
+    console.log("MapAndDashboardWrapper: Fetching ZCTA GeoJSON data...");
+    fetch(ZCTA_GEOJSON_PATH)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        return response.json()
+      })
+      .then((data: Feature | FeatureCollection) => {
+        let finalGeojsonData: FeatureCollection
+        if (data.type === "Feature") {
+          finalGeojsonData = {
+            type: "FeatureCollection",
+            features: [data as Feature<Geometry, GeoJsonProperties>],
+          }
+        } else {
+          finalGeojsonData = data as FeatureCollection<Geometry, GeoJsonProperties>
+        }
+        setAllZctaGeojsonData(finalGeojsonData);
+
+        finalGeojsonData.features.forEach(feature => {
+            const zctaCode = getZctaCodeFromFeature(feature as ZCTAFeature);
+            if (zctaCode) {
+              allZctaFeaturesMapRef.current.set(zctaCode, feature as ZCTAFeature);
+            }
+        });
+        console.log(`MapAndDashboardWrapper: ZCTA GeoJSON data loaded and lookup map populated with ${allZctaFeaturesMapRef.current.size} features.`);
+      })
+      .catch((error) => {
+        console.error("MapAndDashboardWrapper: Error loading ZCTA GeoJSON for lookup:", error)
+      })
+  }, []);
+
+  const handleZCTAClick = useCallback((feature: ZCTAFeature, plants: PlantFeature[]) => {
+    console.log("MapAndDashboardWrapper: ZCTA Clicked:", getZctaCodeFromFeature(feature));
     setSelectedZcta(feature)
-    // When a ZCTA is clicked, we might want to clear any existing hover state
-    setHoveredZcta(null);
-    setPlantsInHoveredZcta([]);
+    setPlantsInSelectedZcta(plants)
+
+    setHoveredZcta(null)
+    setPlantsInHoveredZcta([])
+    // Programmatic ZCTA feature should NOT be set to null on a manual click.
+    // The Map component's internal logic for click handling will clear the highlight
+    // of a *previously* programmatically highlighted ZCTA.
+    // setProgrammaticZctaFeature(null) // <-- REMOVE THIS LINE
   }, [])
 
-  // Callback for when a ZCTA is HOVERED (updates dashboard with plant names)
-  const handleZCTAHover = useCallback((feature: ZCTAFeature | null, plants: string[]) => {
-    setHoveredZcta(feature);
-    setPlantsInHoveredZcta(plants);
+  const handleZCTAHover = useCallback(
+    (feature: ZCTAFeature | null, plants: PlantFeature[]) => {
+      if (!selectedZctaRef.current && !programmaticZctaFeature) {
+        setHoveredZcta(feature)
+        setPlantsInHoveredZcta(plants)
+      }
+    },
+    [programmaticZctaFeature],
+  )
+
+  const handleZipCodeSubmit = useCallback((zipCode: string) => {
+    const foundZcta = allZctaFeaturesMapRef.current.get(zipCode);
+
+    console.log("MapAndDashboardWrapper: Searching for ZIP:", zipCode, "in map of size:", allZctaFeaturesMapRef.current.size);
+    console.log("MapAndDashboardWrapper: Found ZCTA:", foundZcta);
+
+    if (foundZcta) {
+      setProgrammaticZctaFeature(foundZcta);
+      setSelectedZcta(foundZcta);
+      setPlantsInSelectedZcta([]);
+      setHoveredZcta(null);
+      setPlantsInHoveredZcta([]);
+    } else {
+      alert(`ZIP Code ${zipCode} not found in ZCTA data or not in Wisconsin.`);
+      setProgrammaticZctaFeature(null);
+      setSelectedZcta(null);
+      setPlantsInSelectedZcta([]);
+    }
   }, []);
 
   return (
     <div className="map-dashboard-container">
       <div className="map-area">
         <DynamicMapComponent
-          onFeatureClick={handleZCTAClick} // Pass click handler to MapComponent
-          onZCTAHover={handleZCTAHover}   // Pass hover handler to MapComponent
+          onFeatureClick={handleZCTAClick}
+          onZCTAHover={handleZCTAHover}
+          programmaticZctaFeature={programmaticZctaFeature}
+          zctaGeojsonData={allZctaGeojsonData}
         />
       </div>
-      {/* DashboardPanel receives both clicked and hovered data */}
       <DashboardPanel
         selectedZcta={selectedZcta}
+        plantsInSelectedZcta={plantsInSelectedZcta}
         hoveredZcta={hoveredZcta}
         plantsInHoveredZcta={plantsInHoveredZcta}
+        onZipCodeSubmit={handleZipCodeSubmit}
       />
 
       <style jsx>{`
         .map-dashboard-container {
           display: flex;
           flex-direction: column;
-          height: calc(100vh - 60px); /* Adjust based on your header/footer height */
+          height: 100vh;
           width: 100%;
           padding: 0;
           box-sizing: border-box;
-          position: relative; /* Needed for dashboard's fixed/absolute positioning */
+          position: relative;
         }
 
         .map-area {

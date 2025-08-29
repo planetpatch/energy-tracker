@@ -6,7 +6,7 @@ import MapAndDashboardWrapper from '@/components/MapAndDashboardWrapper'; // Imp
 export default function HomePage() {
     return (
         <div>
-            <h1>Interactive Map Dashboard</h1>
+            <h1>Energy Tracker</h1>
             <MapAndDashboardWrapper />
         </div>
     );
