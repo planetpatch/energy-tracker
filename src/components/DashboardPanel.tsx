@@ -18,7 +18,7 @@ import {
     COAL_ICON_PATH,
     INDUSTRIAL_BATTERY_ICON_PATH,
     HYDROELECTRIC_ICON_PATH
-} from '../map/icons'; 
+} from '../map/icon-paths'; 
 // >>>>>>>>>>>>>>>>>>>>>> END IMPORT ICON PATHS <<<<<<<<<<<<<<<<<<<<<<<
 
 interface DashboardPanelProps {

@@ -2,15 +2,15 @@
 
 import * as L from "leaflet";
 import type { Feature } from "geojson"; // Import Feature type if not already globally available
-
-// Paths to your energy plant images in the public folder
-export const SOLAR_ICON_PATH = "/Solar.png";
-export const NATURAL_GAS_ICON_PATH = "/NaturalGas.png";
-export const WIND_ICON_PATH = "/Wind.png";
-export const PETROLEUM_ICON_PATH = "/Petroleum.png";
-export const COAL_ICON_PATH = "/Coal.png";
-export const INDUSTRIAL_BATTERY_ICON_PATH = "/IndustrialBattery.png";
-export const HYDROELECTRIC_ICON_PATH = "/HydroElectric.png";
+import {
+    SOLAR_ICON_PATH,
+    NATURAL_GAS_ICON_PATH,
+    WIND_ICON_PATH,
+    PETROLEUM_ICON_PATH,
+    COAL_ICON_PATH,
+    INDUSTRIAL_BATTERY_ICON_PATH,
+    HYDROELECTRIC_ICON_PATH
+} from './icon-paths'; 
 
 /**
  * Creates a standardized Leaflet DivIcon for custom image markers.
