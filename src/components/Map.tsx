@@ -303,10 +303,11 @@ const MapComponent: React.FC<MapComponentProps> = ({
           })
           .then((data: FeatureCollection) => {
             allPlantsRef.current = data.features as Feature[];
-            if (currentLeafletMap) {
+
+            if (leafletMapRef.current) {
               plantsLayerRef.current = L.geoJSON(data, {
                 pointToLayer: createPlantMarker
-              }).addTo(currentLeafletMap);
+              }).addTo(leafletMapRef.current);
               console.log("Map: Energy Plant layers added.");
             }
           })
