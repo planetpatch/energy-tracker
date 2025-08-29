@@ -7,7 +7,10 @@ import dynamic from "next/dynamic"
 import type { Feature, FeatureCollection, GeoJsonProperties, Geometry } from "geojson"
 
 // >>>>>>>>>>>>>>>>>>>>>> IMPORT SHARED TYPES <<<<<<<<<<<<<<<<<<<<<<<
-import type { PlantFeature, ZCTAFeature, PlantProperties } from '../types';
+import type {
+  PlantFeature, ZCTAFeature
+  // PlantProperties,
+ } from '../types';
 import { getZctaCodeFromFeature } from '../utils/geo';
 
 const ZCTA_GEOJSON_PATH = "/dc.json"

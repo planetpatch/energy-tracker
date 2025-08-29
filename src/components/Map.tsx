@@ -1,20 +1,34 @@
 // src/components/Map.tsx
 "use client"
 
-import React, { useEffect, useRef, useState, useCallback } from "react"
+import React, {
+  useEffect, useRef,  useCallback
+  // useState,
+
+} from "react"
 import * as L from "leaflet"
 import "leaflet/dist/leaflet.css"
 import * as turf from "@turf/turf"
 
 // Keep these GeoJSON types as they are fundamental
-import type { Feature, FeatureCollection, GeoJsonProperties, Geometry, Point } from "geojson";
+import type {
+  Feature, FeatureCollection, GeoJsonProperties, Geometry,
+  // Point
+} from "geojson";
 
 // >>>>>>>>>>>>>>>>>>>>>> CORRECTED IMPORT SHARED TYPES <<<<<<<<<<<<<<<<<<<<<<<
 // We now only import the correctly defined and exported types
-import type { PlantFeature, ZCTAFeature, PlantProperties, ZCTAProperties } from '../types';
+import type {
+  PlantFeature, ZCTAFeature,
+  // PlantProperties, ZCTAProperties
+} from '../types';
 
 import { createPlantMarker } from '../map/icons';
 import { getZctaCodeFromFeature } from '../utils/geo';
+
+export type GeoJSONLayerWithData = L.GeoJSON & {
+  _geoJsonData?: FeatureCollection;
+};
 
 const PLANTS_GEOJSON_PATH = "/EnergyPlants.json"
 
@@ -55,7 +69,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
 }) => {
   const mapRef = useRef<HTMLDivElement>(null)
   const leafletMapRef = useRef<L.Map | null>(null)
-  const zctaLayerRef = useRef<L.GeoJSON | null>(null)
+  const zctaLayerRef = useRef<GeoJSONLayerWithData | null>(null);
   const plantsLayerRef = useRef<L.GeoJSON | null>(null)
   // Ensure allPlantsRef is Feature[], but its contents will match MyPlantSpecificProperties for plants
   const allPlantsRef = useRef<Feature<Geometry, GeoJsonProperties>[]>([]); // GeoJSON.Feature is the base
@@ -152,7 +166,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
         onFeatureClick(feature, plantsInClickedZcta);
       },
     })
-  }, [currentProgrammaticHighlightLayerRef, zctaLayersMapRef, tooltipRef, highlightZctaStyle, defaultZctaStyle, allPlantsRef, onZCTAHover, onFeatureClick]);
+  }, [currentProgrammaticHighlightLayerRef, zctaLayersMapRef, tooltipRef, allPlantsRef, onZCTAHover, onFeatureClick]);
 
 
   const handleProgrammaticZctaAction = useCallback((feature: ZCTAFeature, attempt = 1) => {
@@ -311,7 +325,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
       if (zctaGeojsonData && leafletMapRef.current) {
           // Check if zctaLayerRef.current doesn't exist OR if the zctaGeojsonData reference has changed
           // We use a custom property `_geoJsonData` to store the reference to the data that created the layer
-          if (!zctaLayerRef.current || (zctaLayerRef.current as any)._geoJsonData !== zctaGeojsonData) {
+          if (!zctaLayerRef.current || (zctaLayerRef.current._geoJsonData !== zctaGeojsonData)) {
               // If zctaLayerRef.current already exists, remove its layers to avoid duplicates/staleness
               if (zctaLayerRef.current) {
                   leafletMapRef.current.removeLayer(zctaLayerRef.current);
@@ -328,7 +342,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
               zctaLayerRef.current = newZctaLayer;
 
               // Store a reference to the original zctaGeojsonData on the layer for comparison
-              (zctaLayerRef.current as any)._geoJsonData = zctaGeojsonData;
+              zctaLayerRef.current._geoJsonData = zctaGeojsonData;
               console.log("Map: ZCTA GeoJSON layers added/re-added to map.");
           }
       } else if (!zctaGeojsonData && zctaLayerRef.current && leafletMapRef.current) {

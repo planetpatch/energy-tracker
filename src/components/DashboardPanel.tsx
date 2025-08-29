@@ -3,7 +3,11 @@
 
 import type React from "react"
 import { useState } from "react"
-import type { ZCTAFeature, PlantFeature, PlantProperties } from '../types';
+import Image from "next/image";
+import type {
+  ZCTAFeature, PlantFeature 
+  //,PlantProperties
+} from '../types';
 
 // >>>>>>>>>>>>>>>>>>>>>> IMPORT ICON PATHS AGAIN <<<<<<<<<<<<<<<<<<<<<<<
 import {
@@ -107,17 +111,17 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({
                 className="plant-item-content"
               >
                 {sourceIconPath && (
-                  <img 
-                    src={sourceIconPath} 
-                    alt={plant.properties.primarySource || 'Energy Source'} 
-                    className="plant-source-icon"
-                    style={{ 
-                      width: '18px', 
-                      height: '18px', 
-                      borderRadius: '50%', // This makes the icon a circle
-                      marginRight: '12px'
-                    }}
-                  />
+                 <Image 
+                  src={sourceIconPath} 
+                  alt={plant.properties.primarySource || 'Energy Source'} 
+                  className="plant-source-icon"
+                  width={18}
+                  height={18}
+                  style={{ 
+                    borderRadius: '50%', // This makes the icon a circle
+                    marginRight: '12px'
+                  }}
+                />
                 )}
                 <button type="button" style={{ 
                     background: 'none', 
