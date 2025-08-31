@@ -22,7 +22,7 @@ export default function WelcomeModal({ onStartTracking }: WelcomeModalProps) {
             <div className="bg-white p-8 rounded-lg shadow-2xl max-w-md w-full text-center">
                 <h1 className="text-3xl font-bold mb-4 text-gray-800">Welcome to the Energy Tracker</h1>
                 <p className="mb-6 text-gray-600">
-                    Please input your Madison address or a Madison zip code to begin.
+                    Please input your Madison Zip Code to begin
                     <br />
                     <span className="text-sm text-gray-500">(We do not collect or store this information)</span>
                 </p>
@@ -31,7 +31,7 @@ export default function WelcomeModal({ onStartTracking }: WelcomeModalProps) {
                         type="text"
                         value={locationInput}
                         onChange={(e) => setLocationInput(e.target.value)}
-                        placeholder="e.g., 123 State St or 53703"
+                        placeholder="e.g., 53703"
                         className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                         style={{ color: 'black' }}
                     />

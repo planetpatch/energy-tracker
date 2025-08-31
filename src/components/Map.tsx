@@ -31,6 +31,7 @@ export type GeoJSONLayerWithData = L.GeoJSON & {
 };
 
 const PLANTS_GEOJSON_PATH = "/EnergyPlants.json"
+const MADISON_BORDERS_GEOJSON_PATH = "/Madison_Borders.geojson"; // Path to the new border file
 
 // Removed all local type definitions here. They are now in src/types.ts.
 
@@ -47,6 +48,15 @@ const highlightZctaStyle = {
   color: '#666',
   dashArray: '',
   fillOpacity: 0.5
+};
+
+// Style for the Madison border outline
+const madisonBorderStyle = {
+    color: "#0d6efd", // A distinct blue color
+    weight: 2,
+    opacity: 0.9,
+    fillOpacity: 0.05,
+    dashArray: '5, 5' // Dashed line to make it distinct
 };
 
 
@@ -71,6 +81,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
   const leafletMapRef = useRef<L.Map | null>(null)
   const zctaLayerRef = useRef<GeoJSONLayerWithData | null>(null);
   const plantsLayerRef = useRef<L.GeoJSON | null>(null)
+  const madisonBorderLayerRef = useRef<L.GeoJSON | null>(null); // Ref for the new border layer
   // Ensure allPlantsRef is Feature[], but its contents will match MyPlantSpecificProperties for plants
   const allPlantsRef = useRef<Feature<Geometry, GeoJsonProperties>[]>([]); // GeoJSON.Feature is the base
   const tooltipRef = useRef<HTMLDivElement | null>(null);
@@ -80,6 +91,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
 
   const updateTooltipPosition = (e: MouseEvent) => {
+// ... existing code ...
     if (tooltipRef.current) {
       tooltipRef.current.style.left = `${e.clientX + 15}px`;
       tooltipRef.current.style.top = `${e.clientY + 15}px`;
@@ -87,6 +99,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
   };
 
   const onEachZCTAFeature = useCallback((feature: ZCTAFeature, layer: L.Layer) => {
+// ... existing code ...
     const zctaCode = getZctaCodeFromFeature(feature);
     if (zctaCode) {
       zctaLayersMapRef.current.set(zctaCode, layer);
@@ -170,6 +183,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
 
   const handleProgrammaticZctaAction = useCallback((feature: ZCTAFeature, attempt = 1) => {
+// ... existing code ...
     if (currentProgrammaticHighlightLayerRef.current) {
         const prevZctaCode = getZctaCodeFromFeature((currentProgrammaticHighlightLayerRef.current as L.GeoJSON).feature as ZCTAFeature);
         const prevLayerInCurrentMap = prevZctaCode ? zctaLayersMapRef.current.get(prevZctaCode) : null;
@@ -255,6 +269,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
 
   useEffect(() => {
+// ... existing code ...
     if (programmaticZctaFeature) {
       handleProgrammaticZctaAction(programmaticZctaFeature);
     } else {
@@ -272,6 +287,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
 
   useEffect(() => {
+// ... existing code ...
     if (mapRef.current && typeof window !== "undefined") {
       if (!leafletMapRef.current) {
         const currentLeafletMap = L.map(mapRef.current).setView(initialCenter as L.LatLngExpression, initialZoom as number)
@@ -294,14 +310,38 @@ const MapComponent: React.FC<MapComponentProps> = ({
         document.body.appendChild(tooltipDiv);
         tooltipRef.current = tooltipDiv;
 
+        // Fetch and add Madison borders layer
+        fetch(MADISON_BORDERS_GEOJSON_PATH)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then((data: FeatureCollection) => {
+                if (leafletMapRef.current) {
+                    madisonBorderLayerRef.current = L.geoJSON(data, {
+                        style: madisonBorderStyle,
+                        interactive: false // Make the layer non-interactive
+                    }).addTo(leafletMapRef.current);
+                    console.log("Map: Madison borders layer added.");
+                }
+            })
+            .catch(error => {
+                console.error('Error loading Madison Borders GeoJSON:', error);
+            });
+
+
         fetch(PLANTS_GEOJSON_PATH)
           .then(response => {
+// ... existing code ...
             if (!response.ok) {
               throw new Error(`HTTP error! status: ${response.status}`);
             }
             return response.json();
           })
           .then((data: FeatureCollection) => {
+// ... existing code ...
             allPlantsRef.current = data.features as Feature[];
 
             if (leafletMapRef.current) {
@@ -312,10 +352,12 @@ const MapComponent: React.FC<MapComponentProps> = ({
             }
           })
           .catch(error => {
+// ... existing code ...
             console.error('Error loading Plants GeoJSON:', error);
           });
 
         setTimeout(() => {
+// ... existing code ...
           currentLeafletMap.invalidateSize();
           console.log("Map: Invalidated map size.");
         }, 0);
@@ -324,6 +366,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
       // ZCTA LAYERS: Always check if data is available and layer needs to be added/re-added
       if (zctaGeojsonData && leafletMapRef.current) {
+// ... existing code ...
           // Check if zctaLayerRef.current doesn't exist OR if the zctaGeojsonData reference has changed
           // We use a custom property `_geoJsonData` to store the reference to the data that created the layer
           if (!zctaLayerRef.current || (zctaLayerRef.current._geoJsonData !== zctaGeojsonData)) {
@@ -347,6 +390,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
               console.log("Map: ZCTA GeoJSON layers added/re-added to map.");
           }
       } else if (!zctaGeojsonData && zctaLayerRef.current && leafletMapRef.current) {
+// ... existing code ...
           // If zctaGeojsonData becomes null but there's a layer, remove it
           leafletMapRef.current.removeLayer(zctaLayerRef.current);
           zctaLayerRef.current = null;
@@ -356,14 +400,17 @@ const MapComponent: React.FC<MapComponentProps> = ({
     }
 
     return () => {
+// ... existing code ...
       if (leafletMapRef.current) {
         leafletMapRef.current.remove();
         leafletMapRef.current = null;
         zctaLayerRef.current = null;
         plantsLayerRef.current = null;
+        madisonBorderLayerRef.current = null; // Clean up the new layer
         console.log("Map: Cleanup - Leaflet map removed.");
       }
       if (tooltipRef.current) {
+// ... existing code ...
         document.body.removeChild(tooltipRef.current);
         tooltipRef.current = null;
       }
