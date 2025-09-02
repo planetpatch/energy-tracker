@@ -3,15 +3,19 @@
 
 import type React from "react"
 import { useState, useCallback, useRef, useEffect as ReactUseEffect } from "react"
-import dynamic from "next/dynamic"
-import type { Feature, FeatureCollection, GeoJsonProperties, Geometry } from "geojson"
 
-// >>>>>>>>>>>>>>>>>>>>>> IMPORT SHARED TYPES <<<<<<<<<<<<<<<<<<<<<<<
+import dynamic from "next/dynamic"
+
+import { getZctaCodeFromFeature } from '../utils/geo';
+import DashboardPanel from "./DashboardPanel"
+
+
+import type { Feature, FeatureCollection, GeoJsonProperties, Geometry } from "geojson"
 import type {
   PlantFeature, ZCTAFeature
   // PlantProperties,
- } from '../types';
-import { getZctaCodeFromFeature } from '../utils/geo';
+} from '../types';
+ 
 
 const ZCTA_GEOJSON_PATH = "/dane_zip_codes.json"
 
@@ -20,7 +24,7 @@ const DynamicMapComponent = dynamic(() => import("./Map"), {
   loading: () => <p>Loading map...</p>,
 })
 
-import DashboardPanel from "./DashboardPanel"
+
 
 interface MapAndDashboardWrapperProps {
   initialLocation?: string;
