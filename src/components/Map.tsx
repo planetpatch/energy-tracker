@@ -13,6 +13,7 @@ import type { PlantFeature, ZCTAFeature, PlantFeatureCollection, ZCTAFeatureColl
 // Custom Function and Resource Import
 import { createPlantMarker } from '../map/icons';
 import { getZctaCodeFromFeature } from '../utils/geo';
+import { useMapStore } from "@/stores/mapStore";
 
 export type GeoJSONLayerWithData = L.GeoJSON & {
   _geoJsonData?: FeatureCollection;
@@ -33,12 +34,21 @@ const alliantBorderStyle = {
 };
 
 
+// interface MapComponentProps {
+//   initialCenter?: L.LatLngExpression;
+//   initialZoom?: number;
+//   onFeatureClick: (feature: ZCTAFeature, plantsInZcta: PlantFeature[]) => void;
+//   onZCTAHover: (feature: ZCTAFeature | null, plantsInZcta: PlantFeature[]) => void;
+//   programmaticZctaFeature?: ZCTAFeature | null;
+//   zctaGeojsonData: ZCTAFeatureCollection | null;
+//   plantsData: PlantFeatureCollection | null;
+//   mgeBordersData: BorderFeatureCollection | null;
+//   alliantBordersData: BorderFeatureCollection | null;
+// }
+
 interface MapComponentProps {
   initialCenter?: L.LatLngExpression;
   initialZoom?: number;
-  onFeatureClick: (feature: ZCTAFeature, plantsInZcta: PlantFeature[]) => void;
-  onZCTAHover: (feature: ZCTAFeature | null, plantsInZcta: PlantFeature[]) => void;
-  programmaticZctaFeature?: ZCTAFeature | null;
   zctaGeojsonData: ZCTAFeatureCollection | null;
   plantsData: PlantFeatureCollection | null;
   mgeBordersData: BorderFeatureCollection | null;
@@ -48,9 +58,9 @@ interface MapComponentProps {
 const MapComponent: React.FC<MapComponentProps> = ({
   initialCenter = [43.073051, -89.401230],
   initialZoom = 10,
-  onFeatureClick,
-  onZCTAHover,
-  programmaticZctaFeature,
+  // onFeatureClick,
+  // onZCTAHover,
+  // programmaticZctaFeature,
   zctaGeojsonData,
   plantsData,
   mgeBordersData,
@@ -60,42 +70,114 @@ const MapComponent: React.FC<MapComponentProps> = ({
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<L.Map | null>(null);
 
-
+  // --- REFS FOR VISUAL STATE ---
+  // These refs track the actual Leaflet layer objects on the map
   const zctaLayerRef = useRef<GeoJSONLayerWithData | null>(null);
   const plantsLayerRef = useRef<L.GeoJSON | null>(null);
   const mgeBorderLayerRef = useRef<L.GeoJSON | null>(null);
   const alliantBorderLayerRef = useRef<L.GeoJSON | null>(null);
-  const allPlantsRef = useRef<Feature<Geometry, GeoJsonProperties>[]>([]);
   const tooltipRef = useRef<HTMLDivElement | null>(null);
+
+  // --- REFS FOR DATA & INTERACTION ---
+  const allPlantsRef = useRef<Feature<Geometry, GeoJsonProperties>[]>([]);
   const zctaLayersMapRef = useRef<Map<string, L.Layer>>(new Map());
-  const currentProgrammaticHighlightLayerRef = useRef<L.Layer | null>(null);
+  const currentSelectedLayerRef = useRef<L.Layer | null>(null);
+
+  // --- ZUSTAND STATE SUBSCRIPTION ---
+  // Subscribe to global state changes
+  const selectedZcta = useMapStore((state) => state.selectedZcta);
+  const programmaticZctaFeature = useMapStore((state) => state.programmaticZctaFeature);
 
 
-  const updateTooltipPosition = (e: MouseEvent) => {
-    if (tooltipRef.current) {
-      tooltipRef.current.style.left = `${e.clientX + 15}px`;
-      tooltipRef.current.style.top = `${e.clientY + 15}px`;
-    }
-  };
+  // const updateTooltipPosition = (e: MouseEvent) => {
+  //   if (tooltipRef.current) {
+  //     tooltipRef.current.style.left = `${e.clientX + 15}px`;
+  //     tooltipRef.current.style.top = `${e.clientY + 15}px`;
+  //   }
+  // };
 
+  // const onEachZCTAFeature = useCallback((feature: ZCTAFeature, layer: L.Layer) => {
+  //   const zctaCode = getZctaCodeFromFeature(feature);
+  //   if (zctaCode) {
+  //     zctaLayersMapRef.current.set(zctaCode, layer);
+  //   }
+  //   layer.on({
+  //     mouseover: (e: L.LeafletMouseEvent) => {
+  //       if (currentProgrammaticHighlightLayerRef.current === e.target) return;
+  //       (e.target as L.Path).setStyle(highlightZctaStyle).bringToFront();
+
+  //       if (tooltipRef.current) {
+  //         tooltipRef.current.innerText = `ZIP: ${zctaCode || 'N/A'}`;
+  //         tooltipRef.current.style.display = 'block';
+  //         tooltipRef.current.style.left = `${e.originalEvent.clientX + 15}px`;
+  //         tooltipRef.current.style.top = `${e.originalEvent.clientY + 15}px`;
+  //       }
+  //       document.addEventListener('mousemove', updateTooltipPosition);
+
+  //       const zctaPolygon = feature.geometry;
+  //       const plantsInZcta: PlantFeature[] = [];
+  //       if (allPlantsRef.current && zctaPolygon && (zctaPolygon.type === 'Polygon' || zctaPolygon.type === 'MultiPolygon')) {
+  //         allPlantsRef.current.forEach(plantFeature => {
+  //           if (plantFeature.geometry?.type === 'Point') {
+  //             if (turf.booleanPointInPolygon(plantFeature.geometry, zctaPolygon)) {
+  //               plantsInZcta.push(plantFeature as PlantFeature);
+  //             }
+  //           }
+  //         });
+  //       }
+  //       onZCTAHover(feature, plantsInZcta);
+  //     },
+  //     mouseout: (e: L.LeafletMouseEvent) => {
+  //       if (currentProgrammaticHighlightLayerRef.current !== e.target) {
+  //         (e.target as L.Path).setStyle(defaultZctaStyle);
+  //       }
+  //       onZCTAHover(null, []);
+
+  //       if (tooltipRef.current) tooltipRef.current.style.display = 'none';
+  //       document.removeEventListener('mousemove', updateTooltipPosition);
+  //     },
+  //     click: (e: L.LeafletMouseEvent) => {
+  //       if (currentProgrammaticHighlightLayerRef.current) {
+  //          (currentProgrammaticHighlightLayerRef.current as L.Path).setStyle(defaultZctaStyle);
+  //          currentProgrammaticHighlightLayerRef.current = null;
+  //       }
+  //       (e.target as L.Path).setStyle(highlightZctaStyle).bringToFront();
+
+  //       const clickedZctaPolygon = feature.geometry;
+  //       const plantsInClickedZcta: PlantFeature[] = [];
+  //       if (allPlantsRef.current && clickedZctaPolygon && (clickedZctaPolygon.type === 'Polygon' || clickedZctaPolygon.type === 'MultiPolygon')) {
+  //         allPlantsRef.current.forEach(plantFeature => {
+  //           if (plantFeature.geometry?.type === 'Point') {
+  //             if (turf.booleanPointInPolygon(plantFeature.geometry, clickedZctaPolygon)) {
+  //               plantsInClickedZcta.push(plantFeature as PlantFeature);
+  //             }
+  //           }
+  //         });
+  //       }
+  //       onFeatureClick(feature, plantsInClickedZcta);
+  //     },
+  //   });
+  // }, [onZCTAHover, onFeatureClick]);
   const onEachZCTAFeature = useCallback((feature: ZCTAFeature, layer: L.Layer) => {
+    // Get actions from the store.
+    const { selectZcta, hoverZcta, clearProgrammaticFeature, clearSelection } = useMapStore.getState();
+    
     const zctaCode = getZctaCodeFromFeature(feature);
     if (zctaCode) {
       zctaLayersMapRef.current.set(zctaCode, layer);
     }
     layer.on({
       mouseover: (e: L.LeafletMouseEvent) => {
-        if (currentProgrammaticHighlightLayerRef.current === e.target) return;
-        (e.target as L.Path).setStyle(highlightZctaStyle).bringToFront();
-
+        const targetLayer = e.target as L.Path;
+        // Only highlight if it's not the currently selected layer
+        if (currentSelectedLayerRef.current !== targetLayer) {
+          targetLayer.setStyle(highlightZctaStyle);
+        }
         if (tooltipRef.current) {
           tooltipRef.current.innerText = `ZIP: ${zctaCode || 'N/A'}`;
-          tooltipRef.current.style.display = 'block';
-          tooltipRef.current.style.left = `${e.originalEvent.clientX + 15}px`;
-          tooltipRef.current.style.top = `${e.originalEvent.clientY + 15}px`;
+          tooltipRef.current.classList.remove('hidden');
         }
-        document.addEventListener('mousemove', updateTooltipPosition);
-
+        
         const zctaPolygon = feature.geometry;
         const plantsInZcta: PlantFeature[] = [];
         if (allPlantsRef.current && zctaPolygon && (zctaPolygon.type === 'Polygon' || zctaPolygon.type === 'MultiPolygon')) {
@@ -107,77 +189,120 @@ const MapComponent: React.FC<MapComponentProps> = ({
             }
           });
         }
-        onZCTAHover(feature, plantsInZcta);
+        // Call store action instead of a prop function
+        hoverZcta(feature, plantsInZcta);
       },
+      
       mouseout: (e: L.LeafletMouseEvent) => {
-        if (currentProgrammaticHighlightLayerRef.current !== e.target) {
-          (e.target as L.Path).setStyle(defaultZctaStyle);
+        const targetLayer = e.target as L.Path;
+        // --- FIX: Only reset the style if this layer is NOT the currently selected one ---
+        if (currentSelectedLayerRef.current !== targetLayer) {
+          targetLayer.setStyle(defaultZctaStyle);
         }
-        onZCTAHover(null, []);
-
-        if (tooltipRef.current) tooltipRef.current.style.display = 'none';
-        document.removeEventListener('mousemove', updateTooltipPosition);
+        // Always clear the hover state in the store
+        hoverZcta(null, []);
+        if (tooltipRef.current) tooltipRef.current.classList.add('hidden');
       },
-      click: (e: L.LeafletMouseEvent) => {
-        if (currentProgrammaticHighlightLayerRef.current) {
-           (currentProgrammaticHighlightLayerRef.current as L.Path).setStyle(defaultZctaStyle);
-           currentProgrammaticHighlightLayerRef.current = null;
+      click: () => {
+        if (currentSelectedLayerRef.current && currentSelectedLayerRef.current !== layer) {
+          (currentSelectedLayerRef.current as L.Path).setStyle(defaultZctaStyle);
         }
-        (e.target as L.Path).setStyle(highlightZctaStyle).bringToFront();
 
-        const clickedZctaPolygon = feature.geometry;
+        if (currentSelectedLayerRef.current === layer) {
+            // If so, deselect it
+            (layer as L.Path).setStyle(defaultZctaStyle);
+            currentSelectedLayerRef.current = null;
+            clearSelection(); // Clear the state in the store
+            return;
+        }
+
+        (layer as L.Path).setStyle(highlightZctaStyle).bringToFront();
+        currentSelectedLayerRef.current = layer;
+
+        // If a programmatic selection was active, clear it
+        if (programmaticZctaFeature) clearProgrammaticFeature();
+
+
+        const zctaPolygon = feature.geometry;
         const plantsInClickedZcta: PlantFeature[] = [];
-        if (allPlantsRef.current && clickedZctaPolygon && (clickedZctaPolygon.type === 'Polygon' || clickedZctaPolygon.type === 'MultiPolygon')) {
+        if (allPlantsRef.current && zctaPolygon && (zctaPolygon.type === 'Polygon' || zctaPolygon.type === 'MultiPolygon')) {
           allPlantsRef.current.forEach(plantFeature => {
             if (plantFeature.geometry?.type === 'Point') {
-              if (turf.booleanPointInPolygon(plantFeature.geometry, clickedZctaPolygon)) {
+              if (turf.booleanPointInPolygon(plantFeature.geometry, zctaPolygon)) {
                 plantsInClickedZcta.push(plantFeature as PlantFeature);
               }
             }
           });
         }
-        onFeatureClick(feature, plantsInClickedZcta);
+        // Call store action instead of a prop function
+        selectZcta(feature, plantsInClickedZcta);
       },
     });
-  }, [onZCTAHover, onFeatureClick]);
+  }, [programmaticZctaFeature]);
 
+  // const handleProgrammaticZctaAction = useCallback((feature: ZCTAFeature) => {
+  //   if (!map || zctaLayersMapRef.current.size === 0) return;
 
+  //   if (currentProgrammaticHighlightLayerRef.current) {
+  //       (currentProgrammaticHighlightLayerRef.current as L.Path).setStyle(defaultZctaStyle);
+  //       currentProgrammaticHighlightLayerRef.current = null;
+  //   }
+
+  //   const targetZctaCode = getZctaCodeFromFeature(feature);
+  //   if (!targetZctaCode) return;
+    
+  //   const layerToHighlight = zctaLayersMapRef.current.get(targetZctaCode);
+  //   if (!layerToHighlight) return;
+
+  //   (layerToHighlight as L.Path).setStyle(highlightZctaStyle).bringToFront();
+  //   currentProgrammaticHighlightLayerRef.current = layerToHighlight;
+
+  //   // --- FIX ---
+  //   // 1. Removed `L.MultiPolygon` which does not exist as a class.
+  //   // 2. `instanceof L.Polygon` correctly handles both Polygon and MultiPolygon
+  //   //    geometries and acts as a type guard for the .getBounds() call.
+  //   if (layerToHighlight instanceof L.Polygon) {
+  //       const bounds = layerToHighlight.getBounds();
+  //       if (bounds.isValid()) {
+  //           map.fitBounds(bounds, { padding: [80, 80] });
+  //       }
+  //   }
+  // }, [map]);
+
+  // Programmatic ZCTA Use Effect
   const handleProgrammaticZctaAction = useCallback((feature: ZCTAFeature) => {
     if (!map || zctaLayersMapRef.current.size === 0) return;
 
-    if (currentProgrammaticHighlightLayerRef.current) {
-        (currentProgrammaticHighlightLayerRef.current as L.Path).setStyle(defaultZctaStyle);
-        currentProgrammaticHighlightLayerRef.current = null;
+    if (currentSelectedLayerRef.current) {
+        (currentSelectedLayerRef.current as L.Path).setStyle(defaultZctaStyle);
     }
-
-    const targetZctaCode = getZctaCodeFromFeature(feature);
-    if (!targetZctaCode) return;
+const targetZctaCode = getZctaCodeFromFeature(feature);
+    const layerToHighlight = targetZctaCode ? zctaLayersMapRef.current.get(targetZctaCode) : null;
     
-    const layerToHighlight = zctaLayersMapRef.current.get(targetZctaCode);
     if (!layerToHighlight) return;
 
     (layerToHighlight as L.Path).setStyle(highlightZctaStyle).bringToFront();
-    currentProgrammaticHighlightLayerRef.current = layerToHighlight;
-
-    // --- FIX ---
-    // 1. Removed `L.MultiPolygon` which does not exist as a class.
-    // 2. `instanceof L.Polygon` correctly handles both Polygon and MultiPolygon
-    //    geometries and acts as a type guard for the .getBounds() call.
+    currentSelectedLayerRef.current = layerToHighlight; 
+    
     if (layerToHighlight instanceof L.Polygon) {
         const bounds = layerToHighlight.getBounds();
-        if (bounds.isValid()) {
-            map.fitBounds(bounds, { padding: [80, 80] });
-        }
+        if (bounds.isValid()) map.fitBounds(bounds, { padding: [80, 80] });
     }
   }, [map]);
-
-  // Programmatic ZCTA Use Effect
 
   useEffect(() => {
     if (programmaticZctaFeature) {
       handleProgrammaticZctaAction(programmaticZctaFeature);
     }
   }, [programmaticZctaFeature, handleProgrammaticZctaAction]);
+  
+  // --- FIX: Effect to clear visual selection if global state is cleared ---
+  useEffect(() => {
+    if (!selectedZcta && currentSelectedLayerRef.current) {
+      (currentSelectedLayerRef.current as L.Path).setStyle(defaultZctaStyle);
+      currentSelectedLayerRef.current = null;
+    }
+  }, [selectedZcta]);
 
 // Map Initialization UseEffect
 useEffect(() => {
