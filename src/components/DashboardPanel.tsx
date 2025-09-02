@@ -3,23 +3,19 @@
 import React, { useState } from 'react';
 import Image from "next/image";
 
-// 1. STATE MANAGEMENT: Continue to import and use the Zustand store
 import { useMapStore } from '@/stores/mapStore';
 import type { ZCTAFeature, PlantFeature } from '../types';
 
-// Assuming these paths are correctly defined in your project
 import {
     SOLAR_ICON_PATH, NATURAL_GAS_ICON_PATH, WIND_ICON_PATH,
     PETROLEUM_ICON_PATH, COAL_ICON_PATH, INDUSTRIAL_BATTERY_ICON_PATH,
     HYDROELECTRIC_ICON_PATH
 } from '../map/icon-paths';
 
-// The props interface remains simple, only needing the submit handler
 interface DashboardPanelProps {
   onZipCodeSubmit: (zipCode: string) => void;
 }
 
-// Helper to get icon path based on the energy source
 const getSourceIconPath = (primarySource?: string | null): string | null => {
     switch (primarySource) {
         case "Solar": return SOLAR_ICON_PATH;
@@ -34,13 +30,18 @@ const getSourceIconPath = (primarySource?: string | null): string | null => {
 };
 
 const DashboardPanel: React.FC<DashboardPanelProps> = ({ onZipCodeSubmit }) => {
-  // 2. STATE SUBSCRIPTION: Continue subscribing to global state from the store
+  // --- MODIFICATION: Subscribe to each piece of state individually ---
+  // This prevents creating a new object on every render and resolves the warning.
   const selectedZcta = useMapStore((state) => state.selectedZcta);
   const plantsInSelectedZcta = useMapStore((state) => state.plantsInSelectedZcta);
   const hoveredZcta = useMapStore((state) => state.hoveredZcta);
   const plantsInHoveredZcta = useMapStore((state) => state.plantsInHoveredZcta);
+  const isZctaVisible = useMapStore((state) => state.isZctaVisible);
+  const isMgeVisible = useMapStore((state) => state.isMgeVisible);
+  const isAlliantVisible = useMapStore((state) => state.isAlliantVisible);
+  const toggleLayerVisibility = useMapStore((state) => state.toggleLayerVisibility);
 
-  // 3. LOCAL UI STATE: Keep the local state for managing the UI's interactivity
+
   const [zipCodeInput, setZipCodeInput] = useState<string>("");
   const [expandedPlantIndex, setExpandedPlantIndex] = useState<number | null>(null);
 
@@ -55,13 +56,11 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({ onZipCodeSubmit }) => {
     setExpandedPlantIndex(expandedPlantIndex === index ? null : index);
   };
 
-  // Determine which data to display based on selection or hover state
   const displayZcta = selectedZcta || hoveredZcta;
   const displayPlants = selectedZcta ? plantsInSelectedZcta : plantsInHoveredZcta;
   const isHovering = !selectedZcta && hoveredZcta;
   
   return (
-    // 4. STYLING: Changed z-10 to z-[1000] to ensure it appears above the map
     <div className="absolute top-5 right-5 z-[1000] flex w-72 max-w-sm flex-col rounded-lg bg-white/95 p-5 shadow-2xl max-h-[calc(100vh-40px)] overflow-y-auto">
       <h2 className="mb-4 mt-0 border-b border-gray-200 pb-2.5 text-2xl text-gray-800">
         Energy Dashboard
@@ -73,17 +72,13 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({ onZipCodeSubmit }) => {
         </label>
         <div className="mt-1 flex rounded-md shadow-sm">
           <input
-            type="text"
-            id="zip-input"
-            value={zipCodeInput}
+            type="text" id="zip-input" value={zipCodeInput}
             onChange={(e) => setZipCodeInput(e.target.value)}
-            placeholder="e.g., 53703"
-            maxLength={5}
+            placeholder="e.g., 53703" maxLength={5}
             className="block w-full flex-1 rounded-none rounded-l-md border border-gray-300 px-3 py-2 text-black placeholder-gray-500 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           />
           <button
-            type="submit"
-            disabled={!zipCodeInput.trim()}
+            type="submit" disabled={!zipCodeInput.trim()}
             className="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400"
           >
             Go
@@ -91,8 +86,49 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({ onZipCodeSubmit }) => {
         </div>
       </form>
 
+      {/* --- Legend and Layer Toggles --- */}
+      <div className="mb-5 border-b border-gray-300 pb-4">
+        <h3 className="text-base font-medium text-gray-800">Map Layers</h3>
+        <div className="mt-2 space-y-2">
+            <div className="flex items-center">
+                <input
+                    id="zcta-toggle" type="checkbox"
+                    checked={isZctaVisible}
+                    onChange={() => toggleLayerVisibility('zcta')}
+                    className="h-4 w-4 rounded border-gray-300 text-indigo-800 focus:ring-indigo-800"
+                />
+                <label htmlFor="zcta-toggle" className="ml-3 block text-sm text-gray-900">
+                    Dane County ZIP Codes
+                </label>
+            </div>
+            <div className="flex items-center">
+                <input
+                    id="mge-toggle" type="checkbox"
+                    checked={isMgeVisible}
+                    onChange={() => toggleLayerVisibility('mge')}
+                    className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                />
+                <label htmlFor="mge-toggle" className="ml-3 block text-sm text-gray-900">
+                    MGE Service Area
+                </label>
+            </div>
+            <div className="flex items-center">
+                <input
+                    id="alliant-toggle" type="checkbox"
+                    checked={isAlliantVisible}
+                    onChange={() => toggleLayerVisibility('alliant')}
+                    className="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                />
+                <label htmlFor="alliant-toggle" className="ml-3 block text-sm text-gray-900">
+                    Alliant Service Area
+                </label>
+            </div>
+        </div>
+      </div>
+      {/* --- END: Legend and Layer Toggles --- */}
+
       <div className="flex-grow">
-        {displayZcta ? (
+        {displayZcta && isZctaVisible ? (
           <div>
             <h3 className={`text-lg font-bold ${isHovering ? 'text-gray-500' : 'text-blue-800'}`}>
               ZIP Code: {displayZcta.properties?.ZCTA5CE10}
@@ -113,10 +149,8 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({ onZipCodeSubmit }) => {
                                 >
                                     {sourceIconPath && (
                                         <Image
-                                            src={sourceIconPath}
-                                            alt={plant.properties.primarySource || 'Energy'}
-                                            width={18}
-                                            height={18}
+                                            src={sourceIconPath} alt={plant.properties.primarySource || 'Energy'}
+                                            width={18} height={18}
                                             className="mr-3 flex-shrink-0 rounded-full border border-white/50 object-cover"
                                         />
                                     )}
@@ -145,7 +179,10 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({ onZipCodeSubmit }) => {
         ) : (
           <div className="flex h-full items-center justify-center pt-10">
             <p className="text-center text-gray-500">
-              Click or hover on a ZIP code<br />to see energy plant details.
+              {isZctaVisible 
+                ? "Click or hover on a ZIP code to see energy plant details."
+                : "Enable the 'ZIP Code Areas' layer to view plant details."
+              }
             </p>
           </div>
         )}

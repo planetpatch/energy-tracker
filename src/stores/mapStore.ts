@@ -7,6 +7,10 @@ interface MapState {
   hoveredZcta: ZCTAFeature | null;
   plantsInHoveredZcta: PlantFeature[];
   programmaticZctaFeature: ZCTAFeature | null;
+  // --- NEW: Add state for layer visibility ---
+  isZctaVisible: boolean;
+  isMgeVisible: boolean;
+  isAlliantVisible: boolean;
 }
 
 interface MapActions {
@@ -14,7 +18,9 @@ interface MapActions {
   hoverZcta: (feature: ZCTAFeature | null, plants: PlantFeature[]) => void;
   setProgrammaticSelection: (feature: ZCTAFeature | null) => void;
   clearProgrammaticFeature: () => void;
-  clearSelection: () => void; // Action to clear manual selection
+  clearSelection: () => void;
+  // --- NEW: Add an action to toggle layers ---
+  toggleLayerVisibility: (layerName: 'zcta' | 'mge' | 'alliant') => void;
 }
 
 export const useMapStore = create<MapState & MapActions>((set, get) => ({
@@ -24,6 +30,10 @@ export const useMapStore = create<MapState & MapActions>((set, get) => ({
   hoveredZcta: null,
   plantsInHoveredZcta: [],
   programmaticZctaFeature: null,
+  // --- NEW: Set default visibility to true ---
+  isZctaVisible: true,
+  isMgeVisible: true,
+  isAlliantVisible: true,
 
   // --- ACTIONS IMPLEMENTATION ---
   selectZcta: (feature, plants) => set({
@@ -32,36 +42,40 @@ export const useMapStore = create<MapState & MapActions>((set, get) => ({
     hoveredZcta: null,
     plantsInHoveredZcta: [],
   }),
-
-  // --- MODIFICATION: This action is now "smarter" ---
-  // It will not update the hover state if a ZCTA is already selected.
-  hoverZcta: (feature, plants) => {
-    // We use get() to check the current state before setting a new one.
-    if (get().selectedZcta || get().programmaticZctaFeature) {
-      // If something is already selected, do nothing.
-      return;
-    }
-    set({
-      hoveredZcta: feature,
-      plantsInHoveredZcta: plants,
-    });
-  },
   
+  hoverZcta: (feature, plants) => {
+    // Only update hover state if nothing is actively selected
+    if (!get().selectedZcta) {
+      set({
+        hoveredZcta: feature,
+        plantsInHoveredZcta: plants,
+      });
+    }
+  },
+
   setProgrammaticSelection: (feature) => set({
     programmaticZctaFeature: feature,
     selectedZcta: feature,
-    plantsInSelectedZcta: [],
+    plantsInSelectedZcta: feature?.properties.plants || [],
     hoveredZcta: null,
     plantsInHoveredZcta: [],
   }),
 
-  clearProgrammaticFeature: () => set({
-    programmaticZctaFeature: null,
-  }),
+  clearProgrammaticFeature: () => set({ programmaticZctaFeature: null }),
+  clearSelection: () => set({ selectedZcta: null, plantsInSelectedZcta: [] }),
 
-  clearSelection: () => set({
-    selectedZcta: null,
-    plantsInSelectedZcta: [],
+  // --- NEW: Implement the toggle action ---
+  toggleLayerVisibility: (layerName) => set((state) => {
+    switch (layerName) {
+        case 'zcta':
+            return { isZctaVisible: !state.isZctaVisible };
+        case 'mge':
+            return { isMgeVisible: !state.isMgeVisible };
+        case 'alliant':
+            return { isAlliantVisible: !state.isAlliantVisible };
+        default:
+            return {};
+    }
   }),
 }));
 
