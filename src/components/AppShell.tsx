@@ -2,7 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import MapAndDashboardWrapper from '@/components/MapAndDashboardWrapper'
-import WelcomeModal from '@/components/WelcomeModal'
+import dynamic from 'next/dynamic'
+
+const WelcomeModal = dynamic(() => import('@/components/WelcomeModal'), { 
+    ssr: false 
+});
 
 export default function AppShell() {
     const [isStarted, setIsStarted] = useState(false)
@@ -26,14 +30,15 @@ export default function AppShell() {
         setShowModal(false)
     }
 
-        return (
+    return (
         <div>
+            {/* The way you render the component doesn't change at all */}
             {showModal && <WelcomeModal onStartTracking={handleStartTracking} />}
+
             <div className={!isStarted ? 'blur-sm' : ''}>
-                {/* The h1 is now part of the client shell */}
                 <h1 className="text-2xl font-bold text-center py-4">Energy Tracker</h1>
                 <MapAndDashboardWrapper initialLocation={initialLocation} />
             </div>
         </div>
-    )
+    );
 }
