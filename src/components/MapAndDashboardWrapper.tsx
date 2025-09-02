@@ -11,7 +11,6 @@ import DashboardPanel from "./DashboardPanel"
 import { getZctaCodeFromFeature } from '../utils/geo';
 
 // TYPE IMPORTS
-import type { Feature, FeatureCollection, GeoJsonProperties, Geometry } from "geojson"
 import type { PlantFeature, ZCTAFeature } from '../types';
 import type { MapData } from "@/lib/data-loader";
 
