@@ -1,63 +1,45 @@
+// src/app/page.tsx
 "use client";
 
 import { useState, useEffect } from 'react';
 import MapAndDashboardWrapper from '@/components/MapAndDashboardWrapper';
 import WelcomeModal from '@/components/WelcomeModal';
-import IntroAnimation from '@/components/IntroAnimation'; // Assuming this component exists
 
 export default function HomePage() {
-    // State to manage the cinematic intro
-    const [introComplete, setIntroComplete] = useState(false);
-
-    // Your existing state for the modal and application start
     const [isStarted, setIsStarted] = useState(false);
     const [initialLocation, setInitialLocation] = useState('');
-    const [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState(false); // New state to control modal visibility
 
-    // Your existing useEffect to delay the modal, but now it only runs AFTER the intro is complete.
     useEffect(() => {
-        // If the intro is not complete, do nothing.
-        if (!introComplete) return;
-
-        // Once the intro is complete, start the timer for the modal.
+        // Delay showing the modal slightly to allow the map component to mount and begin rendering.
+        // This helps prevent the user from seeing a black/empty background behind the modal
+        // before the map tiles have a chance to load.
         const timer = setTimeout(() => {
             if (!isStarted) {
                 setShowModal(true);
             }
-        }, 250);
+        }, 250); // A small delay is usually sufficient.
 
-        return () => clearTimeout(timer);
-    }, [introComplete, isStarted]); // This effect now depends on introComplete
-
-    // Callback for the animation component to call when it's done
-    const handleIntroComplete = () => {
-        setIntroComplete(true);
-    };
+        return () => clearTimeout(timer); // Cleanup the timer if the component unmounts.
+    }, [isStarted]);
 
     const handleStartTracking = (location: string) => {
         setInitialLocation(location);
         setIsStarted(true);
-        setShowModal(false);
+        setShowModal(false); // Also hide the modal immediately when tracking starts.
     };
 
     return (
-        <>
-            {/* 1. Render the Intro Animation first, if it's not complete */}
-            {!introComplete && <IntroAnimation onComplete={handleIntroComplete} />}
+        <div>
+            {/* Conditionally render the modal based on the delayed state */}
+            {showModal && <WelcomeModal onStartTracking={handleStartTracking} />}
 
-            {/* 2. Once the intro is complete, render the main application */}
-            {introComplete && (
-                <div>
-                    {/* The modal is rendered based on its delayed state */}
-                    {showModal && <WelcomeModal onStartTracking={handleStartTracking} />}
-
-                    {/* The map wrapper is always rendered to allow it to load in the background. */}
-                    <div className={!isStarted ? 'blur-sm' : ''}>
-                        <h1 className="text-2xl font-bold text-center py-4">Energy Tracker</h1>
-                        <MapAndDashboardWrapper initialLocation={initialLocation} />
-                    </div>
-                </div>
-            )}
-        </>
+            {/* The map wrapper is always rendered to allow it to load in the background.
+                The blur is applied when the app hasn't "started" yet. */}
+            <div className={!isStarted ? 'blur-sm' : ''}>
+                <h1 className="text-2xl font-bold text-center py-4">Energy Tracker</h1>
+                <MapAndDashboardWrapper initialLocation={initialLocation} />
+            </div>
+        </div>
     );
 }

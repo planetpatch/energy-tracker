@@ -13,7 +13,7 @@ import type {
  } from '../types';
 import { getZctaCodeFromFeature } from '../utils/geo';
 
-const ZCTA_GEOJSON_PATH = "/dc.json"
+const ZCTA_GEOJSON_PATH = "/dane_zip_codes.json"
 
 const DynamicMapComponent = dynamic(() => import("./Map"), {
   ssr: false,
