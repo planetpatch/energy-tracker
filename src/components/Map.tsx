@@ -188,13 +188,8 @@ useEffect(() => {
       }).addTo(mapInstance);
       
       const tooltipDiv = document.createElement('div');
-      tooltipDiv.className = 'zipcode-tooltip';
-      tooltipDiv.style.position = 'fixed';
-      tooltipDiv.style.color = 'white';
-      tooltipDiv.style.padding = '5px 10px';
-      tooltipDiv.style.borderRadius = '5px';
-      tooltipDiv.style.pointerEvents = 'none';
-      tooltipDiv.style.zIndex = '1000';
+      // All styles are set via a single className string.
+      tooltipDiv.className = 'zipcode-tooltip fixed hidden rounded bg-black/70 px-2.5 py-1 text-white pointer-events-none z-[1000]';
       document.body.appendChild(tooltipDiv);
       tooltipRef.current = tooltipDiv;
 
@@ -258,7 +253,7 @@ useEffect(() => {
 
 
 
-  return <div id="map" ref={mapRef} style={{ width: "100%", height: "100%" }}></div>
+  return <div id="map" ref={mapRef} className="h-full w-full"></div>;
 }
 
 export default React.memo(MapComponent);

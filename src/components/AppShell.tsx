@@ -40,7 +40,6 @@ export default function AppShell({ mapData }: AppShellProps) {
 
             <div className={!isStarted ? 'blur-sm' : ''}>
                 <h1 className="text-2xl font-bold text-center py-4">Energy Tracker</h1>
-                {/* Now, when you pass mapData down, TypeScript knows its exact shape */}
                 <MapAndDashboardWrapper 
                     mapData={mapData} 
                     initialLocation={initialLocation} 

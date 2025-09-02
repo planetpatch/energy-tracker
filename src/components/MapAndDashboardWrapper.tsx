@@ -103,8 +103,8 @@ const MapAndDashboardWrapper: React.FC<MapAndDashboardWrapperProps> = ({ initial
   );
 
   return (
-    <div className="map-dashboard-container">
-      <div className="map-area">
+    <div className="relative flex w-full flex-col h-[calc(100vh-4rem)]">
+      <div className="w-full flex-grow">
         <DynamicMapComponent
           onFeatureClick={handleZCTAClick}
           onZCTAHover={handleZCTAHover}
@@ -123,23 +123,6 @@ const MapAndDashboardWrapper: React.FC<MapAndDashboardWrapperProps> = ({ initial
         onZipCodeSubmit={handleZipCodeSubmit}
       />
 
-      <style jsx>{`
-        .map-dashboard-container {
-          display: flex;
-          flex-direction: column;
-          height: calc(100vh - 64px); /* Adjust height for the header */
-          width: 100%;
-          padding: 0;
-          box-sizing: border-box;
-          position: relative;
-        }
-
-        .map-area {
-          flex-grow: 1;
-          min-height: 100%;
-          width: 100%;
-        }
-      `}</style>
     </div>
   )
 }
