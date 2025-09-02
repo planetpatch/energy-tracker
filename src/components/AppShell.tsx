@@ -1,9 +1,14 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from 'react'
-import MapAndDashboardWrapper from '@/components/MapAndDashboardWrapper'
-import dynamic from 'next/dynamic'
-import type { MapData } from '@/lib/data-loader'
+import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
+import MapAndDashboardWrapper from '@/components/MapAndDashboardWrapper';
+
+// --- 1. IMPORT THE NEW FUEL MIX PANEL ---
+import FuelMixPanel from '@/components/FuelMixPanel';
+import type { MapData } from '@/lib/data-loader';
+
+
 const WelcomeModal = dynamic(() => import('@/components/WelcomeModal'), { 
     ssr: false 
 });
@@ -34,9 +39,16 @@ export default function AppShell({ mapData }: AppShellProps) {
         setShowModal(false)
     }
 
-    return (
+   return (
         <div>
-            {showModal && <WelcomeModal onStartTracking={handleStartTracking} />}
+            {/* --- 2. PASS MAPDATA TO THE WELCOME MODAL --- */}
+            {/* The modal now requires this prop to check the 'serviceAreas' for the user's ZIP code. */}
+            {showModal && (
+                <WelcomeModal 
+                    onStartTracking={handleStartTracking} 
+                    mapData={mapData} 
+                />
+            )}
 
             <div className={!isStarted ? 'blur-sm' : ''}>
                 <h1 className="text-2xl font-bold text-center py-4">Energy Tracker</h1>
@@ -45,6 +57,10 @@ export default function AppShell({ mapData }: AppShellProps) {
                     initialLocation={initialLocation} 
                 />
             </div>
+            
+            {/* --- 3. RENDER THE NEW FUEL MIX PANEL --- */}
+            {/* This component will manage its own visibility by listening to the Zustand store. */}
+            <FuelMixPanel />
         </div>
     );
 }

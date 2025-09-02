@@ -1,26 +1,39 @@
 import { create } from 'zustand';
 import type { ZCTAFeature, PlantFeature } from '../types';
 
+interface FuelMix {
+  [key: string]: {
+    renewable_percent: number;
+    non_renewable_percent: number;
+  };
+}
+
+
 interface MapState {
   selectedZcta: ZCTAFeature | null;
   plantsInSelectedZcta: PlantFeature[];
   hoveredZcta: ZCTAFeature | null;
   plantsInHoveredZcta: PlantFeature[];
   programmaticZctaFeature: ZCTAFeature | null;
-  // --- NEW: Add state for layer visibility ---
   isZctaVisible: boolean;
   isMgeVisible: boolean;
   isAlliantVisible: boolean;
+  activeUtility: 'MGE' | 'Alliant' | 'Both' | null;
+  fuelMixData: FuelMix | null;
+  isFuelMixVisible: boolean;
 }
 
+
+
 interface MapActions {
-  selectZcta: (feature: ZCTAFeature, plants: PlantFeature[]) => void;
-  hoverZcta: (feature: ZCTAFeature | null, plants: PlantFeature[]) => void;
-  setProgrammaticSelection: (feature: ZCTAFeature | null) => void;
-  clearProgrammaticFeature: () => void;
-  clearSelection: () => void;
-  // --- NEW: Add an action to toggle layers ---
-  toggleLayerVisibility: (layerName: 'zcta' | 'mge' | 'alliant') => void;
+    selectZcta: (feature: ZCTAFeature, plants: PlantFeature[]) => void;
+    hoverZcta: (feature: ZCTAFeature | null, plants: PlantFeature[]) => void;
+    setProgrammaticSelection: (feature: ZCTAFeature | null) => void;
+    clearProgrammaticFeature: () => void;
+    clearSelection: () => void;
+    toggleLayerVisibility: (layerName: 'zcta' | 'mge' | 'alliant') => void;
+    showFuelMixForProvider: (provider: 'MGE' | 'Alliant' | 'Both', data: FuelMix) => void;
+    hideFuelMix: () => void;
 }
 
 export const useMapStore = create<MapState & MapActions>((set, get) => ({
@@ -33,7 +46,10 @@ export const useMapStore = create<MapState & MapActions>((set, get) => ({
   // --- NEW: Set default visibility to true ---
   isZctaVisible: true,
   isMgeVisible: true,
-  isAlliantVisible: true,
+    isAlliantVisible: true,
+    activeUtility: null,
+  fuelMixData: null,
+  isFuelMixVisible: false,
 
   // --- ACTIONS IMPLEMENTATION ---
   selectZcta: (feature, plants) => set({
@@ -77,5 +93,16 @@ export const useMapStore = create<MapState & MapActions>((set, get) => ({
             return {};
     }
   }),
-}));
+    
+    showFuelMixForProvider: (provider, data) => set({
+    activeUtility: provider,
+    fuelMixData: data,
+    isFuelMixVisible: true,
+  }),
 
+  hideFuelMix: () => set({
+    activeUtility: null,
+    isFuelMixVisible: false,
+    // We can keep the fuelMixData in state, no need to clear it.
+  }),
+}));
