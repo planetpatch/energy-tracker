@@ -31,31 +31,51 @@ export type GeoJSONLayerWithData = L.GeoJSON & {
 };
 
 const PLANTS_GEOJSON_PATH = "/EnergyPlants.json"
-const MADISON_BORDERS_GEOJSON_PATH = "/Madison_Borders.geojson"; // Path to the new border file
+//const MADISON_BORDERS_GEOJSON_PATH = "/Madison_Borders.geojson"; // Path to the new border file
+const MGE_BODERS_PATH = "/mge_electric.json"
+const ALLIANT_BORDERS_PATH = "/ae_borders.json"
 
 // Removed all local type definitions here. They are now in src/types.ts.
 
 const defaultZctaStyle = {
   color: "#702963",
-  weight: 3,
+  weight: 1,
   opacity: 0.7,
   fillColor: "#D2042D",
-  fillOpacity: 0.1,
+  fillOpacity: 0.01,
 };
 
 const highlightZctaStyle = {
   weight: 4,
   color: '#666',
   dashArray: '',
-  fillOpacity: 0.5
+  fillOpacity: 0.1
 };
 
 // Style for the Madison border outline
-const madisonBorderStyle = {
-    color: "#0d6efd", // A distinct blue color
+// const madisonBorderStyle = {
+//     color: "#0d6efd", // A distinct blue color
+//     weight: 2,
+//     opacity: 0.9,
+//     fillOpacity: 0.3,
+//     fillColor: "blue",
+//     dashArray: '5, 5' // Dashed line to make it distinct
+// };
+
+const mgeBorderStyle = {
+    color: "green", // A distinct blue color
     weight: 2,
     opacity: 0.9,
-    fillOpacity: 0.05,
+    fillOpacity: 0.3,
+    fillColor: "green",
+    dashArray: '5, 5' // Dashed line to make it distinct
+};
+const alliantBorderStyle = {
+    color: "orange", // A distinct blue color
+    weight: 2,
+    opacity: 0.9,
+    fillOpacity: 0.3,
+    fillColor: "orange",
     dashArray: '5, 5' // Dashed line to make it distinct
 };
 
@@ -82,6 +102,8 @@ const MapComponent: React.FC<MapComponentProps> = ({
   const zctaLayerRef = useRef<GeoJSONLayerWithData | null>(null);
   const plantsLayerRef = useRef<L.GeoJSON | null>(null)
   const madisonBorderLayerRef = useRef<L.GeoJSON | null>(null); // Ref for the new border layer
+  const mgeBorderLayerRef = useRef<L.GeoJSON | null>(null);
+  const alliantBorderLayerRef = useRef<L.GeoJSON | null >(null);
   // Ensure allPlantsRef is Feature[], but its contents will match MyPlantSpecificProperties for plants
   const allPlantsRef = useRef<Feature<Geometry, GeoJsonProperties>[]>([]); // GeoJSON.Feature is the base
   const tooltipRef = useRef<HTMLDivElement | null>(null);
@@ -311,17 +333,37 @@ const MapComponent: React.FC<MapComponentProps> = ({
         tooltipRef.current = tooltipDiv;
 
         // Fetch and add Madison borders layer
-        fetch(MADISON_BORDERS_GEOJSON_PATH)
-            .then(response => {
-                if (!response.ok) {
+        // fetch(MADISON_BORDERS_GEOJSON_PATH)
+        //     .then(response => {
+        //         if (!response.ok) {
+        //             throw new Error(`HTTP error! status: ${response.status}`);
+        //         }
+        //         return response.json();
+        //     })
+        //     .then((data: FeatureCollection) => {
+        //         if (leafletMapRef.current) {
+        //             madisonBorderLayerRef.current = L.geoJSON(data, {
+        //                 style: madisonBorderStyle,
+        //                 interactive: false // Make the layer non-interactive
+        //             }).addTo(leafletMapRef.current);
+        //             console.log("Map: Madison borders layer added.");
+        //         }
+        //     })
+        //     .catch(error => {
+        //         console.error('Error loading Madison Borders GeoJSON:', error);
+        //     });
+        
+        fetch(MGE_BODERS_PATH)
+          .then(response => {
+             if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 return response.json();
             })
             .then((data: FeatureCollection) => {
                 if (leafletMapRef.current) {
-                    madisonBorderLayerRef.current = L.geoJSON(data, {
-                        style: madisonBorderStyle,
+                    mgeBorderLayerRef.current = L.geoJSON(data, {
+                        style: mgeBorderStyle,
                         interactive: false // Make the layer non-interactive
                     }).addTo(leafletMapRef.current);
                     console.log("Map: Madison borders layer added.");
@@ -331,6 +373,25 @@ const MapComponent: React.FC<MapComponentProps> = ({
                 console.error('Error loading Madison Borders GeoJSON:', error);
             });
 
+                fetch(ALLIANT_BORDERS_PATH)
+          .then(response => {
+             if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then((data: FeatureCollection) => {
+                if (leafletMapRef.current) {
+                    alliantBorderLayerRef.current = L.geoJSON(data, {
+                        style: alliantBorderStyle,
+                        interactive: false // Make the layer non-interactive
+                    }).addTo(leafletMapRef.current);
+                    console.log("Map: Madison borders layer added.");
+                }
+            })
+            .catch(error => {
+                console.error('Error loading Madison Borders GeoJSON:', error);
+            });
 
         fetch(PLANTS_GEOJSON_PATH)
           .then(response => {
