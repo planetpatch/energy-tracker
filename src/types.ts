@@ -13,7 +13,6 @@ export interface PlantKnownProperties {
   sectorName?: string | null;
   installedMW?: number | null;
   totalMW?: number | null;
-  // Do NOT include [key: string]: any; here, it will be covered by GeoJsonProperties
 }
 
 // --- Energy Production Plants Types ---
@@ -28,7 +27,8 @@ export type PlantFeatureCollection = FeatureCollection<Point, PlantProperties>;
 // 1. Define an interface for ONLY the specific, known properties of your ZCTA data.
 export interface ZCTAKnownProperties {
   ZCTA5CE10?: string | null;
-  plants?: PlantFeature[];
+  plants: PlantFeature[];
+  serviceAreas: string[];
 }
 // 2. Create a type alias that combines your specific properties with GeoJsonProperties.
 export type ZCTAProperties = ZCTAKnownProperties & GeoJsonProperties;
