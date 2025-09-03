@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Gemunu_Libre  } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -11,6 +11,13 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+const gemunuLibre = Gemunu_Libre({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-gemunu-libre',
+});
+
 
 export const metadata: Metadata = {
   title: "Energy Tracker | PlanetPatch",
@@ -25,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${gemunuLibre.variable} antialiased`}
       >
         {children}
       </body>
