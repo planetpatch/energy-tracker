@@ -32,7 +32,7 @@ const FuelMixPanel: React.FC = () => {
   const activeUtility  = useMapStore((s) => s.activeUtility);
   const fuelMixData    = useMapStore((s) => s.fuelMixData);
   const hidePanel      = useMapStore((s) => s.hideFuelMix);
-  const showPanel = useMapStore((s) => s.showFuelMix);
+  // const showPanel = useMapStore((s) => s.showFuelMix);
 
   
     // const selectedZcta         = useMapStore((s) => s.selectedZcta);

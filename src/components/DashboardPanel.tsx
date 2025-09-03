@@ -29,7 +29,7 @@ const getSourceIconPath = (primarySource?: string | null): string | null => {
 const DashboardPanel: React.FC<DashboardPanelProps> = ({ onZipCodeSubmit }) => {
   // store state
   const isDashboardVisible   = useMapStore((s) => s.isDashboardVisible);
-  const showDashboard        = useMapStore((s) => s.showDashboard);
+  // const showDashboard        = useMapStore((s) => s.showDashboard);
   const hideDashboard        = useMapStore((s) => s.hideDashboard);
 
   const selectedZcta         = useMapStore((s) => s.selectedZcta);
@@ -37,9 +37,9 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({ onZipCodeSubmit }) => {
   const hoveredZcta          = useMapStore((s) => s.hoveredZcta);
   const plantsInHoveredZcta  = useMapStore((s) => s.plantsInHoveredZcta);
   const isZctaVisible        = useMapStore((s) => s.isZctaVisible);
-  const isMgeVisible         = useMapStore((s) => s.isMgeVisible);
-  const isAlliantVisible     = useMapStore((s) => s.isAlliantVisible);
-  const toggleLayerVisibility= useMapStore((s) => s.toggleLayerVisibility);
+  // const isMgeVisible         = useMapStore((s) => s.isMgeVisible);
+  // const isAlliantVisible     = useMapStore((s) => s.isAlliantVisible);
+  // const toggleLayerVisibility= useMapStore((s) => s.toggleLayerVisibility);
 
   // local state
   const [zipCodeInput, setZipCodeInput] = useState<string>("");
