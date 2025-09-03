@@ -3,7 +3,7 @@
 
 // TOOLS IMPORTS
 import type React from "react"
-import { useState, useCallback, useRef, useEffect} from "react"
+import { useCallback, useRef, useEffect} from "react"
 import dynamic from "next/dynamic"
 
 // CUSTOM COMPONENT & FUNCTION IMPORTS
@@ -14,7 +14,7 @@ import { getZctaCodeFromFeature } from '../utils/geo';
 import { useMapStore } from "@/stores/mapStore";
 
 // TYPE IMPORTS
-import type { PlantFeature, ZCTAFeature } from '../types';
+import type { ZCTAFeature } from '../types';
 import type { MapData } from "@/lib/data-loader";
 
 

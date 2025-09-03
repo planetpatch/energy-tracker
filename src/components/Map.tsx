@@ -9,6 +9,9 @@ import type { ZCTAFeature, PlantFeatureCollection, ZCTAFeatureCollection, Border
 import { createPlantMarker } from '../map/icons';
 import { getZctaCodeFromFeature } from '../utils/geo';
 
+type LeafletMapElement = HTMLDivElement & {
+  _leaflet_id?: number;
+}
 // --- (Styles and interfaces remain the same) ---
 const defaultZctaStyle = { color: "#702963", weight: 1, opacity: 0.7, fillColor: "#D2042D", fillOpacity: 0.01 };
 const highlightZctaStyle = { weight: 4, color: '#666', dashArray: '', fillOpacity: 0.1 };
@@ -33,9 +36,9 @@ const MapComponent: React.FC<MapComponentProps> = ({
   mgeBordersData,
   alliantBordersData
 }) => {
-  const mapRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<LeafletMapElement>(null);
   const [map, setMap] = useState<L.Map | null>(null);
-  const leafletMapRef = useRef<L.Map | null>(null);
+  // const leafletMapRef = useRef<L.Map | null>(null);
 
   const zctaLayerRef = useRef<L.GeoJSON | null>(null);
   const plantsLayerRef = useRef<L.GeoJSON | null>(null);
@@ -133,8 +136,8 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
   // --- FIX: Corrected map initialization effect ---
  useEffect(() => {
-    // Check if the map container exists and has NOT been initialized by Leaflet yet
-    if (mapRef.current && !(mapRef.current as any)._leaflet_id) {
+   // Check if the map container exists and has NOT been initialized by Leaflet yet
+    if (mapRef.current && !(mapRef.current._leaflet_id)) {
       const mapInstance = L.map(mapRef.current).setView(initialCenter, initialZoom);
       
       
@@ -169,7 +172,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
       }
     };
   }, [map]);
-  
+
 
   useEffect(() => {
     // --- FIX: Use the ref for the map instance ---

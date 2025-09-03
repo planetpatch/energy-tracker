@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import Image from "next/image";
 
 import { useMapStore } from '@/stores/mapStore';
-import type { ZCTAFeature, PlantFeature } from '../types';
 
 import {
     SOLAR_ICON_PATH, NATURAL_GAS_ICON_PATH, WIND_ICON_PATH,
