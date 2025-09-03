@@ -1,14 +1,12 @@
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import Image from "next/image";
-
 import { useMapStore } from '@/stores/mapStore';
-
 import {
-    SOLAR_ICON_PATH, NATURAL_GAS_ICON_PATH, WIND_ICON_PATH,
-    PETROLEUM_ICON_PATH, COAL_ICON_PATH, INDUSTRIAL_BATTERY_ICON_PATH,
-    HYDROELECTRIC_ICON_PATH
+  SOLAR_ICON_PATH, NATURAL_GAS_ICON_PATH, WIND_ICON_PATH,
+  PETROLEUM_ICON_PATH, COAL_ICON_PATH, INDUSTRIAL_BATTERY_ICON_PATH,
+  HYDROELECTRIC_ICON_PATH
 } from '../map/icon-paths';
 
 interface DashboardPanelProps {
@@ -16,179 +14,132 @@ interface DashboardPanelProps {
 }
 
 const getSourceIconPath = (primarySource?: string | null): string | null => {
-    switch (primarySource) {
-        case "Solar": return SOLAR_ICON_PATH;
-        case "Natural Gas": return NATURAL_GAS_ICON_PATH;
-        case "Wind": return WIND_ICON_PATH;
-        case "Petroleum": return PETROLEUM_ICON_PATH;
-        case "Coal": return COAL_ICON_PATH;
-        case "Battery Storage": return INDUSTRIAL_BATTERY_ICON_PATH;
-        case "Hydroelectric": return HYDROELECTRIC_ICON_PATH;
-        default: return null;
-    }
+  switch (primarySource) {
+    case "Solar": return SOLAR_ICON_PATH;
+    case "Natural Gas": return NATURAL_GAS_ICON_PATH;
+    case "Wind": return WIND_ICON_PATH;
+    case "Petroleum": return PETROLEUM_ICON_PATH;
+    case "Coal": return COAL_ICON_PATH;
+    case "Battery Storage": return INDUSTRIAL_BATTERY_ICON_PATH;
+    case "Hydroelectric": return HYDROELECTRIC_ICON_PATH;
+    default: return null;
+  }
 };
 
 const DashboardPanel: React.FC<DashboardPanelProps> = ({ onZipCodeSubmit }) => {
-  // --- MODIFICATION: Subscribe to each piece of state individually ---
-  // This prevents creating a new object on every render and resolves the warning.
-  const selectedZcta = useMapStore((state) => state.selectedZcta);
-  const plantsInSelectedZcta = useMapStore((state) => state.plantsInSelectedZcta);
-  const hoveredZcta = useMapStore((state) => state.hoveredZcta);
-  const plantsInHoveredZcta = useMapStore((state) => state.plantsInHoveredZcta);
-  const isZctaVisible = useMapStore((state) => state.isZctaVisible);
-  const isMgeVisible = useMapStore((state) => state.isMgeVisible);
-  const isAlliantVisible = useMapStore((state) => state.isAlliantVisible);
+  const activePanel           = useMapStore((state) => state.activePanel);
+  const selectedZcta          = useMapStore((state) => state.selectedZcta);
+  const plantsInSelectedZcta  = useMapStore((state) => state.plantsInSelectedZcta);
+  const isZctaVisible         = useMapStore((state) => state.isZctaVisible);
+  const isMgeVisible          = useMapStore((state) => state.isMgeVisible);
+  const isAlliantVisible      = useMapStore((state) => state.isAlliantVisible);
   const toggleLayerVisibility = useMapStore((state) => state.toggleLayerVisibility);
 
+  if (activePanel !== 'dashboard') return null;
 
-  const [zipCodeInput, setZipCodeInput] = useState<string>("");
-  const [expandedPlantIndex, setExpandedPlantIndex] = useState<number | null>(null);
+  const idZcta = "layer-zcta";
+  const idMge = "layer-mge";
+  const idAlliant = "layer-alliant";
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (zipCodeInput.trim()) {
-      onZipCodeSubmit(zipCodeInput.trim());
-    }
-  };
-
-  const handlePlantClick = (index: number) => {
-    setExpandedPlantIndex(expandedPlantIndex === index ? null : index);
-  };
-
-  const displayZcta = selectedZcta || hoveredZcta;
-  const displayPlants = selectedZcta ? plantsInSelectedZcta : plantsInHoveredZcta;
-  const isHovering = !selectedZcta && hoveredZcta;
-  
   return (
-    <div className="absolute top-5 right-5 z-[1000] flex w-72 max-w-sm flex-col rounded-lg bg-white/95 p-5 shadow-2xl max-h-[calc(100vh-40px)] overflow-y-auto">
-      <h2 className="mb-4 mt-0 border-b border-gray-200 pb-2.5 text-2xl text-gray-800">
-        Energy Dashboard
-      </h2>
-      
-      <form onSubmit={handleSubmit} className="mb-5 border-b border-gray-300 pb-4">
-        <label htmlFor="zip-input" className="block text-sm font-medium text-gray-700">
-          Find by ZIP Code
-        </label>
-        <div className="mt-1 flex rounded-md shadow-sm">
-          <input
-            type="text" id="zip-input" value={zipCodeInput}
-            onChange={(e) => setZipCodeInput(e.target.value)}
-            placeholder="e.g., 53703" maxLength={5}
-            className="block w-full flex-1 rounded-none rounded-l-md border border-gray-300 px-3 py-2 text-black placeholder-gray-500 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          />
-          <button
-            type="submit" disabled={!zipCodeInput.trim()}
-            className="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400"
-          >
-            Go
-          </button>
-        </div>
-      </form>
+    <div
+      id="dashboard-panel"
+      role="region"
+      aria-labelledby="dashboard-title"
+      className="fixed bottom-5 left-5 right-5 z-[1000] md:h-[15vh] h-auto transition-opacity duration-500 ease-in-out animate-fade-in"
+    >
+      <div className="relative w-full h-full bg-white/80 backdrop-blur-md rounded-lg shadow-2xl p-4 pt-4">
+        <div className="flex h-full w-full items-start justify-between gap-6">
 
-      {/* --- Legend and Layer Toggles --- */}
-      <div className="mb-5 border-b border-gray-300 pb-4">
-        <h3 className="text-base font-medium text-gray-800">Map Layers</h3>
-        <div className="mt-2 space-y-2">
-            <div className="flex items-center">
-                <input
-                    id="zcta-toggle" type="checkbox"
-                    checked={isZctaVisible}
-                    onChange={() => toggleLayerVisibility('zcta')}
-                    className="h-4 w-4 rounded border-gray-300 text-indigo-800 focus:ring-indigo-800"
-                />
-                <label htmlFor="zcta-toggle" className="ml-3 block text-sm text-gray-900">
-                    Dane County ZIP Codes
-                </label>
-            </div>
-            <div className="flex items-center">
-                <input
-                    id="mge-toggle" type="checkbox"
-                    checked={isMgeVisible}
-                    onChange={() => toggleLayerVisibility('mge')}
-                    className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
-                />
-                <label htmlFor="mge-toggle" className="ml-3 block text-sm text-gray-900">
-                    MGE Service Area
-                </label>
-            </div>
-            <div className="flex items-center">
-                <input
-                    id="alliant-toggle" type="checkbox"
-                    checked={isAlliantVisible}
-                    onChange={() => toggleLayerVisibility('alliant')}
-                    className="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500"
-                />
-                <label htmlFor="alliant-toggle" className="ml-3 block text-sm text-gray-900">
-                    Alliant Service Area
-                </label>
-            </div>
-        </div>
-      </div>
-      {/* --- END: Legend and Layer Toggles --- */}
-
-      <div className="flex-grow">
-        {displayZcta && isZctaVisible ? (
-          <div>
-            <h3 className={`text-lg font-bold ${isHovering ? 'text-gray-500' : 'text-blue-800'}`}>
-              ZIP Code: {displayZcta.properties?.ZCTA5CE10}
-              {isHovering && <span className="text-sm font-normal"> (Hovering)</span>}
-            </h3>
-            
-            {displayPlants.length === 0 ? (
-                <p className="text-sm text-gray-600 mt-2">No known energy plants in this area.</p>
-            ) : (
-                <ul className="mt-2 list-none space-y-1.5 p-0">
-                    {displayPlants.map((plant, index) => {
-                        const sourceIconPath = getSourceIconPath(plant.properties.primarySource);
-                        return (
-                            <li key={plant.properties.name || `plant-${index}`}>
-                                <div
-                                    onClick={() => handlePlantClick(index)}
-                                    className="flex w-full cursor-pointer items-center rounded bg-blue-600 p-2 text-white transition-colors duration-200 hover:bg-blue-800"
-                                >
-                                    {sourceIconPath && (
-                                        <Image
-                                            src={sourceIconPath} alt={plant.properties.primarySource || 'Energy'}
-                                            width={18} height={18}
-                                            className="mr-3 flex-shrink-0 rounded-full border border-white/50 object-cover"
-                                        />
-                                    )}
-                                    <span className="flex-grow text-left text-sm font-medium">
-                                        {plant.properties.name || 'Unnamed Plant'}
-                                    </span>
-                                </div>
-
-                                {expandedPlantIndex === index && (
-                                    <div className="mt-2 border-t border-gray-200 pt-2 pl-2 text-xs text-black">
-                                        <p><strong>City:</strong> {plant.properties.cityName || 'N/A'}</p>
-                                        <p><strong>Utility:</strong> {plant.properties.utilityName || 'N/A'}</p>
-                                        <p><strong>Sector:</strong> {plant.properties.sectorName || 'N/A'}</p>
-                                        <p><strong>Technology:</strong> {plant.properties.techDesc || 'N/A'}</p>
-                                        <p><strong>Source:</strong> {plant.properties.primarySource || 'N/A'}</p>
-                                        <p><strong>Installed MW:</strong> {plant.properties.installedMW ?? 'N/A'}</p>
-                                        <p><strong>Total MW:</strong> {plant.properties.totalMW ?? 'N/A'}</p>
-                                    </div>
-                                )}
-                            </li>
-                        );
+          <div className="flex-1 h-full overflow-y-auto">
+            {selectedZcta ? (
+              <div>
+                <h3 id="dashboard-title" className="text-base font-bold text-blue-800">
+                  Plants in ZIP: {selectedZcta.properties?.ZCTA5CE10}
+                </h3>
+                {plantsInSelectedZcta.length === 0 ? (
+                  <p className="text-xs text-gray-600 mt-1">No known energy plants in this area.</p>
+                ) : (
+                  <ul className="mt-1 list-none space-y-1 p-0">
+                    {plantsInSelectedZcta.map((plant, index) => {
+                      const sourceIconPath = getSourceIconPath(plant.properties.primarySource);
+                      return (
+                        <li key={plant.properties.name || `plant-${index}`}>
+                          <div className="flex w-full items-center rounded bg-blue-600 p-1 text-white">
+                            {sourceIconPath && (
+                              <Image
+                                src={sourceIconPath}
+                                alt={plant.properties.primarySource || 'Energy'}
+                                width={14}
+                                height={14}
+                                className="mr-2 flex-shrink-0 rounded-full"
+                              />
+                            )}
+                            <span className="flex-grow text-left text-xs font-medium">
+                              {plant.properties.name || 'Unnamed Plant'}
+                            </span>
+                          </div>
+                        </li>
+                      );
                     })}
-                </ul>
+                  </ul>
+                )}
+              </div>
+            ) : (
+              <div className="flex h-full items-center justify-center">
+                <p className="text-center text-sm text-gray-500">
+                  Click a ZIP code on the map<br />to see plant details.
+                </p>
+              </div>
             )}
           </div>
-        ) : (
-          <div className="flex h-full items-center justify-center pt-10">
-            <p className="text-center text-gray-500">
-              {isZctaVisible 
-                ? "Click or hover on a ZIP code to see energy plant details."
-                : "Enable the 'ZIP Code Areas' layer to view plant details."
-              }
-            </p>
+
+          <div className="w-1/4 max-w-xs h-full border-l border-gray-200 pl-8">
+            <h3 className="text-sm font-medium text-gray-600 mb-2">Map Layers</h3>
+            <div className="space-y-1">
+              <div className="flex items-center text-xs">
+                <input
+                  id={idZcta}
+                  type="checkbox"
+                  checked={isZctaVisible}
+                  onChange={() => toggleLayerVisibility('zcta')}
+                  className="h-3 w-3 rounded-sm border-gray-300 text-purple-600 focus:ring-purple-500"
+                />
+                <label htmlFor={idZcta} className="ml-2 text-gray-800 cursor-pointer">
+                  ZIP Code Areas
+                </label>
+              </div>
+              <div className="flex items-center text-xs">
+                <input
+                  id={idMge}
+                  type="checkbox"
+                  checked={isMgeVisible}
+                  onChange={() => toggleLayerVisibility('mge')}
+                  className="h-3 w-3 rounded-sm border-gray-300 text-green-600 focus:ring-green-500"
+                />
+                <label htmlFor={idMge} className="ml-2 text-gray-800 cursor-pointer">
+                  MGE Service Area
+                </label>
+              </div>
+              <div className="flex items-center text-xs">
+                <input
+                  id={idAlliant}
+                  type="checkbox"
+                  checked={isAlliantVisible}
+                  onChange={() => toggleLayerVisibility('alliant')}
+                  className="h-3 w-3 rounded-sm border-gray-300 text-orange-500 focus:ring-orange-500"
+                />
+                <label htmlFor={idAlliant} className="ml-2 text-gray-800 cursor-pointer">
+                  Alliant Service Area
+                </label>
+              </div>
+            </div>
           </div>
-        )}
+
+        </div>
       </div>
     </div>
   );
 };
 
 export default DashboardPanel;
-
