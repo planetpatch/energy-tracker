@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import { useMapStore } from '@/stores/mapStore';
 import type { MapData } from '@/lib/data-loader';
+import { modernButtonBase, donateButtonStyles } from '@/ui/buttons';
+import { gemunuLibre } from '@/ui/fonts';
 
 interface WelcomeModalProps {
   onStartTracking: (location: string) => void;
@@ -77,12 +79,12 @@ export default function WelcomeModal({ onStartTracking, mapData }: WelcomeModalP
                 onChange={(e) => setLocationInput(e.target.value)}
                 placeholder="e.g., 53703"
                 maxLength={5}
-                className="w-full rounded-md border border-gray-300 px-4 py-2 mb-4 text-black transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                className={`w-full text-black mb-4 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 ${gemunuLibre.className}`}
               />
               <button
                 type="submit"
                 disabled={!locationInput.trim()}
-                className="w-full rounded-md bg-blue-600 py-2 px-4 font-bold text-white transition-colors duration-300 hover:bg-blue-700 disabled:bg-gray-400"
+                className={`w-full font-gemunu ${modernButtonBase} ${donateButtonStyles}`}
               >
                 Track My Energy
               </button>
@@ -127,17 +129,16 @@ export default function WelcomeModal({ onStartTracking, mapData }: WelcomeModalP
                       {provider === 'Both' ? 'Not Sure' : provider}
                     </span>
                   </label>
-                ))}
+                              ))}
               </div>
               <button
                 type="submit"
                 disabled={!selectedProvider}
-                className="w-full rounded-md bg-blue-600 py-2 px-4 font-bold text-white transition-colors duration-300 hover:bg-blue-700 disabled:bg-gray-400"
+                className={`w-full font-gemunu ${modernButtonBase} ${donateButtonStyles}`}
               >
                 Continue
               </button>
             </form>
-
             {/* Keep skip here, too */}
             <p className="mt-3 text-xs text-gray-500 text-center">
               Prefer to browse?{' '}
