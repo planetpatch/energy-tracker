@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from "next/image";
 import { useMapStore } from '@/stores/mapStore';
 import {
@@ -35,7 +35,8 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({ onZipCodeSubmit }) => {
   const selectedZcta         = useMapStore((s) => s.selectedZcta);
   const plantsInSelectedZcta = useMapStore((s) => s.plantsInSelectedZcta);
   const hoveredZcta          = useMapStore((s) => s.hoveredZcta);
-  const plantsInHoveredZcta  = useMapStore((s) => s.plantsInHoveredZcta);
+  const plantsInHoveredZcta = useMapStore((s) => s.plantsInHoveredZcta);
+  const selectedPlant        = useMapStore((s) => s.selectedPlant);
   const isZctaVisible        = useMapStore((s) => s.isZctaVisible);
   // const isMgeVisible         = useMapStore((s) => s.isMgeVisible);
   // const isAlliantVisible     = useMapStore((s) => s.isAlliantVisible);
@@ -44,7 +45,15 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({ onZipCodeSubmit }) => {
   // local state
   const [zipCodeInput, setZipCodeInput] = useState<string>("");
   const [expandedPlantIndex, setExpandedPlantIndex] = useState<number | null>(null);
+  const [isPlantPanelVisible, setIsPlantPanelVisible] = useState<boolean>(true);
 
+
+    useEffect(() => {
+    if (selectedPlant) {
+      setIsPlantPanelVisible(true);
+    }
+    }, [selectedPlant]);
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (zipCodeInput.trim()) {
@@ -109,47 +118,33 @@ if (!isDashboardVisible) return null;
         </div>
       </form>
 
-      {/* Legend and Layer Toggles */}
-      {/* <div className="mb-5 border-b border-gray-300 pb-4">
-        <h3 className="text-base font-medium text-gray-800">Legend</h3>
-        <p className="text-sm text-gray-600">Click Checkbox below to turn map layer on and off </p>
-        <div className="mt-2 space-y-2">
-          <div className="flex items-center">
-            <input
-              id="zcta-toggle" type="checkbox"
-              checked={isZctaVisible}
-              onChange={() => toggleLayerVisibility('zcta')}
-              className="h-4 w-4 rounded border-gray-300 text-indigo-800 focus:ring-indigo-800"
-            />
-            <label htmlFor="zcta-toggle" className="ml-3 block text-sm text-gray-900">
-              Dane County ZIP Codes
-            </label>
+     {selectedPlant && isPlantPanelVisible && (
+ <div className="mb-5 border-b border-gray-300 pb-4">
+          <div className="flex items-center justify-between border-b border-gray-200 pb-2.5">
+            <h3 className="text-lg font-bold text-green-800">Selected Plant</h3>
+            <button
+              onClick={() => setIsPlantPanelVisible(false)}
+              className="p-1 rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-800"
+              aria-label="Close selected plant panel"
+              type="button"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
-          <div className="flex items-center">
-            <input
-              id="mge-toggle" type="checkbox"
-              checked={isMgeVisible}
-              onChange={() => toggleLayerVisibility('mge')}
-              className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
-            />
-            <label htmlFor="mge-toggle" className="ml-3 block text-sm text-gray-900">
-              MGE Service Area
-            </label>
-          </div>
-          <div className="flex items-center">
-            <input
-              id="alliant-toggle" type="checkbox"
-              checked={isAlliantVisible}
-              onChange={() => toggleLayerVisibility('alliant')}
-              className="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500"
-            />
-            <label htmlFor="alliant-toggle" className="ml-3 block text-sm text-gray-900">
-              Alliant Service Area
-            </label>
+          <div className="mt-2 pt-2 pl-2 text-xs text-black">
+              <p><strong>Name:</strong> {selectedPlant.properties.name || 'N/A'}</p>
+              <p><strong>City:</strong> {selectedPlant.properties.cityName || 'N/A'}</p>
+              <p><strong>Utility:</strong> {selectedPlant.properties.utilityName || 'N/A'}</p>
+              <p><strong>Sector:</strong> {selectedPlant.properties.sectorName || 'N/A'}</p>
+              <p><strong>Technology:</strong> {selectedPlant.properties.techDesc || 'N/A'}</p>
+              <p><strong>Source:</strong> {selectedPlant.properties.primarySource || 'N/A'}</p>
+              <p><strong>Installed MW:</strong> {selectedPlant.properties.installedMW ?? 'N/A'}</p>
+              <p><strong>Total MW:</strong> {selectedPlant.properties.totalMW ?? 'N/A'}</p>
           </div>
         </div>
-      </div> */}
-
+      )}
       {/* ZCTA / Plants */}
       <div className="flex-grow">
         {displayZcta && isZctaVisible ? (

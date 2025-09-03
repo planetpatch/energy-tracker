@@ -5,7 +5,7 @@ import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 import { useMapStore } from "@/stores/mapStore";
-import type { ZCTAFeature, PlantFeatureCollection, ZCTAFeatureCollection, BorderFeatureCollection } from '../types';
+import type { ZCTAFeature, PlantFeatureCollection, ZCTAFeatureCollection, BorderFeatureCollection, PlantFeature } from '../types';
 import { createPlantMarker } from '../map/icons';
 import { getZctaCodeFromFeature } from '../utils/geo';
 
@@ -38,7 +38,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
 }) => {
   const mapRef = useRef<LeafletMapElement>(null);
   const [map, setMap] = useState<L.Map | null>(null);
-  // const leafletMapRef = useRef<L.Map | null>(null);
+  const { selectPlant } = useMapStore();
 
   const zctaLayerRef = useRef<L.GeoJSON | null>(null);
   const plantsLayerRef = useRef<L.GeoJSON | null>(null);
@@ -58,6 +58,14 @@ const MapComponent: React.FC<MapComponentProps> = ({
   // useEffect(() => {
   //   programmaticZctaFeatureRef.current = programmaticZctaFeature;
   // }, [programmaticZctaFeature]);
+
+    const onEachPlantFeature = (feature: PlantFeature, layer: L.Layer) => {
+    layer.on({
+      click: () => {
+        selectPlant(feature);
+      },
+    });
+  };
   
   const onEachZCTAFeature = useCallback((feature: ZCTAFeature, layer: L.Layer) => {
     const { selectZcta, hoverZcta, clearProgrammaticFeature, clearSelection } = useMapStore.getState();
@@ -199,10 +207,13 @@ const MapComponent: React.FC<MapComponentProps> = ({
     }
 
     if (plantsData) {
-      plantsLayerRef.current = L.geoJSON(plantsData, { pointToLayer: createPlantMarker }).addTo(map);
+      plantsLayerRef.current = L.geoJSON(plantsData, { 
+        pointToLayer: createPlantMarker,
+        onEachFeature: onEachPlantFeature 
+      }).addTo(map);
     }
     // Add `map` to the dependency array
-  }, [map, plantsData, mgeBordersData, alliantBordersData, zctaGeojsonData, onEachZCTAFeature, isZctaVisible, isMgeVisible, isAlliantVisible]);
+  }, [map, plantsData, mgeBordersData, alliantBordersData, zctaGeojsonData, onEachZCTAFeature, isZctaVisible, isMgeVisible, isAlliantVisible, selectPlant]);
   
   return <div id="map" ref={mapRef} className="h-full w-full"></div>;
 }

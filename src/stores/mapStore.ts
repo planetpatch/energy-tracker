@@ -14,7 +14,8 @@ interface MapState {
   hoveredZcta: ZCTAFeature | null;
   plantsInHoveredZcta: PlantFeature[];
   programmaticZctaFeature: ZCTAFeature | null;
-
+  selectedPlant: PlantFeature | null;
+  
   // Map layer visibility
   isZctaVisible: boolean;
   isMgeVisible: boolean;
@@ -35,7 +36,7 @@ interface MapActions {
   setProgrammaticSelection: (feature: ZCTAFeature | null) => void;
   clearProgrammaticFeature: () => void;
   clearSelection: () => void;
-
+selectPlant: (plant: PlantFeature) => void;
   toggleLayerVisibility: (layerName: 'zcta' | 'mge' | 'alliant') => void;
 
   showFuelMixForProvider: (provider: 'MGE' | 'Alliant' | 'Both', data: FuelMix) => void;
@@ -53,6 +54,7 @@ export const useMapStore = create<MapState & MapActions>((set, get) => ({
   hoveredZcta: null,
   plantsInHoveredZcta: [],
   programmaticZctaFeature: null,
+  selectedPlant: null,
 
   isZctaVisible: true,
   isMgeVisible: true,
@@ -71,6 +73,7 @@ export const useMapStore = create<MapState & MapActions>((set, get) => ({
     plantsInSelectedZcta: plants,
     hoveredZcta: null,
     plantsInHoveredZcta: [],
+    selectedPlant: null,
   }),
   
   hoverZcta: (feature, plants) => {
@@ -92,6 +95,7 @@ export const useMapStore = create<MapState & MapActions>((set, get) => ({
 
   clearProgrammaticFeature: () => set({ programmaticZctaFeature: null }),
   clearSelection: () => set({ selectedZcta: null, plantsInSelectedZcta: [] }),
+  selectPlant: (plant) => set({selectedPlant: plant}),
 
   toggleLayerVisibility: (layerName) => set((state) => {
     switch (layerName) {

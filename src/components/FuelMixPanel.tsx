@@ -112,7 +112,7 @@ const FuelMixPanel: React.FC = () => {
           <div className="col-span-12 sm:col-span-3 overflow-y-auto min-h-0">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
               {/* Legend (right in the inner grid on sm+) */}
-              <div className="sm:order-2 sm:border-l border-gray-200 sm:pl-4">
+              <div className="sm:order-1 sm:border-l border-gray-200 sm:pl-4">
                 <h3 className="text-sm font-medium text-gray-600 mb-1">Legend</h3>
                 <div className="mt-2 space-y-2">
                   <div className="flex items-center">
@@ -155,7 +155,7 @@ const FuelMixPanel: React.FC = () => {
               </div>
 
               {/* Toggle Progress Bar View (left in the inner grid on sm+) */}
-              <div className="sm:order-1">
+              <div className="sm:order-2">
                 <h3 className="text-sm font-medium text-gray-600 mb-2">Toggle Progress Bar View</h3>
                 <div className="space-y-2">
                   <label className="flex items-center cursor-pointer text-sm">
