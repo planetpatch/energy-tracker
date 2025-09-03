@@ -208,4 +208,3 @@ const MapComponent: React.FC<MapComponentProps> = ({
 }
 
 export default React.memo(MapComponent);
-

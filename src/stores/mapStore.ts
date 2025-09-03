@@ -1,15 +1,12 @@
 import { create } from 'zustand';
 import type { ZCTAFeature, PlantFeature } from '../types';
 
-// --- Stronger types ---
-export type Provider = 'MGE' | 'Alliant';
-export type ActiveUtility = Provider | 'Both' | null;
-
-interface FuelMixEntry {
-  renewable_percent: number;
-  non_renewable_percent: number;
+interface FuelMix {
+  [key: string]: {
+    renewable_percent: number;
+    non_renewable_percent: number;
+  };
 }
-export type FuelMix = Partial<Record<Provider, FuelMixEntry>>;
 
 interface MapState {
   selectedZcta: ZCTAFeature | null;
@@ -18,14 +15,18 @@ interface MapState {
   plantsInHoveredZcta: PlantFeature[];
   programmaticZctaFeature: ZCTAFeature | null;
 
-  // Layer visibility
+  // Map layer visibility
   isZctaVisible: boolean;
   isMgeVisible: boolean;
   isAlliantVisible: boolean;
 
-  activeUtility: ActiveUtility;
+  // Fuel mix panel state
+  activeUtility: 'MGE' | 'Alliant' | 'Both' | null;
   fuelMixData: FuelMix | null;
-  activePanel: 'dashboard' | 'fuelMix' | null;
+  isFuelMixVisible: boolean;
+
+  // Dashboard panel visibility
+  isDashboardVisible: boolean;
 }
 
 interface MapActions {
@@ -36,8 +37,13 @@ interface MapActions {
   clearSelection: () => void;
 
   toggleLayerVisibility: (layerName: 'zcta' | 'mge' | 'alliant') => void;
-  showFuelMixForProvider: (provider: ActiveUtility, data: FuelMix) => void;
-  togglePanel: (panel: 'dashboard' | 'fuelMix') => void;
+
+  showFuelMixForProvider: (provider: 'MGE' | 'Alliant' | 'Both', data: FuelMix) => void;
+  showFuelMix: () => void;
+  hideFuelMix: () => void;
+
+  showDashboard: () => void;
+  hideDashboard: () => void;
 }
 
 export const useMapStore = create<MapState & MapActions>((set, get) => ({
@@ -48,24 +54,25 @@ export const useMapStore = create<MapState & MapActions>((set, get) => ({
   plantsInHoveredZcta: [],
   programmaticZctaFeature: null,
 
-  // Default visibility
   isZctaVisible: true,
   isMgeVisible: true,
   isAlliantVisible: true,
 
   activeUtility: null,
   fuelMixData: null,
-  activePanel: null,
+  isFuelMixVisible: false,
 
-  // --- ACTIONS ---
-  selectZcta: (feature, plants) =>
-    set({
-      selectedZcta: feature,
-      plantsInSelectedZcta: plants,
-      hoveredZcta: null,
-      plantsInHoveredZcta: [],
-    }),
+  // NEW: dashboard visibility (default visible)
+  isDashboardVisible: true,
 
+  // --- ACTIONS IMPLEMENTATION ---
+  selectZcta: (feature, plants) => set({
+    selectedZcta: feature,
+    plantsInSelectedZcta: plants,
+    hoveredZcta: null,
+    plantsInHoveredZcta: [],
+  }),
+  
   hoverZcta: (feature, plants) => {
     if (!get().selectedZcta) {
       set({
@@ -75,41 +82,40 @@ export const useMapStore = create<MapState & MapActions>((set, get) => ({
     }
   },
 
-  setProgrammaticSelection: (feature) =>
-    set({
-      programmaticZctaFeature: feature,
-      selectedZcta: feature,
-      plantsInSelectedZcta: feature?.properties.plants || [],
-      hoveredZcta: null,
-      plantsInHoveredZcta: [],
-    }),
+  setProgrammaticSelection: (feature) => set({
+    programmaticZctaFeature: feature,
+    selectedZcta: feature,
+    plantsInSelectedZcta: feature?.properties.plants || [],
+    hoveredZcta: null,
+    plantsInHoveredZcta: [],
+  }),
 
   clearProgrammaticFeature: () => set({ programmaticZctaFeature: null }),
   clearSelection: () => set({ selectedZcta: null, plantsInSelectedZcta: [] }),
 
-  toggleLayerVisibility: (layerName) =>
-    set((state) => {
-      switch (layerName) {
-        case 'zcta':
-          return { isZctaVisible: !state.isZctaVisible };
-        case 'mge':
-          return { isMgeVisible: !state.isMgeVisible };
-        case 'alliant':
-          return { isAlliantVisible: !state.isAlliantVisible };
-        default:
-          return {};
-      }
-    }),
+  toggleLayerVisibility: (layerName) => set((state) => {
+    switch (layerName) {
+      case 'zcta':    return { isZctaVisible: !state.isZctaVisible };
+      case 'mge':     return { isMgeVisible: !state.isMgeVisible };
+      case 'alliant': return { isAlliantVisible: !state.isAlliantVisible };
+      default:        return {};
+    }
+  }),
 
-  showFuelMixForProvider: (provider, data) =>
-    set({
-      activeUtility: provider,
-      fuelMixData: data,
-      activePanel: 'fuelMix',
-    }),
+  showFuelMixForProvider: (provider, data) => set({
+    activeUtility: provider,
+    fuelMixData: data,
+    isFuelMixVisible: true,
+  }),
 
-  togglePanel: (panel) => {
-    const { activePanel } = get();
-    set({ activePanel: activePanel === panel ? null : panel });
-  },
+  showFuelMix: () => set({ isFuelMixVisible: true }),
+  hideFuelMix: () => set({
+    activeUtility: null,
+    isFuelMixVisible: false,
+    // keep fuelMixData cached
+  }),
+
+  // NEW: dashboard show/hide
+  showDashboard: () => set({ isDashboardVisible: true }),
+  hideDashboard: () => set({ isDashboardVisible: false }),
 }));
