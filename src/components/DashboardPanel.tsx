@@ -110,9 +110,9 @@ if (!isDashboardVisible) return null;
       </form>
 
       {/* Legend and Layer Toggles */}
-      <div className="mb-5 border-b border-gray-300 pb-4">
+      {/* <div className="mb-5 border-b border-gray-300 pb-4">
         <h3 className="text-base font-medium text-gray-800">Legend</h3>
-        <p className="text-sm text-gray-600">Click Checkbox below to turn map layers on and off </p>
+        <p className="text-sm text-gray-600">Click Checkbox below to turn map layer on and off </p>
         <div className="mt-2 space-y-2">
           <div className="flex items-center">
             <input
@@ -148,7 +148,7 @@ if (!isDashboardVisible) return null;
             </label>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* ZCTA / Plants */}
       <div className="flex-grow">

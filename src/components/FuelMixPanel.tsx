@@ -32,7 +32,18 @@ const FuelMixPanel: React.FC = () => {
   const activeUtility  = useMapStore((s) => s.activeUtility);
   const fuelMixData    = useMapStore((s) => s.fuelMixData);
   const hidePanel      = useMapStore((s) => s.hideFuelMix);
-  const showPanel      = useMapStore((s) => s.showFuelMix);
+  const showPanel = useMapStore((s) => s.showFuelMix);
+
+  
+    // const selectedZcta         = useMapStore((s) => s.selectedZcta);
+    // const plantsInSelectedZcta = useMapStore((s) => s.plantsInSelectedZcta);
+    // const hoveredZcta          = useMapStore((s) => s.hoveredZcta);
+    // const plantsInHoveredZcta  = useMapStore((s) => s.plantsInHoveredZcta);
+    const isZctaVisible        = useMapStore((s) => s.isZctaVisible);
+    const isMgeVisible         = useMapStore((s) => s.isMgeVisible);
+    const isAlliantVisible     = useMapStore((s) => s.isAlliantVisible);
+  const toggleLayerVisibility = useMapStore((s) => s.toggleLayerVisibility);
+  
 
   // local UI state
   const [showMge, setShowMge] = useState(true);
@@ -107,29 +118,83 @@ if (!isVisible) return null;
         {/* Content */}
         <div className="grid grid-cols-12 gap-6 px-4 pb-4 h-[calc(100%-50px)]">
           {/* Legend / toggles */}
-          <div className="col-span-12 sm:col-span-3 overflow-y-auto">
-            <h3 className="text-sm font-medium text-gray-600 mb-2">Toggle View</h3>
-            <div className="space-y-2">
-              <label className="flex items-center cursor-pointer text-sm">
-                <input
-                  type="checkbox"
-                  checked={showMge}
-                  onChange={() => setShowMge(!showMge)}
-                  className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
-                />
-                <span className="ml-2 text-gray-800">MGE</span>
-              </label>
-              <label className="flex items-center cursor-pointer text-sm">
-                <input
-                  type="checkbox"
-                  checked={showAlliant}
-                  onChange={() => setShowAlliant(!showAlliant)}
-                  className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <span className="ml-2 text-gray-800">Alliant Energy</span>
-              </label>
-            </div>
-          </div>
+{/* Legend / toggles (REPLACE THIS WHOLE BLOCK) */}
+<div className="col-span-12 sm:col-span-3 overflow-y-auto">
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
+    {/* Toggle Progress Bar View (left) */}
+
+
+    {/* Legend (right, reused from Dashboard) */}
+    <div className="sm:border-l border-gray-200 sm:pl-4">
+      <h3 className="text-sm font-medium text-gray-600 mb-1">Legend</h3>
+      <div className="mt-2 space-y-2">
+        <div className="flex items-center">
+          <input
+            id="zcta-toggle-fm"
+            type="checkbox"
+            checked={isZctaVisible}
+            onChange={() => toggleLayerVisibility('zcta')}
+            className="h-4 w-4 rounded border-gray-300 text-indigo-800 focus:ring-indigo-800"
+          />
+          <label htmlFor="zcta-toggle-fm" className="ml-3 block text-sm text-gray-900">
+            Dane County ZIP Codes
+          </label>
+        </div>
+        <div className="flex items-center">
+          <input
+            id="mge-toggle-fm"
+            type="checkbox"
+            checked={isMgeVisible}
+            onChange={() => toggleLayerVisibility('mge')}
+            className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+          />
+          <label htmlFor="mge-toggle-fm" className="ml-3 block text-sm text-gray-900">
+            MGE Service Area
+          </label>
+        </div>
+        <div className="flex items-center">
+          <input
+            id="alliant-toggle-fm"
+            type="checkbox"
+            checked={isAlliantVisible}
+            onChange={() => toggleLayerVisibility('alliant')}
+            className="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+          />
+          <label htmlFor="alliant-toggle-fm" className="ml-3 block text-sm text-gray-900">
+            Alliant Service Area
+          </label>
+        </div>
+      </div>
+              </div>
+              
+                  <div>
+      <h3 className="text-sm font-medium text-gray-600 mb-2">Toggle Progress Bar View</h3>
+      <div className="space-y-2">
+        <label className="flex items-center cursor-pointer text-sm">
+          <input
+            type="checkbox"
+            checked={showMge}
+            onChange={() => setShowMge(!showMge)}
+            className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+          />
+          <span className="ml-2 text-gray-800">MGE</span>
+        </label>
+        <label className="flex items-center cursor-pointer text-sm">
+          <input
+            type="checkbox"
+            checked={showAlliant}
+            onChange={() => setShowAlliant(!showAlliant)}
+            className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+          />
+          <span className="ml-2 text-gray-800">Alliant Energy</span>
+        </label>
+      </div>
+              </div>
+              
+  </div>
+</div>
+
+
 
           {/* Bars */}
           <div className="col-span-12 sm:col-span-6 border-x border-gray-200 px-4 overflow-y-auto">
