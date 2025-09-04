@@ -6,7 +6,6 @@ import MapAndDashboardWrapper from '@/components/MapAndDashboardWrapper';
 import FuelMixPanel from '@/components/FuelMixPanel';
 import type { MapData } from '@/lib/data-loader';
 import { useMapStore } from '@/stores/mapStore';
-import { gemunuLibre } from '@/ui/fonts';
 
 const WelcomeModal = dynamic(() => import('@/components/WelcomeModal'), {
   ssr: false

@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { useMapStore } from '@/stores/mapStore';
 import type { MapData } from '@/lib/data-loader';
-import { modernButtonBase, donateButtonStyles } from '@/ui/buttons';
 import { gemunuLibre } from '@/ui/fonts';
 
 interface WelcomeModalProps {
