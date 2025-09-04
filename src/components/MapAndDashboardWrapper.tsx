@@ -102,7 +102,7 @@ const MapAndDashboardWrapper: React.FC<MapAndDashboardWrapperProps> = ({ initial
   // );
 
   return (
-    <div className="relative flex w-full flex-col h-[calc(100vh-4rem)]">
+    <div className="relative flex w-full flex-col h-[calc(100vh)]">
       <div className="w-full flex-grow">
         <DynamicMapComponent
           // onFeatureClick={handleZCTAClick}

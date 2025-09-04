@@ -6,6 +6,7 @@ import MapAndDashboardWrapper from '@/components/MapAndDashboardWrapper';
 import FuelMixPanel from '@/components/FuelMixPanel';
 import type { MapData } from '@/lib/data-loader';
 import { useMapStore } from '@/stores/mapStore';
+import { gemunuLibre } from '@/ui/fonts';
 
 const WelcomeModal = dynamic(() => import('@/components/WelcomeModal'), {
   ssr: false
@@ -54,10 +55,10 @@ export default function AppShell({ mapData }: AppShellProps) {
 
       {/* Fixed, translucent header pill */}
       <h1
-        className="fixed top-3 left-1/2 -translate-x-1/2 z-[1001]
-                   text-2xl font-bold text-center
+        className={`fixed top-3 left-1/2 -translate-x-1/2 z-[1001]
+                   text-4xl font-bold text-center text-green-800
                    bg-white/90 backdrop-blur-md border border-gray-200
-                   px-4 py-2 rounded-md shadow-lg"
+                   px-4 py-2 rounded-md shadow-lg ${gemunuLibre.className}`}
       >
         Energy Tracker
       </h1>

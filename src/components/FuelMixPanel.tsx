@@ -95,7 +95,7 @@ const FuelMixPanel: React.FC = () => {
  <div 
         className="w-full h-full p-1"
         style={{
-          backgroundColor: 'var(--panel-background)',
+          backgroundColor: '#fef',
           border: '4px solid var(--border-color)',
           color: 'var(--foreground)'
         }}
