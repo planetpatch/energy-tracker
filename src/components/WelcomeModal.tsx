@@ -84,7 +84,7 @@ export default function WelcomeModal({ onStartTracking, mapData }: WelcomeModalP
               <button
                 type="submit"
                 disabled={!locationInput.trim()}
-                className={`w-full font-gemunu ${modernButtonBase} ${donateButtonStyles}`}
+                 className="font-gemunu pixel-button-base pixel-button-primary"
               >
                 Track My Energy
               </button>
@@ -134,7 +134,7 @@ export default function WelcomeModal({ onStartTracking, mapData }: WelcomeModalP
               <button
                 type="submit"
                 disabled={!selectedProvider}
-                className={`w-full font-gemunu ${modernButtonBase} ${donateButtonStyles}`}
+                className="font-gemunu pixel-button-base pixel-button-primary"
               >
                 Continue
               </button>
