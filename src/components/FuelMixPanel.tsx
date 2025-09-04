@@ -92,30 +92,36 @@ const FuelMixPanel: React.FC = () => {
       role="region"
       aria-label="Fuel mix panel"
     >
-      <div className="w-full h-full bg-white/90 backdrop-blur-md rounded-xl shadow-2xl">
+ <div 
+        className="w-full h-full p-1"
+        style={{
+          backgroundColor: 'var(--panel-background)',
+          border: '4px solid var(--border-color)',
+          color: 'var(--foreground)'
+        }}
+      >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 pt-3 pb-2">
-          <h2 className="text-base font-semibold text-gray-800">Renewable vs. Non-Renewable Fuel Mix</h2>
-          <button
+{/* <div className="flex items-center justify-between px-4 border-b-2 border-[var(--border-color)]">
+          <h2 className={`text-xl ${gemunuLibre.className} font-sans`}>Fuel Mix</h2>
+        </div> */}
+                  <button
             onClick={hidePanel}
-            className="p-1 rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-800"
+            className="w-6 h-6 bg-red-500 text-white font-bold border-2 border-green-800 flex items-center justify-center hover:bg-red-400"
             aria-label="Close fuel mix panel"
             type="button"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
+            X
+        </button>
+        
 
         {/* Content (no scrollbars in the bars column) */}
-        <div className="grid grid-cols-12 gap-6 px-4 pb-3 h-[calc(100%-50px)] min-h-0">
+          <div className="grid grid-cols-12 gap-6 pb-3 h-[calc(100%-40px)] min-h-0">
           {/* Legend + Toggle View (left column) */}
-          <div className="col-span-12 sm:col-span-3 overflow-y-auto min-h-0">
+          <div className="col-span-12 sm:col-span-3 min-h-0">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
               {/* Legend (right in the inner grid on sm+) */}
               <div className="sm:order-1 sm:border-l border-gray-200 sm:pl-4">
-                <h3 className="text-sm font-medium text-gray-600 mb-1">Legend</h3>
+                <h3 className={`text-xl font-gemunu font-medium text-green-800 text-center ${gemunuLibre.className}`}>Legend</h3>
                 <div className="mt-2 space-y-2">
                   <div className="flex items-center">
                     <input
@@ -123,9 +129,10 @@ const FuelMixPanel: React.FC = () => {
                       type="checkbox"
                       checked={isZctaVisible}
                       onChange={() => toggleLayerVisibility('zcta')}
-                      className="h-4 w-4 rounded border-gray-300 text-indigo-800 focus:ring-indigo-800"
+                      className="h-4 w-4 border-2 border-[var(--border-color)] text-green-600 focus:ring-offset-0 focus:ring-0"
+                      style={{ backgroundColor: 'var(--background)' }}
                     />
-                    <label htmlFor="zcta-toggle-fm" className="ml-3 block text-sm text-gray-900">
+                    <label htmlFor="zcta-toggle-fm" className="ml-3 block text-sm" style={{ color: 'var(--foreground)' }}>
                       Dane County ZIP Codes
                     </label>
                   </div>
@@ -137,7 +144,7 @@ const FuelMixPanel: React.FC = () => {
                       onChange={() => toggleLayerVisibility('mge')}
                       className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
                     />
-                    <label htmlFor="mge-toggle-fm" className="ml-3 block text-sm text-gray-900">
+                  <label htmlFor="zcta-toggle-fm" className="ml-3 block text-sm" style={{ color: 'var(--foreground)' }}>
                       MGE Service Area
                     </label>
                   </div>
@@ -158,7 +165,7 @@ const FuelMixPanel: React.FC = () => {
 
               {/* Toggle Progress Bar View (left in the inner grid on sm+) */}
               <div className="sm:order-2">
-                <h3 className="text-sm font-medium text-gray-600 mb-2">Toggle Progress Bar View</h3>
+                <h3 className={`text-xl font-gemunu font-medium text-green-800 text-center ${gemunuLibre.className}`}>Toggle Progress Bar View</h3>
                 <div className="space-y-2">
                   <label className="flex items-center cursor-pointer text-sm">
                     <input
@@ -185,6 +192,7 @@ const FuelMixPanel: React.FC = () => {
 
           {/* Bars (center column) — no vertical scroll */}
           <div className="col-span-12 sm:col-span-6 border-x border-gray-200 px-4 overflow-y-hidden min-h-0">
+              <h3 className={`text-xl font-gemunu font-medium text-green-800 text-center ${gemunuLibre.className}`}> Renewable vs. Non Renewable Progress  </h3>
             {fuelMixData && (
               <>
                 {showMge && fuelMixData.MGE && (
@@ -207,9 +215,9 @@ const FuelMixPanel: React.FC = () => {
 
           {/* Actions (right column) */}
  <div className="col-span-12 sm:col-span-3 overflow-y-auto min-h-0">
-            <h3 className={`text-2xl font-gemunu font-medium text-green-800 mb-2 text-center ${gemunuLibre.className}`}>Take Action! </h3>
+            <h3 className={`text-xl font-gemunu font-medium text-green-800 text-center mb-2 ${gemunuLibre.className}`}>Take Action! </h3>
             <div className="flex flex-col space-y-2">
-              <div className="flex justify-center items-center">
+              <div className="flex justify-center items-center mr-6 mb-3">
                                 <div
                   ref={focusInfoRef}
                   onMouseEnter={() =>
@@ -235,13 +243,13 @@ const FuelMixPanel: React.FC = () => {
                   href="https://focusonenergy.com/residential/simple-energy-efficiency"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-3/4 text-center text-xs font-gemunu pixel-button-base pixel-button-primary"
+                  className="w-1/2 text-center text-xs font-gemunu pixel-button-base pixel-button-primary"
                 >
-                  Free Focus on Energy Box
+                  Free Energy Box
                 </a>
               </div>
 
-             <div className="flex justify-center items-center">
+             <div className="flex justify-center items-center mr-6">
                                 <div
                   ref={commentInfoRef}
                   onMouseEnter={() =>
@@ -265,7 +273,7 @@ const FuelMixPanel: React.FC = () => {
                   href="https://psc.wi.gov/Pages/PublicParticipation/PublicComments.aspx"
                   target="_blank"
                   rel="noopener noreferrer"
-                 className="w-3/4 text-center text-xs font-gemunu pixel-button-base pixel-button-primary"
+                 className="w-1/2 text-center text-xs font-gemunu pixel-button-base pixel-button-primary"
                 >
                   Leave a Comment
                 </a>
