@@ -129,7 +129,7 @@ const FuelMixPanel: React.FC = () => {
                       type="checkbox"
                       checked={isZctaVisible}
                       onChange={() => toggleLayerVisibility('zcta')}
-                      className="h-4 w-4 border-2 border-[var(--border-color)] text-green-600 focus:ring-offset-0 focus:ring-0"
+                      className="h-4 w-4 border-2 border-[var(--border-color)] accent-red-800 focus:ring-offset-0 focus:ring-0"
                       style={{ backgroundColor: 'var(--background)' }}
                     />
                     <label htmlFor="zcta-toggle-fm" className="ml-3 block text-sm" style={{ color: 'var(--foreground)' }}>
@@ -142,7 +142,7 @@ const FuelMixPanel: React.FC = () => {
                       type="checkbox"
                       checked={isMgeVisible}
                       onChange={() => toggleLayerVisibility('mge')}
-                      className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                      className="h-4 w-4 rounded border-green-800 accent-green-800 focus:ring-green-500"
                     />
                   <label htmlFor="zcta-toggle-fm" className="ml-3 block text-sm" style={{ color: 'var(--foreground)' }}>
                       MGE Service Area
@@ -154,7 +154,7 @@ const FuelMixPanel: React.FC = () => {
                       type="checkbox"
                       checked={isAlliantVisible}
                       onChange={() => toggleLayerVisibility('alliant')}
-                      className="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                      className="h-4 w-4 rounded border-orange-300 border-4 accent-orange-600 focus:ring-orange-500"
                     />
                     <label htmlFor="alliant-toggle-fm" className="ml-3 block text-sm text-gray-900">
                       Alliant Service Area
@@ -172,7 +172,7 @@ const FuelMixPanel: React.FC = () => {
                       type="checkbox"
                       checked={showMge}
                       onChange={() => setShowMge(!showMge)}
-                      className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                      className="h-4 w-4 rounded border-gray-300 accent-green-800 focus:ring-green-500"
                     />
                     <span className="ml-2 text-gray-800">MGE</span>
                   </label>
@@ -181,7 +181,7 @@ const FuelMixPanel: React.FC = () => {
                       type="checkbox"
                       checked={showAlliant}
                       onChange={() => setShowAlliant(!showAlliant)}
-                      className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      className="h-4 w-4 rounded border-gray-300 accent-orange-600 focus:ring-blue-500"
                     />
                     <span className="ml-2 text-gray-800">Alliant Energy</span>
                   </label>
