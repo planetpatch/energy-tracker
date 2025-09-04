@@ -2,6 +2,10 @@
 
 @import "tailwindcss";
 @import 'leaflet/dist/leaflet.css';
+
+/* --- ADDITION FOR PIXEL FONTS --- */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 html,
 body {
   margin: 0;
@@ -25,24 +29,44 @@ body {
   width: 100%;
 }
 
+/* --- UPDATED STYLES --- */
 /* Other global styles and theme variables */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Stardew Valley Inspired Palette */
+  --background: #3C2A1E;
+  /* Dark, earthy brown for the page background */
+  --panel-background: #F5DEB3;
+  /* A warm, wheat color for UI panels */
+  --foreground: #342317;
+  /* Dark brown for text, for high readability */
+  --border-color: #6B3710;
+  /* A richer brown for panel borders */
+
+  /* Unchanged Button Colors */
+  --btn-green: #1e4f2c;
+  --btn-green-dark: #1e4f2c;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* The body font will be set in layout.tsx via a font variable */
   line-height: 1.6;
 }
 
-h1 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Press Start 2P', cursive;
   text-align: center;
   margin-top: 20px;
   margin-bottom: 20px;
 }
+
+/* --- END UPDATED STYLES --- */
 
 .custom-plant-icon {
   width: 18px;
@@ -60,13 +84,6 @@ h1 {
   border: none;
 }
 
-:root {
-  --btn-green: #1e4f2c;
-    /* Muted green for the button face */
-    --btn-green-dark: #1e4f2c;
-    /* Dark green for the border/bevel */
-}
-
 .pixel-button-base {
   padding: 0.5rem 1.25rem;
   font-size: 1.25rem;
@@ -80,7 +97,6 @@ h1 {
   transform: translateY(4px);
   box-shadow: inset 0 -2px 0 0 rgba(0, 0, 0, 0.2);
 }
-
 
 .pixel-button-primary {
   color: white;
@@ -100,12 +116,16 @@ h1 {
   }
 }
 
-
 @keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
+
 .animate-fade-in {
   animation: fade-in 0.5s ease-in-out;
 }
-
