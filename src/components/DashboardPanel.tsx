@@ -74,7 +74,7 @@ if (!isDashboardVisible) return null;
 
   return (
     <div
-      className="absolute top-5 right-5 z-[1000] flex w-72 max-w-sm flex-col rounded-lg bg-white/95 p-5 shadow-2xl max-h-[calc(100vh-40px)] overflow-y-auto"
+      className="absolute top-5 right-5 z-[1000] flex w-72 max-w-sm flex-col rounded-lg bg-white/95 p-5 mt-16 shadow-2xl max-h-[calc(100vh-40px)] overflow-y-auto"
       role="region"
       aria-label="Dashboard panel"
     >

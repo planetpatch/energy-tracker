@@ -6,6 +6,7 @@ import MapAndDashboardWrapper from '@/components/MapAndDashboardWrapper';
 import FuelMixPanel from '@/components/FuelMixPanel';
 import type { MapData } from '@/lib/data-loader';
 import { useMapStore } from '@/stores/mapStore';
+import { gemunuLibre } from '@/ui/fonts';
 
 const WelcomeModal = dynamic(() => import('@/components/WelcomeModal'), {
   ssr: false
@@ -67,7 +68,7 @@ export default function AppShell({ mapData }: AppShellProps) {
         <div className="fixed top-5 right-5 z-[1001] border border-gray-200 bg-white/90 backdrop-blur-md rounded-md shadow-lg p-1 flex space-x-1">
           <button
             type="button"
-            className={tabBtn(isDashboardVisible)}
+            className={`text-center text-xs font-gemunu pixel-button-base pixel-button-primary ${tabBtn(isDashboardVisible)}`}
             onClick={() => (isDashboardVisible ? hideDashboard() : showDashboard())}
             aria-pressed={isDashboardVisible}
           >
@@ -75,7 +76,7 @@ export default function AppShell({ mapData }: AppShellProps) {
           </button>
           <button
             type="button"
-            className={tabBtn(isFuelMixVisible)}
+            className={`text-center text-xs font-gemunu pixel-button-base pixel-button-primary ${tabBtn(isFuelMixVisible)}`}
             onClick={() => (isFuelMixVisible ? hideFuelMix() : showFuelMix())}
             aria-pressed={isFuelMixVisible}
           >
@@ -86,7 +87,7 @@ export default function AppShell({ mapData }: AppShellProps) {
 
       <div className={!isStarted ? 'blur-sm' : ''}>
         {/* Spacer so content doesn't sit under the fixed header on very small screens */}
-        <div className="h-12" />
+        <div />
         <MapAndDashboardWrapper mapData={mapData} initialLocation={initialLocation} />
       </div>
 

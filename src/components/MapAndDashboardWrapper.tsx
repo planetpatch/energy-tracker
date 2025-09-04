@@ -114,13 +114,16 @@ const MapAndDashboardWrapper: React.FC<MapAndDashboardWrapperProps> = ({ initial
           alliantBordersData={mapData.alliantBordersData}
         />
       </div>
-      <DashboardPanel
+      <div>
+<DashboardPanel
         // selectedZcta={selectedZcta}
         // plantsInSelectedZcta={plantsInSelectedZcta}
         // hoveredZcta={hoveredZcta}
         // plantsInHoveredZcta={plantsInHoveredZcta}
         onZipCodeSubmit={handleZipCodeSubmit}
       />
+      </div>
+      
 
     </div>
   )

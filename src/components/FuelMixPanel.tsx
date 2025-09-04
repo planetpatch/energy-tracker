@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useMapStore } from '@/stores/mapStore';
+import { gemunuLibre } from '@/ui/fonts';
+
 
 interface ProgressBarProps {
   utilityName: string;
@@ -204,19 +206,11 @@ const FuelMixPanel: React.FC = () => {
           </div>
 
           {/* Actions (right column) */}
-          <div className="col-span-12 sm:col-span-3 overflow-y-auto min-h-0">
-            <h3 className="text-sm font-medium text-gray-600 mb-2">Take Action</h3>
+ <div className="col-span-12 sm:col-span-3 overflow-y-auto min-h-0">
+            <h3 className={`text-2xl font-gemunu font-medium text-green-800 mb-2 text-center ${gemunuLibre.className}`}>Take Action! </h3>
             <div className="flex flex-col space-y-2">
-              <div className="flex items-center">
-                <a
-                  href="https://focusonenergy.com/residential/simple-energy-efficiency"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full text-center text-xs bg-gray-100 text-gray-800 hover:bg-gray-200 font-semibold py-1.5 px-3 rounded-md shadow-sm transition-colors border border-gray-300 active:scale-95 active:bg-gray-300"
-                >
-                  Free Focus on Energy Box
-                </a>
-                <div
+              <div className="flex justify-center items-center">
+                                <div
                   ref={focusInfoRef}
                   onMouseEnter={() =>
                     showTooltip(
@@ -235,18 +229,20 @@ const FuelMixPanel: React.FC = () => {
                     />
                   </svg>
                 </div>
-              </div>
 
-              <div className="flex items-center">
-                <a
-                  href="https://psc.wi.gov/Pages/PublicParticipation/PublicComments.aspx"
+
+               <a
+                  href="https://focusonenergy.com/residential/simple-energy-efficiency"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full text-center text-xs bg-gray-100 text-gray-800 hover:bg-gray-200 font-semibold py-1.5 px-3 rounded-md shadow-sm transition-colors border border-gray-300 active:scale-95 active:bg-gray-300"
+                  className="w-3/4 text-center text-xs font-gemunu pixel-button-base pixel-button-primary"
                 >
-                  Leave a Comment
+                  Free Focus on Energy Box
                 </a>
-                <div
+              </div>
+
+             <div className="flex justify-center items-center">
+                                <div
                   ref={commentInfoRef}
                   onMouseEnter={() =>
                     showTooltip(
@@ -260,11 +256,20 @@ const FuelMixPanel: React.FC = () => {
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       fillRule="evenodd"
-                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
                       clipRule="evenodd"
                     />
                   </svg>
                 </div>
+                <a
+                  href="https://psc.wi.gov/Pages/PublicParticipation/PublicComments.aspx"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                 className="w-3/4 text-center text-xs font-gemunu pixel-button-base pixel-button-primary"
+                >
+                  Leave a Comment
+                </a>
+
               </div>
             </div>
           </div>
