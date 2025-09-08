@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Gemunu_Libre  } from "next/font/google";
+import { Geist, Geist_Mono, Gemunu_Libre } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
+import TrackEntry from "./_components/TrackEntry";
+
 import "./globals.css";
 
 const geistSans = Geist({
@@ -34,7 +37,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${gemunuLibre.variable} antialiased`}
       >
+        <TrackEntry />
         {children}
+         <Analytics />
       </body>
     </html>
   );
