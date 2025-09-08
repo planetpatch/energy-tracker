@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Gemunu_Libre } from "next/font/google";
 import { GoogleAnalytics } from '@next/third-parties/google'
+//import Navigation from "@/components/navigation";
+//import Footer from "@/components/navigation/Footer";
 
 import "./globals.css";
 
@@ -36,8 +38,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${gemunuLibre.variable} antialiased`}
       >
+              
         {children}
         <GoogleAnalytics gaId="G-9CKG8ZWVEC" />
+              
       </body>
     </html>
   );
