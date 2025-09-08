@@ -1,19 +1,17 @@
-// e.g., app/_components/TrackEntry.tsx
 "use client";
 import { useEffect } from "react";
-import { track } from "@vercel/analytics";
 
 export default function TrackEntry() {
   useEffect(() => {
-    // only fire once per tab/session
-    if (sessionStorage.getItem("pp-src-tracked")) return;
+    if (sessionStorage.getItem("qr-src-tracked")) return; // dedupe per session
 
-    const params = new URLSearchParams(window.location.search);
-    const src = params.get("src");
-    if (src) {
-      track("qr_entry", { src });      // e.g., "qrA" or "qrB"
-      sessionStorage.setItem("pp-src-tracked", "1");
+    const src = new URLSearchParams(window.location.search).get("src");
+    if (src && typeof window !== "undefined" && "gtag" in window) {
+      // @ts-ignore
+      window.gtag("event", "qr_entry", { src }); // logs "qr_entry" with src param
+      sessionStorage.setItem("qr-src-tracked", "1");
     }
   }, []);
+
   return null;
 }
