@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Gemunu_Libre } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import TrackEntry from "./_components/TrackEntry";
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 import "./globals.css";
 
@@ -34,25 +35,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-        <head>
-        {/* Google tag (gtag.js) */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-9CKG8ZWVEC"></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-9CKG8ZWVEC', { send_page_view: true });
-            `,
-          }}
-        />
-      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${gemunuLibre.variable} antialiased`}
       >
         <TrackEntry />
         {children}
+        <GoogleAnalytics gaId="G-9CKG8ZWVEC" />
          <Analytics />
       </body>
     </html>
