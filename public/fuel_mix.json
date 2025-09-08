@@ -1,0 +1,10 @@
+{
+    "MGE": {
+        "renewable_percent":24,
+        "non_renewable_percent":76
+    },
+    "Alliant": {
+        "renewable_percent": 29,
+        "non_renewable_percent": 71
+    }
+}

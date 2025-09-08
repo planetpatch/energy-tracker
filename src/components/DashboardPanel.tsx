@@ -1,342 +1,215 @@
-// src/components/DashboardPanel.tsx
-"use client"
+"use client";
 
-import type React from "react"
-import { useState } from "react"
+import React, { useState, useEffect } from 'react';
 import Image from "next/image";
-import type {
-  ZCTAFeature, PlantFeature 
-  //,PlantProperties
-} from '../types';
-
-// >>>>>>>>>>>>>>>>>>>>>> IMPORT ICON PATHS AGAIN <<<<<<<<<<<<<<<<<<<<<<<
+import { useMapStore } from '@/stores/mapStore';
 import {
-    SOLAR_ICON_PATH,
-    NATURAL_GAS_ICON_PATH,
-    WIND_ICON_PATH,
-    PETROLEUM_ICON_PATH,
-    COAL_ICON_PATH,
-    INDUSTRIAL_BATTERY_ICON_PATH,
-    HYDROELECTRIC_ICON_PATH
-} from '../map/icon-paths'; 
-// >>>>>>>>>>>>>>>>>>>>>> END IMPORT ICON PATHS <<<<<<<<<<<<<<<<<<<<<<<
+  SOLAR_ICON_PATH, NATURAL_GAS_ICON_PATH, WIND_ICON_PATH,
+  PETROLEUM_ICON_PATH, COAL_ICON_PATH, INDUSTRIAL_BATTERY_ICON_PATH,
+  HYDROELECTRIC_ICON_PATH
+} from '../map/icon-paths';
 
 interface DashboardPanelProps {
-  selectedZcta: ZCTAFeature | null
-  plantsInSelectedZcta: PlantFeature[]
-  hoveredZcta: ZCTAFeature | null
-  plantsInHoveredZcta: PlantFeature[]
-  onZipCodeSubmit: (zipCode: string) => void
+  onZipCodeSubmit: (zipCode: string) => void;
 }
 
-const DashboardPanel: React.FC<DashboardPanelProps> = ({
-  selectedZcta,
-  plantsInSelectedZcta,
-  hoveredZcta,
-  plantsInHoveredZcta,
-  onZipCodeSubmit,
-}) => {
-  const [zipCodeInput, setZipCodeInput] = useState<string>("")
+const getSourceIconPath = (primarySource?: string | null): string | null => {
+  switch (primarySource) {
+    case "Solar": return SOLAR_ICON_PATH;
+    case "Natural Gas": return NATURAL_GAS_ICON_PATH;
+    case "Wind": return WIND_ICON_PATH;
+    case "Petroleum": return PETROLEUM_ICON_PATH;
+    case "Coal": return COAL_ICON_PATH;
+    case "Battery Storage": return INDUSTRIAL_BATTERY_ICON_PATH;
+    case "Hydroelectric": return HYDROELECTRIC_ICON_PATH;
+    default: return null;
+  }
+};
+
+const DashboardPanel: React.FC<DashboardPanelProps> = ({ onZipCodeSubmit }) => {
+  // store state
+  const isDashboardVisible   = useMapStore((s) => s.isDashboardVisible);
+  // const showDashboard        = useMapStore((s) => s.showDashboard);
+  const hideDashboard        = useMapStore((s) => s.hideDashboard);
+
+  const selectedZcta         = useMapStore((s) => s.selectedZcta);
+  const plantsInSelectedZcta = useMapStore((s) => s.plantsInSelectedZcta);
+  const hoveredZcta          = useMapStore((s) => s.hoveredZcta);
+  const plantsInHoveredZcta = useMapStore((s) => s.plantsInHoveredZcta);
+  const selectedPlant        = useMapStore((s) => s.selectedPlant);
+  const isZctaVisible        = useMapStore((s) => s.isZctaVisible);
+  // const isMgeVisible         = useMapStore((s) => s.isMgeVisible);
+  // const isAlliantVisible     = useMapStore((s) => s.isAlliantVisible);
+  // const toggleLayerVisibility= useMapStore((s) => s.toggleLayerVisibility);
+
+  // local state
+  const [zipCodeInput, setZipCodeInput] = useState<string>("");
   const [expandedPlantIndex, setExpandedPlantIndex] = useState<number | null>(null);
-  const [hoveredPlantIndex, setHoveredPlantIndex] = useState<number | null>(null);
+  const [isPlantPanelVisible, setIsPlantPanelVisible] = useState<boolean>(true);
 
-  const getZctaCode = (feature: ZCTAFeature | null): string => {
-    if (!feature) return "N/A"
-    const zctaProperties = feature.properties as ZCTAFeature['properties'];
-    return zctaProperties?.ZCTA5CE10 || zctaProperties?.ZCTA5CE20 || "N/A"
-  }
 
-  const handleSubmit = () => {
-    if (zipCodeInput.trim()) {
-      onZipCodeSubmit(zipCodeInput.trim())
+    useEffect(() => {
+    if (selectedPlant) {
+      setIsPlantPanelVisible(true);
     }
-  }
+    }, [selectedPlant]);
+  
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (zipCodeInput.trim()) {
+      onZipCodeSubmit(zipCodeInput.trim());
+    }
+  };
 
   const handlePlantClick = (index: number) => {
     setExpandedPlantIndex(expandedPlantIndex === index ? null : index);
   };
 
-  // >>>>>>>>>>>>>>>>>>>>>> HELPER TO GET ICON PATH (USING IMPORTED CONSTANTS) <<<<<<<<<<<<<<<<<<<<<<<
-  const getSourceIconPath = (primarySource?: string | null): string | null => {
-      switch (primarySource) {
-          case "Solar": return SOLAR_ICON_PATH;
-          case "Natural Gas": return NATURAL_GAS_ICON_PATH;
-          case "Wind": return WIND_ICON_PATH;
-          case "Petroleum": return PETROLEUM_ICON_PATH;
-          case "Coal": return COAL_ICON_PATH;
-          case "Battery Storage": return INDUSTRIAL_BATTERY_ICON_PATH; // Assuming this source name from your JSON
-          case "Hydroelectric": return HYDROELECTRIC_ICON_PATH; // Assuming this source name from your JSON
-          default: return null; // No icon for unknown source
-      }
-  };
-  // >>>>>>>>>>>>>>>>>>>>>> END HELPER <<<<<<<<<<<<<<<<<<<<<<<
+  const displayZcta   = selectedZcta || hoveredZcta;
+  const displayPlants = selectedZcta ? plantsInSelectedZcta : plantsInHoveredZcta;
+  const isHovering    = !selectedZcta && !!hoveredZcta;
 
-  const renderPlantList = (plants: PlantFeature[]) => {
-    if (plants.length === 0) {
-      return <p style={{ color: 'black' }}>No known energy plants in this ZCTA.</p>;
-    }
-    return (
-      <ul>
-        {plants.map((plant, index) => {
-          const sourceIconPath = getSourceIconPath(plant.properties.primarySource);
-          
-          const plantContentBaseStyle: React.CSSProperties = {
-            display: 'flex',
-            alignItems: 'center',
-            padding: '8px 12px',
-            backgroundColor: '#007bff',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            transition: 'background-color 0.2s',
-            width: '100%',
-            boxSizing: 'border-box',
-          };
-
-          const plantContentHoverStyle: React.CSSProperties = hoveredPlantIndex === index ? {
-            backgroundColor: '#0056b3',
-          } : {};
-
-          const combinedPlantContentStyle = { ...plantContentBaseStyle, ...plantContentHoverStyle };
-
-          return (
-            <li 
-              key={plant.properties.name || `plant-${index}`} 
-              style={{ marginBottom: '5px' }}
-              onMouseEnter={() => setHoveredPlantIndex(index)}
-              onMouseLeave={() => setHoveredPlantIndex(null)}
-            >
-              <div 
-                onClick={() => handlePlantClick(index)} 
-                style={combinedPlantContentStyle}
-                className="plant-item-content"
-              >
-                {sourceIconPath && (
-                 <Image 
-                  src={sourceIconPath} 
-                  alt={plant.properties.primarySource || 'Energy Source'} 
-                  className="plant-source-icon"
-                  width={18}
-                  height={18}
-                  style={{ 
-                    borderRadius: '50%', // This makes the icon a circle
-                    marginRight: '12px'
-                  }}
-                />
-                )}
-                <button type="button" style={{ 
-                    background: 'none', 
-                    border: 'none', 
-                    padding: '0', 
-                    margin: '0', 
-                    font: 'inherit', 
-                    color: 'white', 
-                    textAlign: 'left', 
-                    width: '100%', 
-                    cursor: 'pointer',
-                    flexGrow: 1, 
-                }}>
-                  {plant.properties.name || 'Unnamed Plant'}
-                </button>
-              </div>
-              
-              {expandedPlantIndex === index && (
-                <div style={{ color: 'black' }}>
-                  <p><strong>City:</strong> {plant.properties.cityName || 'N/A'}</p>
-                  <p><strong>Utility:</strong> {plant.properties.utilityName || 'N/A'}</p>
-                  <p><strong>Sector:</strong> {plant.properties.sectorName || 'N/A'}</p>
-                  <p><strong>Technology:</strong> {plant.properties.techDesc || 'N/A'}</p>
-                  <p><strong>Source:</strong> {plant.properties.primarySource || 'N/A'}</p>
-                  <p><strong>Installed MW:</strong> {plant.properties.installedMW ?? 'N/A'}</p>
-                  <p><strong>Total MW:</strong> {plant.properties.totalMW ?? 'N/A'}</p>
-                </div>
-              )}
-            </li>
-          );
-        })}
-      </ul>
-    );
-  };
+  // When hidden: show a fixed button in the top-right of the screen
+if (!isDashboardVisible) return null;
 
   return (
-    <div className="dashboard-panel">
-      <h2>Energy Dashboard</h2>
-
-      <div className="zip-input-section">
-        <h3>Find by ZIP Code</h3>
-        <input
-          type="text"
-          placeholder="Enter 5-digit ZIP"
-          value={zipCodeInput}
-          onChange={(e) => setZipCodeInput(e.target.value)}
-          onKeyPress={(e) => {
-            if (e.key === "Enter") {
-              handleSubmit()
-            }
-          }}
-          maxLength={5}
-        />
-        <button onClick={handleSubmit}>Go to ZIP</button>
+    <div
+      className="absolute top-5 right-5 z-[1000] flex w-72 max-w-sm flex-col rounded-lg bg-white/95 p-5 mt-16 shadow-2xl max-h-[calc(100vh-40px)] overflow-y-auto"
+      role="region"
+      aria-label="Dashboard panel"
+    >
+      {/* Header with close button */}
+      <div className="mb-4 mt-0 border-b border-gray-200 pb-2.5 flex items-center justify-between">
+        <h2 className="text-2xl text-gray-800 m-0">Energy Dashboard</h2>
+        <button
+          onClick={hideDashboard}
+          className="p-1 rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-800"
+          aria-label="Close dashboard panel"
+          type="button"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
 
-      {selectedZcta ? (
-        <div style={{ color: 'black' }}>
-          <h3>Selected ZCTA: {getZctaCode(selectedZcta)}</h3>
-          {renderPlantList(plantsInSelectedZcta)}
-          <p className="instruction-text">Click on other ZCTAs or hover for plant info.</p>
+      {/* ZIP form */}
+      <form onSubmit={handleSubmit} className="mb-5 border-b border-gray-300 pb-4">
+        <label htmlFor="zip-input" className="block text-sm font-medium text-gray-700">
+          Find by ZIP Code
+        </label>
+        <div className="mt-1 flex rounded-md shadow-sm">
+          <input
+            type="text"
+            id="zip-input"
+            value={zipCodeInput}
+            onChange={(e) => setZipCodeInput(e.target.value)}
+            placeholder="e.g., 53703"
+            maxLength={5}
+            className="block w-full flex-1 rounded-none rounded-l-md border border-gray-300 px-3 py-2 text-black placeholder-gray-500 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+          />
+          <button
+            type="submit"
+            disabled={!zipCodeInput.trim()}
+            className="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400"
+          >
+            Go
+          </button>
         </div>
-      ) : hoveredZcta ? (
-        <div className="hover-info-section">
-          <h3>Hovered ZCTA: {getZctaCode(hoveredZcta)}</h3>
-          {renderPlantList(plantsInHoveredZcta)}
-          <p className="instruction-text">Click to select this ZCTA.</p>
+      </form>
+
+     {selectedPlant && isPlantPanelVisible && (
+ <div className="mb-5 border-b border-gray-300 pb-4">
+          <div className="flex items-center justify-between border-b border-gray-200 pb-2.5">
+            <h3 className="text-lg font-bold text-green-800">Selected Plant</h3>
+            <button
+              onClick={() => setIsPlantPanelVisible(false)}
+              className="p-1 rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-800"
+              aria-label="Close selected plant panel"
+              type="button"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div className="mt-2 pt-2 pl-2 text-xs text-black">
+              <p><strong>Name:</strong> {selectedPlant.properties.name || 'N/A'}</p>
+              <p><strong>City:</strong> {selectedPlant.properties.cityName || 'N/A'}</p>
+              <p><strong>Utility:</strong> {selectedPlant.properties.utilityName || 'N/A'}</p>
+              <p><strong>Sector:</strong> {selectedPlant.properties.sectorName || 'N/A'}</p>
+              <p><strong>Technology:</strong> {selectedPlant.properties.techDesc || 'N/A'}</p>
+              <p><strong>Source:</strong> {selectedPlant.properties.primarySource || 'N/A'}</p>
+              <p><strong>Installed MW:</strong> {selectedPlant.properties.installedMW ?? 'N/A'}</p>
+              <p><strong>Total MW:</strong> {selectedPlant.properties.totalMW ?? 'N/A'}</p>
+          </div>
         </div>
-      ) : null }
+      )}
+      {/* ZCTA / Plants */}
+      <div className="flex-grow">
+        {displayZcta && isZctaVisible ? (
+          <div>
+            <h3 className={`text-lg font-bold ${isHovering ? 'text-gray-500' : 'text-blue-800'}`}>
+              ZIP Code: {displayZcta.properties?.ZCTA5CE10}
+              {isHovering && <span className="text-sm font-normal"> (Hovering)</span>}
+            </h3>
 
-      <style jsx>{`
-                .dashboard-panel {
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    width: 280px;
-                    max-height: calc(100vh - 40px);
-                    background-color: rgba(255, 255, 255, 0.95);
-                    padding: 20px;
-                    border-radius: 8px;
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-                    z-index: 1000;
-                    overflow-y: auto;
-                    display: flex;
-                    flex-direction: column;
-                }
-                h2 {
-                    margin-top: 0;
-                    margin-bottom: 15px;
-                    color: #333;
-                    font-size: 1.5em;
-                    border-bottom: 1px solid #eee;
-                    padding-bottom: 10px;
-                }
-                h3 {
-                    margin-top: 10px;
-                    margin-bottom: 8px;
-                    color: #0056b3;
-                    font-size: 1.1em;
-                    font-weight: bold;
-                }
-                h4 {
-                    margin-top: 10px;
-                    margin-bottom: 5px;
-                    color: #555;
-                    font-size: 1.0em;
-                }
-                p {
-                    margin-bottom: 5px;
-                    font-size: 0.9em;
-                    color: #666;
-                }
-                .instruction-text {
-                    font-style: italic;
-                    color: #888;
-                    margin-top: 15px;
-                }
-                ul {
-                    list-style-type: none;
-                    padding: 0;
-                    margin: 10px 0 0 0;
-                }
-                .plant-list-item { 
-                    margin-bottom: 5px; 
-                }
+            {displayPlants.length === 0 ? (
+              <p className="text-sm text-gray-600 mt-2">No known energy plants in this area.</p>
+            ) : (
+              <ul className="mt-2 list-none space-y-1.5 p-0">
+                {displayPlants.map((plant, index) => {
+                  const sourceIconPath = getSourceIconPath(plant.properties.primarySource);
+                  return (
+                    <li key={plant.properties.name || `plant-${index}`}>
+                      <div
+                        onClick={() => handlePlantClick(index)}
+                        className="flex w-full cursor-pointer items-center rounded bg-blue-600 p-2 text-white transition-colors duration-200 hover:bg-blue-800"
+                      >
+                        {sourceIconPath && (
+                          <Image
+                            src={sourceIconPath}
+                            alt={plant.properties.primarySource || 'Energy'}
+                            width={18}
+                            height={18}
+                            className="mr-3 flex-shrink-0 rounded-full border border-white/50 object-cover"
+                          />
+                        )}
+                        <span className="flex-grow text-left text-sm font-medium">
+                          {plant.properties.name || 'Unnamed Plant'}
+                        </span>
+                      </div>
 
-                .plant-item-content {
-                    /* These styles are applied via inline style for dynamic hover, but keeping class for reference */
-                    display: flex;
-                    align-items: center;
-                    padding: 8px 12px;
-                    border-radius: 4px;
-                    cursor: pointer;
-                    transition: background-color 0.2s;
-                    width: 100%;
-                    box-sizing: border-box;
-                    /* Background color will be set dynamically via inline style */
-                }
-
-                .plant-source-icon {
-                    margin-right: 8px;
-                    object-fit: cover;
-                    border: 1px solid rgba(255, 255, 255, 0.5);
-                    flex-shrink: 0;
-                    /* border-radius is now applied inline to ensure it's a circle */
-                }
-
-                button { 
-                    padding: 8px 12px;
-                    background-color: #007bff;
-                    color: white;
-                    border: none;
-                    border-radius: 4px;
-                    cursor: pointer;
-                    font-size: 1em;
-                    transition: background-color 0.2s;
-                }
-                button:hover {
-                    background-color: #0056b3;
-                }
-
-                .plant-details button { 
-                    background: none;
-                    border: none;
-                    padding: 0;
-                    margin: 0;
-                    font: inherit;
-                    color: white;
-                    text-align: left;
-                    width: 100%;
-                    flex-grow: 1;
-                    cursor: pointer;
-                }
-                .plant-details button:focus { 
-                    outline: none; 
-                    box-shadow: none;
-                }
-                
-                .zip-input-section {
-                    margin-bottom: 20px;
-                    padding-bottom: 15px;
-                    border-bottom: 1px solid #ddd;
-                }
-                .zip-input-section input {
-                    width: calc(100% - 70px);
-                    padding: 8px;
-                    margin-right: 5px;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    font-size: 1em;
-                    color: black;
-                }
-                .zip-input-section input::placeholder {
-                    color: #555;
-                }
-                .zip-input-section button {
-                    margin-top: 10px;
-                }
-                .plant-details {
-                    margin-top: 10px;
-                    padding-top: 10px;
-                    border-top: 1px solid #ccc;
-                    font-size: 0.85em;
-                    color: black;
-                }
-                .plant-details p {
-                    margin-bottom: 3px;
-                    color: black;
-                }
-                .no-plants-text {
-                    color: black !important;
-                }
-            `}</style>
+                      {expandedPlantIndex === index && (
+                        <div className="mt-2 border-t border-gray-200 pt-2 pl-2 text-xs text-black">
+                          <p><strong>City:</strong> {plant.properties.cityName || 'N/A'}</p>
+                          <p><strong>Utility:</strong> {plant.properties.utilityName || 'N/A'}</p>
+                          <p><strong>Sector:</strong> {plant.properties.sectorName || 'N/A'}</p>
+                          <p><strong>Technology:</strong> {plant.properties.techDesc || 'N/A'}</p>
+                          <p><strong>Source:</strong> {plant.properties.primarySource || 'N/A'}</p>
+                          <p><strong>Installed MW:</strong> {plant.properties.installedMW ?? 'N/A'}</p>
+                          <p><strong>Total MW:</strong> {plant.properties.totalMW ?? 'N/A'}</p>
+                        </div>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+        ) : (
+          <div className="flex h-full items-center justify-center pt-10">
+            <p className="text-center text-gray-500">
+              {isZctaVisible
+                ? "Click or hover on a ZIP code to see energy plant details."
+                : "Enable the 'ZIP Code Areas' layer to view plant details."
+              }
+            </p>
+          </div>
+        )}
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default DashboardPanel
+export default DashboardPanel;
