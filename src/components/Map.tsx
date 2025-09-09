@@ -12,7 +12,7 @@ import { getZctaCodeFromFeature } from '../utils/geo';
 type LeafletMapElement = HTMLDivElement & {
   _leaflet_id?: number;
 }
-// --- (Styles and interfaces remain the same) ---
+
 const defaultZctaStyle = { color: "#702963", weight: 1, opacity: 0.7, fillColor: "#D2042D", fillOpacity: 0.01 };
 const highlightZctaStyle = { weight: 4, color: '#666', dashArray: '', fillOpacity: 0.1 };
 const mgeBorderStyle = { color: "green", weight: 2, opacity: 0.9, fillOpacity: 0.3, fillColor: "green", dashArray: '5, 5' };
@@ -54,12 +54,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
   const isMgeVisible = useMapStore((state) => state.isMgeVisible);
   const isAlliantVisible = useMapStore((state) => state.isAlliantVisible);
 
-  // const programmaticZctaFeatureRef = useRef(programmaticZctaFeature);
-  // useEffect(() => {
-  //   programmaticZctaFeatureRef.current = programmaticZctaFeature;
-  // }, [programmaticZctaFeature]);
-
-    const onEachPlantFeature = (feature: PlantFeature, layer: L.Layer) => {
+  const onEachPlantFeature = (feature: PlantFeature, layer: L.Layer) => {
     layer.on({
       click: () => {
         selectPlant(feature);
@@ -67,17 +62,17 @@ const MapComponent: React.FC<MapComponentProps> = ({
     });
   };
   
-  const onEachZCTAFeature = useCallback((feature: ZCTAFeature, layer: L.Layer) => {
+const onEachZCTAFeature = useCallback((feature: ZCTAFeature, layer: L.Layer) => {
     const { selectZcta, hoverZcta, clearProgrammaticFeature, clearSelection } = useMapStore.getState();
     const zctaCode = getZctaCodeFromFeature(feature);
     if (zctaCode) {
       zctaLayersMapRef.current.set(zctaCode, layer);
     }
-    const plantsInZcta = feature.properties.plants || [];
 
     layer.on({
       mouseover: (e: L.LeafletMouseEvent) => {
         const targetLayer = e.target as L.Path;
+        // Keep hover styles for immediate feedback, but don't set currentSelectedLayerRef
         if (currentSelectedLayerRef.current !== targetLayer) {
           targetLayer.setStyle(highlightZctaStyle);
         }
@@ -85,69 +80,93 @@ const MapComponent: React.FC<MapComponentProps> = ({
           tooltipRef.current.innerText = `ZIP: ${zctaCode || 'N/A'}`;
           tooltipRef.current.classList.remove('hidden');
         }
-        hoverZcta(feature, plantsInZcta);
+        hoverZcta(feature);
       },
       mouseout: (e: L.LeafletMouseEvent) => {
         const targetLayer = e.target as L.Path;
+        // Only reset style if it's not the currently selected layer
         if (currentSelectedLayerRef.current !== targetLayer) {
           targetLayer.setStyle(defaultZctaStyle);
         }
-        hoverZcta(null, []);
+        hoverZcta(null);
         if (tooltipRef.current) tooltipRef.current.classList.add('hidden');
       },
+      // --- SIMPLIFIED CLICK HANDLER ---
+      // This handler now ONLY updates the central state.
       click: () => {
-        if (currentSelectedLayerRef.current && currentSelectedLayerRef.current !== layer) {
-            (currentSelectedLayerRef.current as L.Path).setStyle(defaultZctaStyle);
-        }
+        // If the clicked layer is already selected, clear the selection.
         if (currentSelectedLayerRef.current === layer) {
-            (layer as L.Path).setStyle(defaultZctaStyle);
-            currentSelectedLayerRef.current = null;
-            clearSelection();
-            return;
+          clearSelection();
+          return;
         }
-        (layer as L.Path).setStyle(highlightZctaStyle).bringToFront();
-        currentSelectedLayerRef.current = layer;
+        // Otherwise, select the new ZCTA.
         if (programmaticZctaFeature) clearProgrammaticFeature();
-        selectZcta(feature, plantsInZcta);
+        selectZcta(feature);
       },
     });
   }, [programmaticZctaFeature]); 
 
-  const handleProgrammaticZctaAction = useCallback((feature: ZCTAFeature) => {
-    if (!map) return;
-    if (currentSelectedLayerRef.current) {
-        (currentSelectedLayerRef.current as L.Path).setStyle(defaultZctaStyle);
-    }
-    const targetZctaCode = getZctaCodeFromFeature(feature);
-    const layerToHighlight = targetZctaCode ? zctaLayersMapRef.current.get(targetZctaCode) : null;
-    if (!layerToHighlight) return;
-    (layerToHighlight as L.Path).setStyle(highlightZctaStyle).bringToFront();
-    currentSelectedLayerRef.current = layerToHighlight; 
-    if (layerToHighlight instanceof L.Polygon) {
-        const bounds = layerToHighlight.getBounds();
-        if (bounds.isValid()) map.fitBounds(bounds, { padding: [80, 80] });
-    }
-  }, [map]);
+  // const handleProgrammaticZctaAction = useCallback((feature: ZCTAFeature) => {
+  //   if (!map) return;
+  //   if (currentSelectedLayerRef.current) {
+  //       (currentSelectedLayerRef.current as L.Path).setStyle(defaultZctaStyle);
+  //   }
+  //   const targetZctaCode = getZctaCodeFromFeature(feature);
+  //   const layerToHighlight = targetZctaCode ? zctaLayersMapRef.current.get(targetZctaCode) : null;
+  //   if (!layerToHighlight) return;
+  //   (layerToHighlight as L.Path).setStyle(highlightZctaStyle).bringToFront();
+  //   currentSelectedLayerRef.current = layerToHighlight;
+  //   if (layerToHighlight instanceof L.Polygon) {
+  //       const bounds = layerToHighlight.getBounds();
+  //       if (bounds.isValid()) map.fitBounds(bounds, { padding: [80, 80] });
+  //   }
+  // }, [map]);
 
-  useEffect(() => {
-    if (programmaticZctaFeature) {
-      handleProgrammaticZctaAction(programmaticZctaFeature);
-    }
-  }, [programmaticZctaFeature, handleProgrammaticZctaAction]);
+  // useEffect(() => {
+  //   if (programmaticZctaFeature) {
+  //     handleProgrammaticZctaAction(programmaticZctaFeature);
+  //   }
+  // }, [programmaticZctaFeature, handleProgrammaticZctaAction]);
   
-  useEffect(() => {
-    if (!selectedZcta && currentSelectedLayerRef.current) {
+  // useEffect(() => {
+  //   if (!selectedZcta && currentSelectedLayerRef.current) {
+  //     (currentSelectedLayerRef.current as L.Path).setStyle(defaultZctaStyle);
+  //     currentSelectedLayerRef.current = null;
+  //   }
+  // }, [selectedZcta]);
+  
+    useEffect(() => {
+    // 1. Reset the previously highlighted layer
+    if (currentSelectedLayerRef.current) {
       (currentSelectedLayerRef.current as L.Path).setStyle(defaultZctaStyle);
       currentSelectedLayerRef.current = null;
     }
-  }, [selectedZcta]);
 
-  // --- FIX: Corrected map initialization effect ---
+    // 2. If there's a new selected ZCTA, find and highlight its layer
+    if (selectedZcta && map) {
+      const targetZctaCode = getZctaCodeFromFeature(selectedZcta);
+      const layerToHighlight = targetZctaCode ? zctaLayersMapRef.current.get(targetZctaCode) : null;
+
+      if (layerToHighlight) {
+        (layerToHighlight as L.Path).setStyle(highlightZctaStyle).bringToFront();
+        currentSelectedLayerRef.current = layerToHighlight;
+
+        // Also zoom to the area if it was selected programmatically
+        if (programmaticZctaFeature && layerToHighlight instanceof L.Polygon) {
+            const bounds = layerToHighlight.getBounds();
+            if (bounds.isValid()) {
+                map.fitBounds(bounds, { padding: [80, 80] });
+            }
+        }
+      }
+    }
+  }, [selectedZcta, map, programmaticZctaFeature]); // Reacts to any change in the selected ZCTA
+
+
+
  useEffect(() => {
-   // Check if the map container exists and has NOT been initialized by Leaflet yet
     if (mapRef.current && !(mapRef.current._leaflet_id)) {
       const mapInstance = L.map(mapRef.current).setView(initialCenter, initialZoom);
-      
       
  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: '&copy; OpenStreetMap contributors',
@@ -165,7 +184,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
         }
       });
 
-      setMap(mapInstance); // Set state to trigger layer effect
+      setMap(mapInstance);
     }
  }, [initialCenter, initialZoom]);
   
@@ -181,17 +200,13 @@ const MapComponent: React.FC<MapComponentProps> = ({
     };
   }, [map]);
 
-
   useEffect(() => {
-    // --- FIX: Use the ref for the map instance ---
     if (!map) return;
-     // Cleanup previous layers before adding new ones
     if (zctaLayerRef.current) map.removeLayer(zctaLayerRef.current);
     if (mgeBorderLayerRef.current) map.removeLayer(mgeBorderLayerRef.current);
     if (alliantBorderLayerRef.current) map.removeLayer(alliantBorderLayerRef.current);
     if (plantsLayerRef.current) map.removeLayer(plantsLayerRef.current);
 
-    // Add layers based on visibility state
     if (isZctaVisible && zctaGeojsonData) {
       zctaLayersMapRef.current.clear();
       const newZctaLayer = L.geoJSON(zctaGeojsonData, { style: defaultZctaStyle, onEachFeature: onEachZCTAFeature }).addTo(map);
@@ -212,7 +227,6 @@ const MapComponent: React.FC<MapComponentProps> = ({
         onEachFeature: onEachPlantFeature 
       }).addTo(map);
     }
-    // Add `map` to the dependency array
   }, [map, plantsData, mgeBordersData, alliantBordersData, zctaGeojsonData, onEachZCTAFeature, isZctaVisible, isMgeVisible, isAlliantVisible, selectPlant]);
   
   return <div id="map" ref={mapRef} className="h-full w-full"></div>;

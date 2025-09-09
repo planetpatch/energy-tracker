@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import MapAndDashboardWrapper from '@/components/MapAndDashboardWrapper';
 import FuelMixPanel from '@/components/FuelMixPanel';
 import type { MapData } from '@/lib/data-loader';
@@ -20,19 +21,12 @@ export default function AppShell({ mapData }: AppShellProps) {
   const [isStarted, setIsStarted] = useState(false);
   const [initialLocation, setInitialLocation] = useState('');
   const [showModal, setShowModal] = useState(false);
+  // The isMenuOpen state is no longer needed
 
-  const isDashboardVisible = useMapStore(s => s.isDashboardVisible);
-  const showDashboard      = useMapStore(s => s.showDashboard);
-  const hideDashboard      = useMapStore(s => s.hideDashboard);
+  const { isDashboardVisible, showDashboard, hideDashboard } = useMapStore();
+  const { isFuelMixVisible, showFuelMix, hideFuelMix } = useMapStore();
 
-  const isFuelMixVisible  = useMapStore(s => s.isFuelMixVisible);
-  const showFuelMix       = useMapStore(s => s.showFuelMix);
-  const hideFuelMix       = useMapStore(s => s.hideFuelMix);
-
-  // tab-style button
-  const tabBtn = (active: boolean) =>
-    `px-3 py-1.5 text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
-     ${active ? 'bg-blue-600 text-white shadow' : 'bg-transparent text-gray-800 hover:bg-gray-100'}`;
+  const tabBtn = (active: boolean) => active ? 'pixel-button-primary' : 'pixel-button-secondary';
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -53,46 +47,71 @@ export default function AppShell({ mapData }: AppShellProps) {
         <WelcomeModal onStartTracking={handleStartTracking} mapData={mapData} />
       )}
 
-      {/* Fixed, translucent header pill */}
-      <h1
-        className={`fixed top-3 left-1/2 -translate-x-1/2 z-[1001]
-                   text-4xl font-bold text-center text-green-800
-                   bg-white/90 backdrop-blur-md border border-gray-200
-                   px-4 py-2 rounded-md shadow-lg ${gemunuLibre.className}`}
+      {/* --- A Single, Responsive Header --- */}
+      <header
+        className={`fixed top-0 left-0 right-0 z-[1001]
+                   flex items-center justify-between
+                   bg-white/90 backdrop-blur-md border-b border-gray-200
+                   px-4 h-16 shadow-md ${gemunuLibre.className}`}
       >
-        Energy Tracker
-      </h1>
-
-      {/* Top-right tab buttons with translucent background (only after start) */}
-      {isStarted && (
-        <div className="fixed top-5 right-5 z-[1001] border border-gray-200 bg-white/90 backdrop-blur-md rounded-md shadow-lg p-1 flex space-x-1">
-          <button
-            type="button"
-            className={`text-center text-xs font-gemunu pixel-button-base pixel-button-primary ${tabBtn(isDashboardVisible)}`}
-            onClick={() => (isDashboardVisible ? hideDashboard() : showDashboard())}
-            aria-pressed={isDashboardVisible}
-          >
-            Dashboard
-          </button>
-          <button
-            type="button"
-            className={`text-center text-xs font-gemunu pixel-button-base pixel-button-primary ${tabBtn(isFuelMixVisible)}`}
-            onClick={() => (isFuelMixVisible ? hideFuelMix() : showFuelMix())}
-            aria-pressed={isFuelMixVisible}
-          >
-            Fuel Mix
-          </button>
+        {/* Left Side: Logo and Title (Visible on all screen sizes) */}
+        <div className="flex items-center">
+          <Image
+            src="/planetpatch_logo_transparent.png"
+            alt="PlanetPatch Logo"
+            width={32}
+            height={32}
+            className="mr-3"
+          />
+          <h1 className="text-2xl md:text-3xl font-bold text-green-800">
+            Energy Tracker
+          </h1>
         </div>
-      )}
+
+        {/* Right Side: Desktop Buttons (Visible on medium screens and up) */}
+        {isStarted && (
+          <div className="hidden md:flex items-center space-x-2">
+            <button
+              type="button"
+              className={`text-center text-xs font-gemunu pixel-button-base ${tabBtn(isDashboardVisible)}`}
+              onClick={() => (isDashboardVisible ? hideDashboard() : showDashboard())}
+            >
+              Dashboard
+            </button>
+            <button
+              type="button"
+              className={`text-center text-xs font-gemunu pixel-button-base ${tabBtn(isFuelMixVisible)}`}
+              onClick={() => (isFuelMixVisible ? hideFuelMix() : showFuelMix())}
+            >
+              Fuel Mix
+            </button>
+            <a
+              href="https://www.planetpatch.dev"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-1 rounded-md hover:bg-gray-200 transition-colors"
+              aria-label="Visit PlanetPatch.dev"
+            >
+              <Image
+                src="/planetpatch_logo_transparent.png"
+                alt="PlanetPatch Logo"
+                width={24}
+                height={24}
+              />
+            </a>
+          </div>
+        )}
+      </header>
+      
+      {/* The mobile dropdown menu has been completely removed */}
 
       <div className={!isStarted ? 'blur-sm' : ''}>
-        {/* Spacer so content doesn't sit under the fixed header on very small screens */}
-        <div />
+        {/* Spacer for the fixed header */}
+        <div className="h-16" /> 
         <MapAndDashboardWrapper mapData={mapData} initialLocation={initialLocation} />
       </div>
 
-      {/* Keep panels where they already are */}
-      <FuelMixPanel />
+      {isStarted && <FuelMixPanel />}
     </div>
   );
 }

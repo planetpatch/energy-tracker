@@ -10,12 +10,10 @@ interface FuelMix {
 
 interface MapState {
   selectedZcta: ZCTAFeature | null;
-  plantsInSelectedZcta: PlantFeature[];
   hoveredZcta: ZCTAFeature | null;
-  plantsInHoveredZcta: PlantFeature[];
   programmaticZctaFeature: ZCTAFeature | null;
   selectedPlant: PlantFeature | null;
-  
+
   // Map layer visibility
   isZctaVisible: boolean;
   isMgeVisible: boolean;
@@ -31,12 +29,12 @@ interface MapState {
 }
 
 interface MapActions {
-  selectZcta: (feature: ZCTAFeature, plants: PlantFeature[]) => void;
-  hoverZcta: (feature: ZCTAFeature | null, plants: PlantFeature[]) => void;
+  selectZcta: (feature: ZCTAFeature) => void;
+  hoverZcta: (feature: ZCTAFeature | null) => void;
   setProgrammaticSelection: (feature: ZCTAFeature | null) => void;
   clearProgrammaticFeature: () => void;
   clearSelection: () => void;
-selectPlant: (plant: PlantFeature) => void;
+  selectPlant: (plant: PlantFeature) => void;
   toggleLayerVisibility: (layerName: 'zcta' | 'mge' | 'alliant') => void;
 
   showFuelMixForProvider: (provider: 'MGE' | 'Alliant' | 'Both', data: FuelMix) => void;
@@ -50,9 +48,7 @@ selectPlant: (plant: PlantFeature) => void;
 export const useMapStore = create<MapState & MapActions>((set, get) => ({
   // --- INITIAL STATE ---
   selectedZcta: null,
-  plantsInSelectedZcta: [],
   hoveredZcta: null,
-  plantsInHoveredZcta: [],
   programmaticZctaFeature: null,
   selectedPlant: null,
 
@@ -64,23 +60,19 @@ export const useMapStore = create<MapState & MapActions>((set, get) => ({
   fuelMixData: null,
   isFuelMixVisible: false,
 
-  // NEW: dashboard visibility (default visible)
   isDashboardVisible: true,
 
   // --- ACTIONS IMPLEMENTATION ---
-  selectZcta: (feature, plants) => set({
+  selectZcta: (feature) => set({
     selectedZcta: feature,
-    plantsInSelectedZcta: plants,
     hoveredZcta: null,
-    plantsInHoveredZcta: [],
     selectedPlant: null,
   }),
   
-  hoverZcta: (feature, plants) => {
+  hoverZcta: (feature) => {
     if (!get().selectedZcta) {
       set({
         hoveredZcta: feature,
-        plantsInHoveredZcta: plants,
       });
     }
   },
@@ -88,14 +80,12 @@ export const useMapStore = create<MapState & MapActions>((set, get) => ({
   setProgrammaticSelection: (feature) => set({
     programmaticZctaFeature: feature,
     selectedZcta: feature,
-    plantsInSelectedZcta: feature?.properties.plants || [],
     hoveredZcta: null,
-    plantsInHoveredZcta: [],
   }),
 
   clearProgrammaticFeature: () => set({ programmaticZctaFeature: null }),
-  clearSelection: () => set({ selectedZcta: null, plantsInSelectedZcta: [] }),
-  selectPlant: (plant) => set({selectedPlant: plant}),
+  clearSelection: () => set({ selectedZcta: null, selectedPlant: null }),
+  selectPlant: (plant) => set({ selectedPlant: plant }),
 
   toggleLayerVisibility: (layerName) => set((state) => {
     switch (layerName) {
@@ -116,10 +106,8 @@ export const useMapStore = create<MapState & MapActions>((set, get) => ({
   hideFuelMix: () => set({
     activeUtility: null,
     isFuelMixVisible: false,
-    // keep fuelMixData cached
   }),
 
-  // NEW: dashboard show/hide
   showDashboard: () => set({ isDashboardVisible: true }),
   hideDashboard: () => set({ isDashboardVisible: false }),
 }));
