@@ -35,6 +35,7 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({ onZipCodeSubmit }) => {
 
   const focusInfoRef = useRef<HTMLDivElement>(null);
   const commentInfoRef = useRef<HTMLDivElement>(null);
+  const followInfoRef = useRef<HTMLDivElement>(null);
 
   const showTooltip = (content: string, targetRef: React.RefObject<HTMLDivElement | null>) =>
     setTooltip({ visible: true, content, targetRef });
@@ -230,8 +231,8 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({ onZipCodeSubmit }) => {
 
                                           <div className="flex justify-center items-center">
                                 <div
-                  ref={focusInfoRef}
-                  onMouseEnter={() => showTooltip("Focus on Energy is Wisconsin's statewide program for energy efficiency and renewables. Click to learn more and get a free energy-saving kit.", focusInfoRef)}
+                  ref={followInfoRef}
+                  onMouseEnter={() => showTooltip("Follow us on Instagram and get a free sticker. Woot woot!", followInfoRef)}
                   onMouseLeave={hideTooltip}
                   className=" cursor-pointer text-gray-400 hover:text-gray-600"
                 >
@@ -251,6 +252,7 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({ onZipCodeSubmit }) => {
             </div>
           )}
         </div>
+        
         <div className="text-center pt-2">
             Created by <br/>
         <a className='underline text-blue-500 font-bold'href='www.planetpatch.dev'>

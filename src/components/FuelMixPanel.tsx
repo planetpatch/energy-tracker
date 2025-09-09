@@ -87,7 +87,7 @@ const FuelMixPanel: React.FC = () => {
               <ProgressBar
                 utilityName="Alliant Energy"
                 renewablePercent={fuelMixData.Alliant.renewable_percent}
-                colorClass="bg-blue-500"
+                colorClass="bg-orange-500"
               />
             )}
           </div>
@@ -100,7 +100,7 @@ const FuelMixPanel: React.FC = () => {
               type="checkbox"
               checked={showMge}
               onChange={() => setShowMge(!showMge)}
-              className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+              className="h-4 w-4 rounded border-gray-300 text-green-600 accent-green-800 focus:ring-green-500"
             />
             <span className="ml-2 font-medium text-gray-700">MGE</span>
           </label>
@@ -109,7 +109,7 @@ const FuelMixPanel: React.FC = () => {
               type="checkbox"
               checked={showAlliant}
               onChange={() => setShowAlliant(!showAlliant)}
-              className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              className="h-4 w-4 rounded border-gray-300 text-blue-600 accent-orange-700 focus:ring-blue-500"
             />
             <span className="ml-2 font-medium text-gray-700">Alliant Energy</span>
           </label>

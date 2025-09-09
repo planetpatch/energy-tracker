@@ -100,12 +100,10 @@ export default function WelcomeModal({ onStartTracking, mapData }: WelcomeModalP
                 Go Directly to Map
               </button>
 
-                      <div className="text-center pt-2">
-            Created by&nbsp;
+            <br/><br/>Created by&nbsp;
         <a className='underline text-blue-500 font-bold'href='https://www.planetpatch.dev' target="_blank">
          PlanetPatch Inc.
         </a> 
-              </div>
               
             </p>
           </>
