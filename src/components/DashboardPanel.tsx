@@ -27,7 +27,6 @@ export interface DashboardPanelProps {
   tooltip: { visible: boolean; content: string; targetRef: React.RefObject<HTMLDivElement | null> | null; };
   // CORRECTED: The ref's current property can be null
   focusInfoRef: React.RefObject<HTMLDivElement | null>;
-  commentInfoRef: React.RefObject<HTMLDivElement | null>;
   followInfoRef: React.RefObject<HTMLDivElement | null>;
   showTooltip: (content: string, targetRef: React.RefObject<HTMLDivElement | null>) => void;
   hideTooltip: () => void;
@@ -61,7 +60,6 @@ const DashboardPanel: React.FC<{onZipCodeSubmit: (zipCode: string) => void}> = (
   }>({ visible: false, content: '', targetRef: null });
 
   const focusInfoRef = useRef<HTMLDivElement>(null);
-  const commentInfoRef = useRef<HTMLDivElement>(null);
   const followInfoRef = useRef<HTMLDivElement>(null);
   const isDesktop = useMediaQuery('(min-width: 768px)');
 
@@ -98,7 +96,6 @@ const DashboardPanel: React.FC<{onZipCodeSubmit: (zipCode: string) => void}> = (
     setIsActionsOpen,
     tooltip,
     focusInfoRef,
-    commentInfoRef,
     followInfoRef,
     showTooltip,
     hideTooltip,

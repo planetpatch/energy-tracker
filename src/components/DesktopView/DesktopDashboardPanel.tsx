@@ -17,8 +17,10 @@ export const DesktopDashboardPanel: React.FC<DashboardPanelProps> = ({
   displayZcta,
   isHovering,
   tooltipPosition,
+  focusInfoRef, followInfoRef, isZctaVisible, toggleLayerVisibility, isMgeVisible, isAlliantVisible, showTooltip, hideTooltip
 }) => {
   if (!isDashboardVisible) return null;
+  
 
   return (
     <>
@@ -80,7 +82,7 @@ export const DesktopDashboardPanel: React.FC<DashboardPanelProps> = ({
           )}
         </div>
 
-        {/* Collapsible Legend Section */}
+{/* Collapsible Legend Section */}
         <div className="border-t border-gray-200 pt-4 mb-4">
           <button
             onClick={() => setIsLegendOpen(!isLegendOpen)}
@@ -96,13 +98,24 @@ export const DesktopDashboardPanel: React.FC<DashboardPanelProps> = ({
           </button>
           {isLegendOpen && (
             <div className="mt-2 space-y-2">
-              {/* Checkboxes for layers */}
+              <div className="flex items-center">
+                <input id="zcta-toggle-desktop" type="checkbox" checked={isZctaVisible} onChange={() => toggleLayerVisibility('zcta')} className="h-4 w-4 rounded border-gray-300 text-indigo-800 focus:ring-indigo-800 accent-red-900 " />
+                <label htmlFor="zcta-toggle-desktop" className="ml-3 block text-sm text-gray-900">Dane County ZIP Codes</label>
+              </div>
+              <div className="flex items-center">
+                <input id="mge-toggle-desktop" type="checkbox" checked={isMgeVisible} onChange={() => toggleLayerVisibility('mge')} className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500 accent-green-800" />
+                <label htmlFor="mge-toggle-desktop" className="ml-3 block text-sm text-gray-900">MGE Service Area</label>
+              </div>
+              <div className="flex items-center">
+                <input id="alliant-toggle-desktop" type="checkbox" checked={isAlliantVisible} onChange={() => toggleLayerVisibility('alliant')} className="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500 accent-orange-700" />
+                <label htmlFor="alliant-toggle-desktop" className="ml-3 block text-sm text-gray-900">Alliant Service Area</label>
+              </div>
             </div>
           )}
         </div>
 
         {/* Collapsible Take Action Section */}
-        <div className="border-t border-b border-gray-200 pt-4 pb-2">
+        <div className="border-t border-gray-200 pt-4 mb-4">
           <button
             onClick={() => setIsActionsOpen(!isActionsOpen)}
             className="flex justify-between items-center w-full text-left"
@@ -117,11 +130,21 @@ export const DesktopDashboardPanel: React.FC<DashboardPanelProps> = ({
           </button>
           {isActionsOpen && (
             <div className="mt-4 flex flex-col space-y-3">
-              {/* Action buttons */}
+              <div className="flex justify-center items-center">
+                <a href="https://focusonenergy.com/residential/simple-energy-efficiency" target="_blank" rel="noopener noreferrer" className="w-full text-center text-xs font-gemunu pixel-button-base pixel-button-primary">FREE Focus on Energy Box</a>
+                <div ref={focusInfoRef} onMouseEnter={() => showTooltip("Focus on Energy is Wisconsin's statewide program for energy efficiency and renewables. Click to learn more and get a free energy-saving kit.", focusInfoRef)} onMouseLeave={hideTooltip} className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>
+                </div>
+              </div>
+              <div className="flex justify-center items-center">
+                <a href="https://instagram.com/planetpatch.dev" target="_blank" rel="noopener noreferrer" className="w-full text-center text-xs font-gemunu pixel-button-base pixel-button-primary">Follow PlanetPatch Instagram </a>
+                <div ref={followInfoRef} onMouseEnter={() => showTooltip("Follow us on Instagram and get a free sticker. Woot woot!", followInfoRef)} onMouseLeave={hideTooltip} className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>
+                </div>
+              </div>
             </div>
           )}
         </div>
-        
         <div className="text-center pt-2">
             Created by <br/>
           <a className='underline text-blue-500 font-bold' href='https://www.planetpatch.dev' target="_blank" rel="noopener noreferrer">
