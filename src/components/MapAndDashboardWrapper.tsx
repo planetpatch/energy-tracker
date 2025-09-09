@@ -1,29 +1,15 @@
-// src/components/MapAndDashboardWrapper.tsx
-"use client"
+"use client";
 
-// TOOLS IMPORTS
-import type React from "react"
-import { useCallback, useRef, useEffect} from "react"
-import dynamic from "next/dynamic"
-
-// CUSTOM COMPONENT & FUNCTION IMPORTS
-import DashboardPanel from "./DashboardPanel"
-import { getZctaCodeFromFeature } from '../utils/geo';
-
-// CUSTOM STORE FOR CLIENT SIDE STATE MANAGEMENT
+import { useCallback, useRef, useEffect } from "react";
 import { useMapStore } from "@/stores/mapStore";
-
-// TYPE IMPORTS
+import { getZctaCodeFromFeature } from '../utils/geo';
 import type { ZCTAFeature } from '../types';
 import type { MapData } from "@/lib/data-loader";
 
-
-const DynamicMapComponent = dynamic(() => import("./Map"), {
-  ssr: false,
-  loading: () => <p>Loading map...</p>,
-})
-
-
+// Import the new responsive components and the media query hook
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import DesktopMapWrapper from "./DesktopView/DesktopMapWrapper";
+import MobileMapWrapper from "./MobileView/MobileMapWrapper";
 
 interface MapAndDashboardWrapperProps {
   initialLocation?: string;
@@ -31,40 +17,32 @@ interface MapAndDashboardWrapperProps {
 }
 
 const MapAndDashboardWrapper: React.FC<MapAndDashboardWrapperProps> = ({ initialLocation, mapData }) => {
-  // State for user interactions (selection and hover) remains here
-  // const [selectedZcta, setSelectedZcta] = useState<ZCTAFeature | null>(null);
-  // const [plantsInSelectedZcta, setPlantsInSelectedZcta] = useState<PlantFeature[]>([]);
-  // const [hoveredZcta, setHoveredZcta] = useState<ZCTAFeature | null>(null);
-  // const [plantsInHoveredZcta, setPlantsInHoveredZcta] = useState<PlantFeature[]>([]);
-  // const [programmaticZctaFeature, setProgrammaticZctaFeature] = useState<ZCTAFeature | null>(null);
+  // --- SHARED LOGIC ---
 
-  // const selectedZctaRef = useRef(selectedZcta);
-  // useEffect(() => {
-  //   selectedZctaRef.current = selectedZcta;
-  // }, [selectedZcta]);
-
+  // Ref to hold a map of all ZIP codes for quick lookups
   const allZctaFeaturesMapRef = useRef<Map<string, ZCTAFeature>>(new Map());
+  
+  // Custom hook to detect screen size
+  const isDesktop = useMediaQuery('(min-width: 768px)');
 
+  // This function handles the submission from the Dashboard's search bar
   const handleZipCodeSubmit = useCallback((zipCode: string) => {
-    // Get the action directly from the store. We use getState() here because
-    // this handler is not in the React render cycle.
     const { setProgrammaticSelection } = useMapStore.getState();
-
     const zipMatch = zipCode.match(/\d{5}/);
     const searchKey = zipMatch ? zipMatch[0] : zipCode;
     const foundZcta = allZctaFeaturesMapRef.current.get(searchKey);
 
     if (foundZcta) {
-      // Instead of calling local state setters, we call the store's action.
       setProgrammaticSelection(foundZcta);
     } else {
-      alert(`ZIP Code ${searchKey} not found in ZCTA data or not in Wisconsin.`);
-      // Clear the programmatic selection in the store if not found.
+      alert(`ZIP Code ${searchKey} not found in Dane County.`);
       setProgrammaticSelection(null);
     }
   }, []);
+
+  // This effect populates the ZIP code map on initial load
   useEffect(() => {
-    if (mapData && mapData.zctaData) {
+    if (mapData?.zctaData) {
       const newMap = new Map<string, ZCTAFeature>();
       mapData.zctaData.features.forEach(feature => {
         const zctaCode = getZctaCodeFromFeature(feature);
@@ -73,60 +51,27 @@ const MapAndDashboardWrapper: React.FC<MapAndDashboardWrapperProps> = ({ initial
         }
       });
       allZctaFeaturesMapRef.current = newMap;
-      console.log(`MADW: ZCTA lookup map populated with ${newMap.size} features from props.`);
 
-      // If there's an initial location, process it now that the data is ready.
+      // Process initial location if provided
       if (initialLocation) {
         handleZipCodeSubmit(initialLocation);
       }
     }
   }, [initialLocation, mapData, handleZipCodeSubmit]);
 
+  // Props to be passed down to both responsive components
+  const sharedProps = {
+    mapData,
+    handleZipCodeSubmit,
+  };
 
+  // --- CONDITIONAL RENDER ---
+  // Render the appropriate component based on the screen size
+  return isDesktop ? (
+    <DesktopMapWrapper {...sharedProps} />
+  ) : (
+    <MobileMapWrapper {...sharedProps} />
+  );
+};
 
-  // const handleZCTAClick = useCallback((feature: ZCTAFeature, plants: PlantFeature[]) => {
-  //   setSelectedZcta(feature);
-  //   setPlantsInSelectedZcta(plants);
-  //   setHoveredZcta(null);
-  //   setPlantsInHoveredZcta([]);
-  // }, []);
-
-  // const handleZCTAHover = useCallback(
-  //   (feature: ZCTAFeature | null, plants: PlantFeature[]) => {
-  //     if (!selectedZctaRef.current && !programmaticZctaFeature) {
-  //       setHoveredZcta(feature);
-  //       setPlantsInHoveredZcta(plants);
-  //     }
-  //   },
-  //   [programmaticZctaFeature],
-  // );
-
-  return (
-    <div className="relative flex w-full flex-col h-[calc(100vh)]">
-      <div className="w-full flex-grow">
-        <DynamicMapComponent
-          // onFeatureClick={handleZCTAClick}
-          // onZCTAHover={handleZCTAHover}
-          // programmaticZctaFeature={programmaticZctaFeature}
-          zctaGeojsonData={mapData.zctaData}
-          plantsData={mapData.plantsData}
-          mgeBordersData={mapData.mgeBordersData}
-          alliantBordersData={mapData.alliantBordersData}
-        />
-      </div>
-      <div>
-<DashboardPanel
-        // selectedZcta={selectedZcta}
-        // plantsInSelectedZcta={plantsInSelectedZcta}
-        // hoveredZcta={hoveredZcta}
-        // plantsInHoveredZcta={plantsInHoveredZcta}
-        onZipCodeSubmit={handleZipCodeSubmit}
-      />
-      </div>
-      
-
-    </div>
-  )
-}
-
-export default MapAndDashboardWrapper
+export default MapAndDashboardWrapper;
