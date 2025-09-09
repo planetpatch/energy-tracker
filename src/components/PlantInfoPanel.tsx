@@ -3,26 +3,26 @@
 
 import React, { useState, useEffect } from 'react';
 import { useMapStore } from '@/stores/mapStore';
-import {
-  SOLAR_ICON_PATH, NATURAL_GAS_ICON_PATH, WIND_ICON_PATH,
-  PETROLEUM_ICON_PATH, COAL_ICON_PATH, INDUSTRIAL_BATTERY_ICON_PATH,
-  HYDROELECTRIC_ICON_PATH
-} from '../map/icon-paths';
-import Image from "next/image";
+// import {
+//   SOLAR_ICON_PATH, NATURAL_GAS_ICON_PATH, WIND_ICON_PATH,
+//   PETROLEUM_ICON_PATH, COAL_ICON_PATH, INDUSTRIAL_BATTERY_ICON_PATH,
+//   HYDROELECTRIC_ICON_PATH
+// } from '../map/icon-paths';
+// import Image from "next/image";
 
 
-const getSourceIconPath = (primarySource?: string | null): string | null => {
-  switch (primarySource) {
-    case "Solar": return SOLAR_ICON_PATH;
-    case "Natural Gas": return NATURAL_GAS_ICON_PATH;
-    case "Wind": return WIND_ICON_PATH;
-    case "Petroleum": return PETROLEUM_ICON_PATH;
-    case "Coal": return COAL_ICON_PATH;
-    case "Battery Storage": return INDUSTRIAL_BATTERY_ICON_PATH;
-    case "Hydroelectric": return HYDROELECTRIC_ICON_PATH;
-    default: return null;
-  }
-};
+// const getSourceIconPath = (primarySource?: string | null): string | null => {
+//   switch (primarySource) {
+//     case "Solar": return SOLAR_ICON_PATH;
+//     case "Natural Gas": return NATURAL_GAS_ICON_PATH;
+//     case "Wind": return WIND_ICON_PATH;
+//     case "Petroleum": return PETROLEUM_ICON_PATH;
+//     case "Coal": return COAL_ICON_PATH;
+//     case "Battery Storage": return INDUSTRIAL_BATTERY_ICON_PATH;
+//     case "Hydroelectric": return HYDROELECTRIC_ICON_PATH;
+//     default: return null;
+//   }
+// };
 
 
 
