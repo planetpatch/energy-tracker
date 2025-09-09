@@ -6,8 +6,6 @@ import type { DashboardPanelProps } from '../DashboardPanel';
 export const MobileDashboardPanel: React.FC<DashboardPanelProps> = ({
   isDashboardVisible,
   hideDashboard,
-  selectedZcta,
-  hoveredZcta,
   isZctaVisible,
   isMgeVisible,
   isAlliantVisible,
@@ -18,7 +16,6 @@ export const MobileDashboardPanel: React.FC<DashboardPanelProps> = ({
   setIsLegendOpen,
   isActionsOpen,
   setIsActionsOpen,
-  tooltip,
   focusInfoRef,
   commentInfoRef,
   followInfoRef,
@@ -27,7 +24,6 @@ export const MobileDashboardPanel: React.FC<DashboardPanelProps> = ({
   handleSubmit,
   displayZcta,
   isHovering,
-  tooltipPosition,
 }) => {
   if (!isDashboardVisible) return null;
 
