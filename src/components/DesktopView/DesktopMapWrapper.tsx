@@ -22,7 +22,6 @@ const DesktopMapWrapper: React.FC<DesktopMapWrapperProps> = ({ mapData, handleZi
       <div className="w-full flex-grow">
         <DynamicMapComponent
           zctaGeojsonData={mapData.zctaData}
-          plantsData={mapData.plantsData}
           mgeBordersData={mapData.mgeBordersData}
           alliantBordersData={mapData.alliantBordersData}
         />
