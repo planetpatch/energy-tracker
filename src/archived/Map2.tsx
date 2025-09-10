@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useCallback, useState } from "react";
 import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-import { useMapStore } from "@/stores/mapStore";
+import { useMapStore } from "./mapStore_plants";
 import type {
   ZCTAFeature,
   PlantFeatureCollection,PlantFeature,
