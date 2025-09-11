@@ -56,7 +56,6 @@ const MobileMapWrapper: React.FC<MobileMapWrapperProps> = ({ mapData, handleZipC
       <div className="w-full h-full">
         <DynamicMapComponent
           zctaGeojsonData={mapData.zctaData}
-          plantsData={mapData.plantsData}
           mgeBordersData={mapData.mgeBordersData}
           alliantBordersData={mapData.alliantBordersData}
         />
