@@ -5,20 +5,29 @@ import React from 'react';
 import { gemunuLibre } from '@/ui/fonts';
 import type { FuelMixPanelProps, ProgressBarProps } from '../FuelMixPanel'; // Shared types
 
-const ProgressBar: React.FC<ProgressBarProps> = ({ utilityName, renewablePercent, colorClass }) => (
-  <div className="mb-2">
-    <div className="flex justify-between mb-1">
-      <span className="text-s font-semibold text-gray-700">{utilityName}</span>
-      <span className="text-xs font-bold text-green-800">{renewablePercent.toFixed(1)}% Renewable</span>
+const ProgressBar: React.FC<ProgressBarProps> = ({ utilityName, renewablePercent, colorClass }) => {
+  // 👇 1. CALCULATE the non-renewable percentage here
+  const nonRenewablePercent = 100 - renewablePercent;
+
+  return (
+    <div className="mb-2">
+      <div className="flex justify-between mb-1">
+        <span className="text-s font-semibold text-gray-700">{utilityName}</span>
+        <div className="flex space-x-2"> {/* Wrapper for alignment */}
+          <span className="text-xs font-bold text-green-700">{renewablePercent.toFixed(1)}% Renewable</span>
+          {/* 👇 2. DISPLAY the calculated value */}
+          <span className="text-xs font-bold text-gray-800">/ {nonRenewablePercent.toFixed(1)}% Non-Renewable</span>
+        </div>
+      </div>
+      <div className="w-full bg-gray-500 rounded-full h-3.5">
+        <div
+          className={`${colorClass} h-3.5 rounded-full transition-all duration-500 ease-out`}
+          style={{ width: `${renewablePercent}%` }}
+        />
+      </div>
     </div>
-    <div className="w-full bg-gray-500 rounded-full h-3.5">
-      <div
-        className={`${colorClass} h-3.5 rounded-full transition-all duration-500 ease-out`}
-        style={{ width: `${renewablePercent}%` }}
-      />
-    </div>
-  </div>
-);
+  );
+};
 
 export const MobileFuelMixPanel: React.FC<FuelMixPanelProps> = ({
   isMounted,
@@ -57,6 +66,7 @@ export const MobileFuelMixPanel: React.FC<FuelMixPanelProps> = ({
               </svg>
             </button>
         </div>
+        
       </div>
 
 

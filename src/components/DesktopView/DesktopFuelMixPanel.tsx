@@ -7,20 +7,30 @@ import { gemunuLibre } from '@/ui/fonts';
 import type { FuelMixPanelProps, ProgressBarProps } from '../FuelMixPanel'; // Shared types
 
 // Re-defining ProgressBar here, but it could be in its own file
-const ProgressBar: React.FC<ProgressBarProps> = ({ utilityName, renewablePercent, colorClass }) => (
-  <div className="mb-2">
-    <div className="flex justify-between mb-1">
-      <span className="text-xs font-semibold text-gray-700">{utilityName}</span>
-      <span className="text-xs text-gray-600">{renewablePercent.toFixed(1)}% Renewable</span>
+const ProgressBar: React.FC<ProgressBarProps> = ({ utilityName, renewablePercent, colorClass }) => {
+  // 1. CALCULATE the non-renewable percentage
+  const nonRenewablePercent = 100 - renewablePercent;
+
+  return (
+    <div className="mb-2">
+      <div className="flex justify-between mb-1">
+        <span className="text-xs font-semibold text-gray-700">{utilityName}</span>
+        {/* 👇 2. WRAP the percentages for alignment */}
+        <div className="flex space-x-2">
+          <span className="text-xs font-bold text-green-800">{renewablePercent.toFixed(1)}% Renewable</span>
+          {/* 👇 3. ADD the new span to display the value */}
+          <span className="text-xs font-bold text-gray-800">{nonRenewablePercent.toFixed(1)}% Non-Renewable</span>
+        </div>
+      </div>
+      <div className="w-full bg-gray-500 rounded-full h-2.5">
+        <div
+          className={`${colorClass} h-2.5 rounded-full transition-all duration-500 ease-out`}
+          style={{ width: `${renewablePercent}%` }}
+        />
+      </div>
     </div>
-    <div className="w-full bg-gray-500  rounded-full h-2.5">
-      <div
-        className={`${colorClass} h-2.5 rounded-full transition-all duration-500 ease-out`}
-        style={{ width: `${renewablePercent}%` }}
-      />
-    </div>
-  </div>
-);
+  );
+};
 
 export const DesktopFuelMixPanel: React.FC<FuelMixPanelProps> = ({
   isMounted,
