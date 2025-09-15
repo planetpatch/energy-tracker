@@ -49,7 +49,7 @@ export const DesktopFuelMixPanel: React.FC<FuelMixPanelProps> = ({
   
   return (
     <div
-      className={`fixed bottom-4 right-4 z-[1000] w-full max-w-sm rounded-lg bg-white/90 shadow-xl backdrop-blur-md p-4 transition-transform duration-300 ease-in-out ${
+      className={`fixed bottom-4 left-4 z-[1000] w-full max-w-sm rounded-lg bg-white/90 shadow-xl backdrop-blur-md p-4 transition-transform duration-300 ease-in-out ${
         isMounted ? 'translate-y-0' : 'translate-y-[150%]'
       }`}
       role="region"
