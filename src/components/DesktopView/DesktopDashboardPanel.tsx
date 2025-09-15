@@ -93,7 +93,7 @@ export const DesktopDashboardPanel: React.FC<DashboardPanelProps> = ({
             onClick={() => setIsLegendOpen(!isLegendOpen)}
             className="flex justify-between items-center w-full text-left"
           >
-            <h3 className="text-lg font-gemunu font-bold text-gray-800">Legend</h3>
+            <h3 className="text-lg font-gemunu font-bold text-gray-800">Legend 📍</h3>
             <svg
               className={`w-5 h-5 transition-transform duration-200 ${isLegendOpen ? 'rotate-180' : ''}`}
               fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -125,7 +125,7 @@ export const DesktopDashboardPanel: React.FC<DashboardPanelProps> = ({
             onClick={() => setTakeActionVisible(!isTakeActionVisible)}
             className="flex justify-between items-center w-full text-left"
           >
-            <h3 className="text-lg font-gemunu font-bold text-gray-800">Take Action!</h3>
+            <h3 className="text-lg font-gemunu font-bold text-gray-800">Take Action! 😼</h3>
             <svg
               className={`w-5 h-5 transition-transform duration-200 ${isTakeActionVisible ? 'rotate-180' : ''}`}
       fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -138,7 +138,7 @@ export const DesktopDashboardPanel: React.FC<DashboardPanelProps> = ({
                <div className="flex justify-center items-center">
                 <a href="https://focusonenergy.com/residential/simple-energy-efficiency" target="_blank" rel="noopener noreferrer"
                   className={`w-full h-full flex items-center rounded-sm justify-center pixel-button-base`}>
-                  FREE Energy Kit
+                  FREE Energy Kit 🔋
                 </a>
                         
                 <div ref={focusInfoRef}
@@ -156,7 +156,8 @@ export const DesktopDashboardPanel: React.FC<DashboardPanelProps> = ({
                 <a href="https://instagram.com/planetpatch.dev" target="_blank" rel="noopener noreferrer"
                   className={`w-full h-full flex items-center rounded-sm justify-center pixel-button-base`}
                 >
-                  Follow PlanetPatch</a>
+                  Follow PlanetPatch 🔗
+                </a>
                 <div ref={followInfoRef}
                   onMouseEnter={() => showTooltip("Follow us on Instagram and get a free sticker. Woot woot!",
                   followInfoRef)}
@@ -168,7 +169,8 @@ export const DesktopDashboardPanel: React.FC<DashboardPanelProps> = ({
               <div className="flex justify-center items-center">
                  <a href="https://www.mge.com/smart-energy/clean-energy/renewable-energy-programs/green-power-tomorrow" target="_blank" rel="noopener noreferrer"
                   className={`w-full h-full flex items-center rounded-sm justify-center pixel-button-base`}>
-                  Renewable Credits</a>
+                  Renewable Credits ⚡️
+                </a>
                 <div ref={creditsInfoRef} onMouseEnter={() => showTooltip(`Both Alliant and MGE offer you 1 kWh of regional renewable energy 
                  per 1 cent you spend. This is one way you can help push our utilities towards investing in more renewable energy faster! 🏎️ `,
                   creditsInfoRef)}
@@ -180,7 +182,8 @@ export const DesktopDashboardPanel: React.FC<DashboardPanelProps> = ({
                                           <div className="flex justify-center items-center">
                  <a href="https://www.planetpatch.dev/projects/energy-tracker/" target="_blank" rel="noopener noreferrer"
                   className={`w-full h-full flex items-center rounded-sm justify-center pixel-button-base`}>
-                 Learn More</a>
+                  Learn More 🧐
+                </a>
                 <div ref={learnMoreInfoRef} onMouseEnter={() => showTooltip(`Learn more about your energy system and the steps you can take to 
                 build a resilient climate future!`, learnMoreInfoRef)}
                   onMouseLeave={hideTooltip} className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600">

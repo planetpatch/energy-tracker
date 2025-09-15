@@ -17,9 +17,9 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ utilityName, renewablePercent
         <span className="text-xs font-semibold text-gray-700">{utilityName}</span>
         {/* 👇 2. WRAP the percentages for alignment */}
         <div className="flex space-x-2">
-          <span className="text-xs font-bold text-green-800">{renewablePercent.toFixed(1)}% Renewable</span>
+          <span className="text-xs font-bold text-green-800">{renewablePercent.toFixed(1)}% Renewable 😎</span>
           {/* 👇 3. ADD the new span to display the value */}
-          <span className="text-xs font-bold text-gray-800">/ {nonRenewablePercent.toFixed(1)}% Non-Renewable</span>
+          <span className="text-xs font-bold text-gray-800">/ {nonRenewablePercent.toFixed(1)}% Non-Renewable 🤢</span>
         </div>
       </div>
       <div className="w-full bg-gray-500 rounded-full h-4.5">
@@ -134,7 +134,7 @@ export const DesktopFuelMixPanel: React.FC<FuelMixPanelProps> = ({
             onClick={handleTakeActionClick}
             className="w-full h-9 flex items-center justify-center font-gemunu text-base pixel-button-base pixel-button-primary"
           >
-            Take Action!
+            Take Action! 😼
           </button>
         </div>
       </div>
