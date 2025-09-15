@@ -137,3 +137,42 @@ h6 {
 .animate-fade-in {
   animation: fade-in 0.5s ease-in-out;
 }
+
+/* src/app/globals.css */
+
+/*
+  Styles for the orientation lock overlay.
+  It's hidden by default.
+*/
+.orientation-lock {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background-color: #1e4f2c;
+  /* A dark gray */
+  display: none;
+  /* Hidden by default */
+  justify-content: center;
+  align-items: center;
+}
+
+/*
+  This is the media query that does the magic.
+  It targets screens that are phone-sized (max 767px wide)
+  AND are in landscape orientation.
+*/
+@media only screen and (max-width: 767px) and (orientation: landscape) {
+
+  /* Hide the main app content */
+  #__next {
+    display: none;
+  }
+
+  /* Show our overlay */
+  .orientation-lock {
+    display: flex;
+  }
+}

@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Gemunu_Libre } from "next/font/google";
 import { GoogleAnalytics } from '@next/third-parties/google'
+
 //import Navigation from "@/components/navigation";
 //import Footer from "@/components/navigation/Footer";
 
 import "./globals.css";
+import { RotateDeviceOverlay } from "@/components/MobileView/RotateDeviceOverlay";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,6 +42,7 @@ export default function RootLayout({
       >
               
         {children}
+        <RotateDeviceOverlay /> 
         <GoogleAnalytics gaId="G-9CKG8ZWVEC" />
               
       </body>
