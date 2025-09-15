@@ -23,7 +23,8 @@ export const MobileDashboardPanel: React.FC<DashboardPanelProps> = ({
   // hideTooltip,
   handleSubmit,
   displayZcta,
-  isHovering, tooltip, tooltipPosition
+  isHovering,
+  // tooltip, tooltipPosition
 }) => {
     const { isTakeActionVisible, setTakeActionVisible } = useMapStore();
   if (!isDashboardVisible) return null;
@@ -153,31 +154,8 @@ export const MobileDashboardPanel: React.FC<DashboardPanelProps> = ({
                 </a>
         </div>
 
-              {/* <div className="flex justify-center items-center mr-2">
+          
 
-                <a href="https://focusonenergy.com/residential/simple-energy-efficiency" target="_blank" rel="noopener noreferrer"
-                  
-                  className={`w-full h-full flex items-center rounded-sm justify-center font-gemunu text-sm pixel-button-base`}>
-                  FREE Focus on Energy Box</a>
-
-                                <div ref={focusInfoRef}
-                  onMouseEnter={() => showTooltip(`Focus on Energy is Wisconsin's statewide program for energy efficiency and renewables. 
-                    Click to learn more and get a free energy-saving kit.`, focusInfoRef)}
-                  onMouseLeave={hideTooltip} className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd"
-                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                    clipRule="evenodd" /></svg>
-                </div>
-                
-            </div>
-              <div className="flex justify-center items-center mr-2">
-
-                <a href="https://instagram.com/planetpatch.dev" target="_blank" rel="noopener noreferrer"
-                  className="w-full text-center text-xs font-gemunu pixel-button-base pixel-button-primary rounded-sm">Follow PlanetPatch Instagram </a>
-                <div ref={followInfoRef} onMouseEnter={() => showTooltip("Follow us on Instagram and get a free sticker. Woot woot!", followInfoRef)} onMouseLeave={hideTooltip} className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600">
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>
-              </div>
-            </div> */}
             </div>
 
             
@@ -186,36 +164,8 @@ export const MobileDashboardPanel: React.FC<DashboardPanelProps> = ({
       </div>
       
 
-{/* 
-        <div className="text-center pt-2 border-t border-gray-200">
-          <a className='underline text-blue-500 font-bold' href='https://www.planetpatch.dev' target="_blank" rel="noopener noreferrer">
-           PlanetPatch Inc.
-          </a> 
-        </div> */}
       </div>
       
-
-
-      {/* --- MODIFIED Tooltip Rendering --- */}
-      {tooltip.visible && tooltipPosition && (
-        <div
-          className="z-[1001] w-full max-w-xs rounded-lg bg-gray-800 text-sm font-normal text-white shadow-lg"
-          style={{
-//              top: tooltipPosition.top - 10, 
-//              left: Math.min( // Clamp the left position
-//               window.innerWidth - (320 / 2) - tooltipPadding, 
-// Math.max( 
-//                 (320 / 2) + tooltipPadding,
-//                 tooltipPosition.left + tooltipPosition.width / 2
-//               )
-//             ),
-            // transform: 'translateX(-50%) translateY(-100%)',
-          }}
-        >
-          {tooltip.content}
-           <div className="absolute left-1/2 -translate-x-1/2 bottom-[-8px] w-0 h-0 border-x-8 border-x-transparent border-t-8 border-t-gray-800" />
-        </div>
-      )}
     </>
   );
 };
