@@ -19,12 +19,12 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ utilityName, renewablePercent
         <div className="flex space-x-2">
           <span className="text-xs font-bold text-green-800">{renewablePercent.toFixed(1)}% Renewable</span>
           {/* 👇 3. ADD the new span to display the value */}
-          <span className="text-xs font-bold text-gray-800">{nonRenewablePercent.toFixed(1)}% Non-Renewable</span>
+          <span className="text-xs font-bold text-gray-800">/ {nonRenewablePercent.toFixed(1)}% Non-Renewable</span>
         </div>
       </div>
-      <div className="w-full bg-gray-500 rounded-full h-2.5">
+      <div className="w-full bg-gray-500 rounded-full h-4.5">
         <div
-          className={`${colorClass} h-2.5 rounded-full transition-all duration-500 ease-out`}
+          className={`${colorClass} h-4.5 rounded-full transition-all duration-500 ease-out`}
           style={{ width: `${renewablePercent}%` }}
         />
       </div>
@@ -59,16 +59,16 @@ export const DesktopFuelMixPanel: React.FC<FuelMixPanelProps> = ({
   
   return (
     <div
-      className={`fixed bottom-4 left-4 z-[1000] w-full max-w-sm rounded-lg bg-white/90 shadow-xl backdrop-blur-md p-4 transition-transform duration-300 ease-in-out ${
-        isMounted ? 'translate-y-0' : 'translate-y-[150%]'
-      }`}
-      role="region"
-      aria-label="Fuel mix panel"
+  className={`fixed bottom-4 left-4 z-[1000] w-full max-w-lg rounded-lg bg-white/90 shadow-xl backdrop-blur-md p-4 transition-transform duration-300 ease-in-out ${
+    isMounted ? 'translate-y-0' : 'translate-y-[150%]'
+  }`}
+  role="region"
+  aria-label="Fuel mix panel"
     >
       {/* Header */}
       <div className="flex items-center justify-between pb-2 border-b border-gray-200">
         <h2 className={`text-xl font-bold text-gray-800 ${gemunuLibre.className}`}>
-          Utility Fuel Mix
+          Utility Fuel Mix (Renewable vs. Non-Renewable)
         </h2>
         <button
           onClick={hideFuelMix}
@@ -81,6 +81,10 @@ export const DesktopFuelMixPanel: React.FC<FuelMixPanelProps> = ({
           </svg>
         </button>
       </div>
+
+       {/* <p className="text-xs text-gray-600 mt-2 mb-3">
+        <span className="font-semibold text-green-800">Renewable:</span> Solar, Wind, Hydro, etc. | <span className="font-semibold text-gray-800">Non-Renewable:</span> Coal, Natural Gas, Petroleum
+      </p> */}
 
       {/* Content */}
       <div className="pt-3">

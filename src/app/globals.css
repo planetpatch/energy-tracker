@@ -102,9 +102,9 @@ h6 {
   background-color: var(--btn-green);
 }
 
-.pixel-button-primary:hover {
-  color: var(--btn-green-dark);
-  background-color: white;
+.pixel-button-base:hover {
+  color: white;
+  background-color: var(--btn-green);
 }
 
 /* --- ADDITION FOR INTRO ANIMATION --- */
