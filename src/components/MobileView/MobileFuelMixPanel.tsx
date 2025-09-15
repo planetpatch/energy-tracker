@@ -3,19 +3,17 @@
 import { useMapStore } from '@/stores/mapStore';
 import React from 'react';
 import { gemunuLibre } from '@/ui/fonts';
-import type { FuelMixPanelProps, ProgressBarProps } from '../FuelMixPanel'; // Shared types
+import type { FuelMixPanelProps, ProgressBarProps } from '../FuelMixPanel';
 
 const ProgressBar: React.FC<ProgressBarProps> = ({ utilityName, renewablePercent, colorClass }) => {
-  // 👇 1. CALCULATE the non-renewable percentage here
   const nonRenewablePercent = 100 - renewablePercent;
 
   return (
     <div className="mb-2">
       <div className="flex justify-between mb-1">
         <span className="text-s font-semibold text-gray-700">{utilityName}</span>
-        <div className="flex space-x-2"> {/* Wrapper for alignment */}
+        <div className="flex space-x-2"> 
           <span className="text-xs font-bold text-green-700">{renewablePercent.toFixed(1)}% Renewable</span>
-          {/* 👇 2. DISPLAY the calculated value */}
           <span className="text-xs font-bold text-gray-800">/ {nonRenewablePercent.toFixed(1)}% Non-Renewable</span>
         </div>
       </div>
@@ -48,7 +46,6 @@ export const MobileFuelMixPanel: React.FC<FuelMixPanelProps> = ({
       role="region"
       aria-label="Fuel mix panel"
     >
-      {/* Header with a "drag handle" affordance */}
       <div className="flex flex-col items-center pb-2">
           <div className="w-10 h-1 bg-gray-300 rounded-full mb-2" />
           <div className="w-full flex items-center justify-between">
