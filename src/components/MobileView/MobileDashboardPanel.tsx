@@ -2,6 +2,7 @@
 
 import React from 'react';
 import type { DashboardPanelProps } from '../DashboardPanel';
+import { useMapStore } from '@/stores/mapStore';
 
 export const MobileDashboardPanel: React.FC<DashboardPanelProps> = ({
   isDashboardVisible,
@@ -14,8 +15,8 @@ export const MobileDashboardPanel: React.FC<DashboardPanelProps> = ({
   setZipCodeInput,
   isLegendOpen,
   setIsLegendOpen,
-  isActionsOpen,
-  setIsActionsOpen,
+  // isActionsOpen,
+  // setIsActionsOpen,
   focusInfoRef,
   followInfoRef,
   showTooltip,
@@ -24,7 +25,11 @@ export const MobileDashboardPanel: React.FC<DashboardPanelProps> = ({
   displayZcta,
   isHovering, tooltip, tooltipPosition
 }) => {
+    const { isTakeActionVisible, setTakeActionVisible } = useMapStore();
   if (!isDashboardVisible) return null;
+
+
+
 
   return (
     <>
@@ -107,11 +112,16 @@ export const MobileDashboardPanel: React.FC<DashboardPanelProps> = ({
 
       {/* --- Collapsible Take Action Section (Moved Up) --- */}
       <div className="border-t border-gray-200 pt-4 mb-4">
-        <button onClick={() => setIsActionsOpen(!isActionsOpen)} className="flex justify-between items-center w-full text-left">
+         <button onClick={() => setTakeActionVisible(!isTakeActionVisible)} className="flex justify-between items-center w-full text-left">
           <h3 className="text-lg font-gemunu font-bold text-gray-800">Take Action!</h3>
-          <svg className={`w-5 h-5 transition-transform duration-200 ${isActionsOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+          <svg 
+      // 2. UPDATE THIS CONDITIONAL CLASS
+      className={`w-5 h-5 transition-transform duration-200 ${isTakeActionVisible ? 'rotate-180' : ''}`} 
+      fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+    </svg>
         </button>
-        {isActionsOpen && (
+        {isTakeActionVisible && (
           <div className="mt-3 flex flex-col space-y-3">
               <div className="flex justify-center items-center mr-2">
 

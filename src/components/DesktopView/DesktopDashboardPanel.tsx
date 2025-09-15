@@ -1,5 +1,6 @@
 "use client";
 
+import { useMapStore } from '@/stores/mapStore';
 import React from 'react';
 import type { DashboardPanelProps } from '../DashboardPanel'; // We'll define this in the orchestrator
 
@@ -10,8 +11,8 @@ export const DesktopDashboardPanel: React.FC<DashboardPanelProps> = ({
   setZipCodeInput,
   isLegendOpen,
   setIsLegendOpen,
-  isActionsOpen,
-  setIsActionsOpen,
+  // isActionsOpen,
+  // setIsActionsOpen,
   tooltip,
   handleSubmit,
   displayZcta,
@@ -19,8 +20,11 @@ export const DesktopDashboardPanel: React.FC<DashboardPanelProps> = ({
   tooltipPosition,
   focusInfoRef, followInfoRef, isZctaVisible, toggleLayerVisibility, isMgeVisible, isAlliantVisible, showTooltip, hideTooltip
 }) => {
+
+    const { isTakeActionVisible, setTakeActionVisible } = useMapStore();
   if (!isDashboardVisible) return null;
-  
+
+
 
   return (
     <>
@@ -117,31 +121,78 @@ export const DesktopDashboardPanel: React.FC<DashboardPanelProps> = ({
         {/* Collapsible Take Action Section */}
         <div className="border-t border-gray-200 pt-4 mb-4">
           <button
-            onClick={() => setIsActionsOpen(!isActionsOpen)}
+            onClick={() => setTakeActionVisible(!isTakeActionVisible)}
             className="flex justify-between items-center w-full text-left"
           >
             <h3 className="text-lg font-gemunu font-bold text-gray-800">Take Action!</h3>
             <svg
-              className={`w-5 h-5 transition-transform duration-200 ${isActionsOpen ? 'rotate-180' : ''}`}
-              fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              className={`w-5 h-5 transition-transform duration-200 ${isTakeActionVisible ? 'rotate-180' : ''}`}
+      fill="none" stroke="currentColor" viewBox="0 0 24 24"
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
           </button>
-          {isActionsOpen && (
+          {isTakeActionVisible && (
             <div className="mt-4 flex flex-col space-y-3">
+               <div className="flex justify-center items-center">
+        <a href="https://focusonenergy.com/residential/simple-energy-efficiency" target="_blank" rel="noopener noreferrer"
+          className="w-full text-center text-xs font-gemunu pixel-button-base pixel-button-primary">
+                  FREE Focus on Energy Box</a>
+                
+                <div ref={focusInfoRef}
+                  onMouseEnter={() => showTooltip("Focus on Energy is Wisconsin's statewide program for energy efficiency and renewables. Click to learn more and get a free energy-saving kit.", focusInfoRef)}
+                  onMouseLeave={hideTooltip} className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600">
+                  
+                  <svg
+                    className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                </div>
+              </div>
+
               <div className="flex justify-center items-center">
-                <a href="https://focusonenergy.com/residential/simple-energy-efficiency" target="_blank" rel="noopener noreferrer" className="w-full text-center text-xs font-gemunu pixel-button-base pixel-button-primary">FREE Focus on Energy Box</a>
-                <div ref={focusInfoRef} onMouseEnter={() => showTooltip("Focus on Energy is Wisconsin's statewide program for energy efficiency and renewables. Click to learn more and get a free energy-saving kit.", focusInfoRef)} onMouseLeave={hideTooltip} className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600">
+                <a href="https://instagram.com/planetpatch.dev" target="_blank" rel="noopener noreferrer"
+                  className="w-full text-center text-xs font-gemunu pixel-button-base pixel-button-primary">
+                  Follow PlanetPatch Instagram</a>
+                <div ref={followInfoRef} onMouseEnter={() => showTooltip("Follow us on Instagram and get a free sticker. Woot woot!", followInfoRef)}
+                  onMouseLeave={hideTooltip} className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>
                 </div>
               </div>
+
               <div className="flex justify-center items-center">
-                <a href="https://instagram.com/planetpatch.dev" target="_blank" rel="noopener noreferrer" className="w-full text-center text-xs font-gemunu pixel-button-base pixel-button-primary">Follow PlanetPatch Instagram </a>
-                <div ref={followInfoRef} onMouseEnter={() => showTooltip("Follow us on Instagram and get a free sticker. Woot woot!", followInfoRef)} onMouseLeave={hideTooltip} className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600">
+                 <a href="https://www.mge.com/smart-energy/clean-energy/renewable-energy-programs/green-power-tomorrow" target="_blank" rel="noopener noreferrer"
+                  className="w-full text-center text-xs font-gemunu pixel-button-base pixel-button-primary">
+                  MGE Renewable Energy Credits</a>
+                <div ref={followInfoRef} onMouseEnter={() => showTooltip(`MGE's Green Power Tomorrow (GPT) program offers you 1 kWh of regional renewable energy 
+                 per 1 cent you spend. This is one way you can help push MGE towards investing in more renewable energy! `, followInfoRef)}
+                  onMouseLeave={hideTooltip} className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>
                 </div>
               </div>
+
+                            <div className="flex justify-center items-center">
+                 <a href="https://www.alliantenergy.com/ways-to-save/second-nature" target="_blank" rel="noopener noreferrer"
+                  className="w-full text-center text-xs font-gemunu pixel-button-base pixel-button-primary">
+                 Alliant Renewable Energy Credits</a>
+                <div ref={followInfoRef} onMouseEnter={() => showTooltip(`Alliant's Second Nature program offers you 1 kWh of regional renewable energy 
+                 per 1 cent you spend. This is one way you can help push Alliant towards investing in more renewable energy!  `, followInfoRef)}
+                  onMouseLeave={hideTooltip} className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>
+                </div>
+              </div>
+
+                                          <div className="flex justify-center items-center">
+                 <a href="https://www.planetpatch.dev/projects/energy-tracker/" target="_blank" rel="noopener noreferrer"
+                  className="w-full text-center text-xs font-gemunu pixel-button-base pixel-button-primary">
+                 Learn More</a>
+                <div ref={followInfoRef} onMouseEnter={() => showTooltip(`Learn more about your energy system and the steps you can take to 
+                build a resilient climate future!`, followInfoRef)}
+                  onMouseLeave={hideTooltip} className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>
+                </div>
+              </div>
+
             </div>
           )}
         </div>

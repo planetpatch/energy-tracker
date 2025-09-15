@@ -25,6 +25,7 @@ interface MapState {
 
   // Dashboard panel visibility
   isDashboardVisible: boolean;
+  isTakeActionVisible: boolean;
 }
 
 interface MapActions {
@@ -41,6 +42,7 @@ interface MapActions {
 
   showDashboard: () => void;
   hideDashboard: () => void;
+  setTakeActionVisible: (isVisible: boolean) => void;
 }
 
 export const useMapStore = create<MapState & MapActions>((set, get) => ({
@@ -57,7 +59,8 @@ export const useMapStore = create<MapState & MapActions>((set, get) => ({
   fuelMixData: null,
   isFuelMixVisible: false,
 
-  isDashboardVisible: true,
+  isDashboardVisible: false,
+    isTakeActionVisible: false, 
 
   // --- ACTIONS IMPLEMENTATION ---
   selectZcta: (feature) => set({
@@ -105,4 +108,5 @@ export const useMapStore = create<MapState & MapActions>((set, get) => ({
 
   showDashboard: () => set({ isDashboardVisible: true }),
   hideDashboard: () => set({ isDashboardVisible: false }),
+  setTakeActionVisible: (isVisible) => set({ isTakeActionVisible: isVisible }),
 }));
