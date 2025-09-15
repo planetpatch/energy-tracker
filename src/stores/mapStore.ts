@@ -26,6 +26,10 @@ interface MapState {
   // Dashboard panel visibility
   isDashboardVisible: boolean;
   isTakeActionVisible: boolean;
+
+  //fuelmix progress bar persistence
+    showMge: boolean;
+  showAlliant: boolean;
 }
 
 interface MapActions {
@@ -43,6 +47,8 @@ interface MapActions {
   showDashboard: () => void;
   hideDashboard: () => void;
   setTakeActionVisible: (isVisible: boolean) => void;
+   setShowMge: (isVisible: boolean) => void; 
+  setShowAlliant: (isVisible: boolean) => void; 
 }
 
 export const useMapStore = create<MapState & MapActions>((set, get) => ({
@@ -60,7 +66,9 @@ export const useMapStore = create<MapState & MapActions>((set, get) => ({
   isFuelMixVisible: false,
 
   isDashboardVisible: false,
-    isTakeActionVisible: false, 
+  isTakeActionVisible: false, 
+      showMge: true, 
+  showAlliant: true,
 
   // --- ACTIONS IMPLEMENTATION ---
   selectZcta: (feature) => set({
@@ -109,4 +117,6 @@ export const useMapStore = create<MapState & MapActions>((set, get) => ({
   showDashboard: () => set({ isDashboardVisible: true }),
   hideDashboard: () => set({ isDashboardVisible: false }),
   setTakeActionVisible: (isVisible) => set({ isTakeActionVisible: isVisible }),
+    setShowMge: (isVisible) => set({ showMge: isVisible }), 
+  setShowAlliant: (isVisible) => set({ showAlliant: isVisible }), 
 }));

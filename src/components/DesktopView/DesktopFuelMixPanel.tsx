@@ -26,13 +26,20 @@ export const DesktopFuelMixPanel: React.FC<FuelMixPanelProps> = ({
   isMounted,
   hideFuelMix,
   fuelMixData,
-  showMge,
-  setShowMge,
-  showAlliant,
-  setShowAlliant,
+  // showMge,
+  // setShowMge,
+  // showAlliant,
+  // setShowAlliant,
 }) => {
 
-  const { showDashboard, setTakeActionVisible } = useMapStore();
+  const { 
+    showMge, 
+    setShowMge, 
+    showAlliant, 
+    setShowAlliant, 
+    showDashboard, 
+    setTakeActionVisible 
+  } = useMapStore();
 
     const handleTakeActionClick = () => {
     // hideFuelMix();

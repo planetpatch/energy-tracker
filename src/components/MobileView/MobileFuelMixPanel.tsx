@@ -1,5 +1,6 @@
 "use client";
 
+import { useMapStore } from '@/stores/mapStore';
 import React from 'react';
 import { gemunuLibre } from '@/ui/fonts';
 import type { FuelMixPanelProps, ProgressBarProps } from '../FuelMixPanel'; // Shared types
@@ -23,11 +24,13 @@ export const MobileFuelMixPanel: React.FC<FuelMixPanelProps> = ({
   isMounted,
   hideFuelMix,
   fuelMixData,
-  showMge,
-  setShowMge,
-  showAlliant,
-  setShowAlliant,
+  // showMge,
+  // setShowMge,
+  // showAlliant,
+  // setShowAlliant,
 }) => {
+
+    const { showMge, setShowMge, showAlliant, setShowAlliant } = useMapStore();
   return (
     <div
       className={`fixed bottom-12 left-0 right-0 z-[1000] w-full rounded-t-xl bg-white/90 shadow-2xl backdrop-blur-md p-4 transition-transform duration-300 ease-in-out ${
