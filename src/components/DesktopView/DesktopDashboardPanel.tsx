@@ -167,7 +167,7 @@ export const DesktopDashboardPanel: React.FC<DashboardPanelProps> = ({
               </div>
 
               <div className="flex justify-center items-center">
-                 <a href="https://www.mge.com/smart-energy/clean-energy/renewable-energy-programs/green-power-tomorrow" target="_blank" rel="noopener noreferrer"
+                 <a href="https://www.planetpatch.dev/projects/energy-tracker#renewable-credits" target="_blank" rel="noopener noreferrer"
                   className={`w-full h-full flex items-center rounded-sm justify-center pixel-button-base`}>
                   Renewable Credits ⚡️
                 </a>

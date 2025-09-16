@@ -31,13 +31,16 @@ export const MobileFuelMixPanel: React.FC<FuelMixPanelProps> = ({
   isMounted,
   hideFuelMix,
   fuelMixData,
-  // showMge,
-  // setShowMge,
-  // showAlliant,
-  // setShowAlliant,
 }) => {
 
-    const { showMge, setShowMge, showAlliant, setShowAlliant } = useMapStore();
+    const { showMge, setShowMge, showAlliant, setShowAlliant, showDashboard, setTakeActionVisible } = useMapStore();
+  
+      const handleTakeActionClick = () => {
+      hideFuelMix();
+      showDashboard();
+      setTakeActionVisible(true);
+    };
+  
   return (
     <div
       className={`fixed bottom-12 left-0 right-0 z-[1000] w-full rounded-t-xl bg-white/90 shadow-2xl backdrop-blur-md p-4 transition-transform duration-300 ease-in-out ${
@@ -108,6 +111,14 @@ export const MobileFuelMixPanel: React.FC<FuelMixPanelProps> = ({
             />
             <span className="ml-2 font-medium text-gray-700">Alliant Energy</span>
           </label>
+        </div>
+                <div className="border-t border-gray-200 pt-4 mt-4">
+          <button
+            onClick={handleTakeActionClick}
+            className={`w-full h-full flex items-center rounded-sm justify-center pixel-button-base text-white bg-[#1e4f2c] text-lg py-2`}
+          >
+            Take Action! 😼
+          </button>
         </div>
       </div>
     </div>
