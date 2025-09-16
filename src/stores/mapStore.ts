@@ -106,6 +106,8 @@ export const useMapStore = create<MapState & MapActions>((set, get) => ({
     activeUtility: provider,
     fuelMixData: data,
     isFuelMixVisible: true,
+      showMge: provider === 'MGE' || provider === 'Both',
+    showAlliant: provider === 'Alliant' || provider === 'Both',
   }),
 
   showFuelMix: () => set({ isFuelMixVisible: true }),

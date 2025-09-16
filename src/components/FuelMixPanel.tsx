@@ -26,13 +26,13 @@ export interface FuelMixPanelProps {
 }
 
 const FuelMixPanel: React.FC = () => {
-  // --- STATE AND LOGIC ---
   const { isFuelMixVisible,
     hideFuelMix,
     fuelMixData,
-    activeUtility, 
-    setShowMge, 
-    setShowAlliant } = useMapStore();
+    // activeUtility, 
+    // setShowMge, 
+    // setShowAlliant
+  } = useMapStore();
   
   const [isMounted, setIsMounted] = useState(false);
   // const [showMge, setShowMge] = useState(true);
@@ -48,10 +48,10 @@ const FuelMixPanel: React.FC = () => {
     }
   }, [isFuelMixVisible]);
   
-  useEffect(() => {
-    setShowMge(activeUtility === 'MGE' || activeUtility === 'Both');
-    setShowAlliant(activeUtility === 'Alliant' || activeUtility === 'Both');
-  }, [activeUtility, setShowMge, setShowAlliant]);
+  // useEffect(() => {
+  //   setShowMge(activeUtility === 'MGE' || activeUtility === 'Both');
+  //   setShowAlliant(activeUtility === 'Alliant' || activeUtility === 'Both');
+  // }, [activeUtility, setShowMge, setShowAlliant]);
 
   if (!isFuelMixVisible) return null;
   
