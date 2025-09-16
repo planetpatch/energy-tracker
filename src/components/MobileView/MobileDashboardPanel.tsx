@@ -3,6 +3,8 @@
 import React from 'react';
 import type { DashboardPanelProps } from '../DashboardPanel';
 import { useMapStore } from '@/stores/mapStore';
+import { gemunuLibre } from '@/ui/fonts';
+
 
 export const MobileDashboardPanel: React.FC<DashboardPanelProps> = ({
   isDashboardVisible,
@@ -15,15 +17,10 @@ export const MobileDashboardPanel: React.FC<DashboardPanelProps> = ({
   setZipCodeInput,
   isLegendOpen,
   setIsLegendOpen,
-  // isActionsOpen,
-  // setIsActionsOpen,
-  focusInfoRef,
-  followInfoRef,
-  showTooltip,
-  hideTooltip,
   handleSubmit,
   displayZcta,
-  isHovering, tooltip, tooltipPosition
+  isHovering,
+  // tooltip, tooltipPosition
 }) => {
     const { isTakeActionVisible, setTakeActionVisible } = useMapStore();
   if (!isDashboardVisible) return null;
@@ -35,13 +32,11 @@ export const MobileDashboardPanel: React.FC<DashboardPanelProps> = ({
     <>
       <div
         className="fixed bottom-12 left-0 right-0 z-[1000] w-full rounded-t-xl bg-white/95 shadow-2xl backdrop-blur-md p-4 transition-transform duration-300 ease-in-out max-h-[80vh] overflow-y-auto"
-        // This is a simple way to handle the slide-up, but a library like Framer Motion could make it draggable.
       >
-        {/* Header with drag handle */}
         <div className="flex flex-col items-center pb-2">
             <div className="w-10 h-1 bg-gray-300 rounded-full mb-2" />
             <div className="w-full flex items-center justify-between">
-              <h2 className="text-xl font-gemunu text-gray-800 m-0">Dashboard</h2>
+            <h2 className={`text-2xl font-bold text-gray-800 ${gemunuLibre.className}`}>Dashboard</h2>
               <button
                 onClick={hideDashboard}
                 className="p-1 rounded-full text-gray-500 hover:bg-gray-200 hover:text-gray-800"
@@ -77,7 +72,6 @@ export const MobileDashboardPanel: React.FC<DashboardPanelProps> = ({
           </div>
         </form>
 
-        {/* Selected ZIP Code Display */}
            {displayZcta && (
           <div className="border-t border-gray-200 pt-4 pb-4">
               <p className={`text-sm font-bold font-gemunu text-gray-500 `}>
@@ -86,10 +80,9 @@ export const MobileDashboardPanel: React.FC<DashboardPanelProps> = ({
           </div>
         )}
         
-              {/* --- Collapsible Legend Section (Moved Down) --- */}
       <div className="border-t border-gray-200 pt-4 mb-4">
         <button onClick={() => setIsLegendOpen(!isLegendOpen)} className="flex justify-between items-center w-full text-left">
-          <h3 className="text-lg font-gemunu font-bold text-gray-800">Legend</h3>
+          <h3 className="text-lg font-gemunu font-bold text-gray-800">Legend 📍</h3>
           <svg className={`w-5 h-5 transition-transform duration-200 ${isLegendOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
         </button>
         {isLegendOpen && (
@@ -110,77 +103,58 @@ export const MobileDashboardPanel: React.FC<DashboardPanelProps> = ({
         )}
       </div>
 
-      {/* --- Collapsible Take Action Section (Moved Up) --- */}
       <div className="border-t border-gray-200 pt-4 mb-4">
          <button onClick={() => setTakeActionVisible(!isTakeActionVisible)} className="flex justify-between items-center w-full text-left">
-          <h3 className="text-lg font-gemunu font-bold text-gray-800">Take Action!</h3>
+          <h3 className="text-lg font-gemunu font-bold text-gray-800">Take Action! 😼</h3>
           <svg 
-      // 2. UPDATE THIS CONDITIONAL CLASS
       className={`w-5 h-5 transition-transform duration-200 ${isTakeActionVisible ? 'rotate-180' : ''}`} 
       fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
     </svg>
         </button>
         {isTakeActionVisible && (
-          <div className="mt-3 flex flex-col space-y-3">
-              <div className="flex justify-center items-center mr-2">
+            <div className="mt-3 flex flex-col space-y-3">
 
-                <a href="https://focusonenergy.com/residential/simple-energy-efficiency" target="_blank" rel="noopener noreferrer"
-                  className="w-full text-center text-xs font-gemunu pixel-button-base pixel-button-primary rounded-sm ">FREE Focus on Energy Box</a>
-
-                                <div ref={focusInfoRef}
-                  onMouseEnter={() => showTooltip(`Focus on Energy is Wisconsin's statewide program for energy efficiency and renewables. 
-                    Click to learn more and get a free energy-saving kit.`, focusInfoRef)}
-                  onMouseLeave={hideTooltip} className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd"
-                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                    clipRule="evenodd" /></svg>
-                </div>
-                
-            </div>
-              <div className="flex justify-center items-center mr-2">
-
-                <a href="https://instagram.com/planetpatch.dev" target="_blank" rel="noopener noreferrer"
-                  className="w-full text-center text-xs font-gemunu pixel-button-base pixel-button-primary rounded-sm">Follow PlanetPatch Instagram </a>
-                <div ref={followInfoRef} onMouseEnter={() => showTooltip("Follow us on Instagram and get a free sticker. Woot woot!", followInfoRef)} onMouseLeave={hideTooltip} className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600">
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>
+        <div className="flex justify-around items-center h-12 p-2 space-x-2">
+          <a
+                  className={`w-full h-full flex items-center rounded-sm justify-center pixel-button-base-mobile`}
+                  href="https://focusonenergy.com/residential/simple-energy-efficiency" target="_blank" rel="noopener noreferrer"
+          >
+            FREE Energy Kit 🔋
+                </a>
+                <a
+                  href="https://instagram.com/planetpatch.dev" target="_blank" rel="noopener noreferrer"
+            className={`w-full h-full flex items-center rounded-sm justify-center pixel-button-base-mobile`}
+          >
+           Follow PlanetPatch 🔗
+                </a>
               </div>
+              
+                      <div className="flex justify-around items-center h-12 p-2 space-x-2">
+          <a href="https://www.planetpatch.dev/projects/energy-tracker#renewable-credits" target="_blank" rel="noopener noreferrer"
+            className={`w-full h-full flex items-center rounded-sm justify-center font-gemunu pixel-button-base-mobile`}
+          >
+            Renewable Credits ⚡️
+                </a>
+          <a href="https://www.planetpatch.dev/projects/energy-tracker/" target="_blank" rel="noopener noreferrer"
+            className={`w-full h-full flex items-center rounded-sm justify-center font-gemunu text-sm pixel-button-base-mobile`}
+          >
+           Learn More 🧐
+                </a>
+        </div>
+
+          
+
             </div>
-          </div>
+
+            
+            
         )}
       </div>
       
 
-{/* 
-        <div className="text-center pt-2 border-t border-gray-200">
-          <a className='underline text-blue-500 font-bold' href='https://www.planetpatch.dev' target="_blank" rel="noopener noreferrer">
-           PlanetPatch Inc.
-          </a> 
-        </div> */}
       </div>
       
-
-
-      {/* --- MODIFIED Tooltip Rendering --- */}
-      {tooltip.visible && tooltipPosition && (
-        <div
-          className="fixed z-[1001] w-full max-w-xs rounded-lg bg-gray-800 px-3 py-2 text-sm font-normal text-white shadow-lg"
-          style={{
-            top: tooltipPosition.top - 10, // Position vertically above the icon
-            left: tooltipPosition.left + tooltipPosition.width / 2, // Center on the icon
-            // This transform is the key:
-            // It centers the tooltip, but uses min/max to ensure it never goes off-screen.
-            // 1rem is a 16px safety margin from the edge.
-            transform: `translate(min(max(-50%, 
-            calc(-100% + ${tooltipPosition.left}px - 1rem)),
-             calc(${window.innerWidth}px - 100% - 1rem))) 
-             translateY(-100%)`,
-          }}
-        >
-          {tooltip.content}
-          <div className="absolute left-1/2 -translate-x-1/2 bottom-[-8px] w-0 h-0 border-x-8 border-x-transparent border-t-8 border-t-gray-800" />
-        </div>
-      )}
     </>
   );
 };

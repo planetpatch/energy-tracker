@@ -17,8 +17,8 @@ type LeafletMapElement = HTMLDivElement & {
 
 const defaultZctaStyle = { color: "#702963", weight: 1, opacity: 0.7, fillColor: "#D2042D", fillOpacity: 0.01 };
 const highlightZctaStyle = { weight: 4, color: '#666', dashArray: '', fillOpacity: 0.1 };
-const mgeBorderStyle = { color: "green", weight: 2, opacity: 0.9, fillOpacity: 0.3, fillColor: "green", dashArray: '5, 5' };
-const alliantBorderStyle = { color: "orange", weight: 2, opacity: 0.9, fillOpacity: 0.3, fillColor: "orange", dashArray: '5, 5' };
+const mgeBorderStyle = { color: "green", weight: 2, opacity: 0.9, fillOpacity: 0.25, fillColor: "green", dashArray: '5, 5' };
+const alliantBorderStyle = { color: "orange", weight: 2, opacity: 0.9, fillOpacity: 0.25, fillColor: "orange", dashArray: '5, 5' };
 
 
 interface MapComponentProps {

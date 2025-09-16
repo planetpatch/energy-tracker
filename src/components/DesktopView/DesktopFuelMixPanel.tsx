@@ -7,32 +7,49 @@ import { gemunuLibre } from '@/ui/fonts';
 import type { FuelMixPanelProps, ProgressBarProps } from '../FuelMixPanel'; // Shared types
 
 // Re-defining ProgressBar here, but it could be in its own file
-const ProgressBar: React.FC<ProgressBarProps> = ({ utilityName, renewablePercent, colorClass }) => (
-  <div className="mb-2">
-    <div className="flex justify-between mb-1">
-      <span className="text-xs font-semibold text-gray-700">{utilityName}</span>
-      <span className="text-xs text-gray-600">{renewablePercent.toFixed(1)}% Renewable</span>
+const ProgressBar: React.FC<ProgressBarProps> = ({ utilityName, renewablePercent, colorClass }) => {
+  // 1. CALCULATE the non-renewable percentage
+  const nonRenewablePercent = 100 - renewablePercent;
+
+  return (
+    <div className="mb-2">
+      <div className="flex justify-between mb-1">
+        <span className="text-xs font-semibold text-gray-700">{utilityName}</span>
+        {/* 👇 2. WRAP the percentages for alignment */}
+        <div className="flex space-x-2">
+          <span className="text-xs font-bold text-green-800">{renewablePercent.toFixed(1)}% Renewable 😎</span>
+          {/* 👇 3. ADD the new span to display the value */}
+          <span className="text-xs font-bold text-gray-800">/ {nonRenewablePercent.toFixed(1)}% Non-Renewable 🤢</span>
+        </div>
+      </div>
+      <div className="w-full bg-gray-500 rounded-full h-4.5">
+        <div
+          className={`${colorClass} h-4.5 rounded-full transition-all duration-500 ease-out`}
+          style={{ width: `${renewablePercent}%` }}
+        />
+      </div>
     </div>
-    <div className="w-full bg-gray-500  rounded-full h-2.5">
-      <div
-        className={`${colorClass} h-2.5 rounded-full transition-all duration-500 ease-out`}
-        style={{ width: `${renewablePercent}%` }}
-      />
-    </div>
-  </div>
-);
+  );
+};
 
 export const DesktopFuelMixPanel: React.FC<FuelMixPanelProps> = ({
   isMounted,
   hideFuelMix,
   fuelMixData,
-  showMge,
-  setShowMge,
-  showAlliant,
-  setShowAlliant,
+  // showMge,
+  // setShowMge,
+  // showAlliant,
+  // setShowAlliant,
 }) => {
 
-  const { showDashboard, setTakeActionVisible } = useMapStore();
+  const { 
+    showMge, 
+    setShowMge, 
+    showAlliant, 
+    setShowAlliant, 
+    showDashboard, 
+    setTakeActionVisible 
+  } = useMapStore();
 
     const handleTakeActionClick = () => {
     // hideFuelMix();
@@ -42,16 +59,16 @@ export const DesktopFuelMixPanel: React.FC<FuelMixPanelProps> = ({
   
   return (
     <div
-      className={`fixed bottom-4 left-4 z-[1000] w-full max-w-sm rounded-lg bg-white/90 shadow-xl backdrop-blur-md p-4 transition-transform duration-300 ease-in-out ${
-        isMounted ? 'translate-y-0' : 'translate-y-[150%]'
-      }`}
-      role="region"
-      aria-label="Fuel mix panel"
+  className={`fixed bottom-4 left-4 z-[1000] w-full max-w-lg rounded-lg bg-white/90 shadow-xl backdrop-blur-md p-4 transition-transform duration-300 ease-in-out ${
+    isMounted ? 'translate-y-0' : 'translate-y-[150%]'
+  }`}
+  role="region"
+  aria-label="Fuel mix panel"
     >
       {/* Header */}
       <div className="flex items-center justify-between pb-2 border-b border-gray-200">
         <h2 className={`text-xl font-bold text-gray-800 ${gemunuLibre.className}`}>
-          Utility Fuel Mix
+          Utility Fuel Mix (Renewable vs. Non-Renewable)
         </h2>
         <button
           onClick={hideFuelMix}
@@ -64,6 +81,10 @@ export const DesktopFuelMixPanel: React.FC<FuelMixPanelProps> = ({
           </svg>
         </button>
       </div>
+
+       {/* <p className="text-xs text-gray-600 mt-2 mb-3">
+        <span className="font-semibold text-green-800">Renewable:</span> Solar, Wind, Hydro, etc. | <span className="font-semibold text-gray-800">Non-Renewable:</span> Coal, Natural Gas, Petroleum
+      </p> */}
 
       {/* Content */}
       <div className="pt-3">
@@ -113,7 +134,7 @@ export const DesktopFuelMixPanel: React.FC<FuelMixPanelProps> = ({
             onClick={handleTakeActionClick}
             className="w-full h-9 flex items-center justify-center font-gemunu text-base pixel-button-base pixel-button-primary"
           >
-            Take Action!
+            Take Action! 😼
           </button>
         </div>
       </div>

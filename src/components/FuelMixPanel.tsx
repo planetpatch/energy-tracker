@@ -19,18 +19,24 @@ export interface FuelMixPanelProps {
   isMounted: boolean;
   hideFuelMix: () => void;
   fuelMixData: { [key: string]: { renewable_percent: number; non_renewable_percent: number; } } | null;
-  showMge: boolean;
-  setShowMge: React.Dispatch<React.SetStateAction<boolean>>;
-  showAlliant: boolean;
-  setShowAlliant: React.Dispatch<React.SetStateAction<boolean>>;
+  // showMge: boolean;
+  // setShowMge: React.Dispatch<React.SetStateAction<boolean>>;
+  // showAlliant: boolean;
+  // setShowAlliant: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const FuelMixPanel: React.FC = () => {
-  // --- STATE AND LOGIC ---
-  const { isFuelMixVisible, hideFuelMix, activeUtility, fuelMixData } = useMapStore();
+  const { isFuelMixVisible,
+    hideFuelMix,
+    fuelMixData,
+    // activeUtility, 
+    // setShowMge, 
+    // setShowAlliant
+  } = useMapStore();
+  
   const [isMounted, setIsMounted] = useState(false);
-  const [showMge, setShowMge] = useState(true);
-  const [showAlliant, setShowAlliant] = useState(true);
+  // const [showMge, setShowMge] = useState(true);
+  // const [showAlliant, setShowAlliant] = useState(true);
   const isDesktop = useMediaQuery('(min-width: 768px)');
 
   useEffect(() => {
@@ -42,10 +48,10 @@ const FuelMixPanel: React.FC = () => {
     }
   }, [isFuelMixVisible]);
   
-  useEffect(() => {
-    setShowMge(activeUtility === 'MGE' || activeUtility === 'Both');
-    setShowAlliant(activeUtility === 'Alliant' || activeUtility === 'Both');
-  }, [activeUtility]);
+  // useEffect(() => {
+  //   setShowMge(activeUtility === 'MGE' || activeUtility === 'Both');
+  //   setShowAlliant(activeUtility === 'Alliant' || activeUtility === 'Both');
+  // }, [activeUtility, setShowMge, setShowAlliant]);
 
   if (!isFuelMixVisible) return null;
   
@@ -53,10 +59,10 @@ const FuelMixPanel: React.FC = () => {
     isMounted,
     hideFuelMix,
     fuelMixData,
-    showMge,
-    setShowMge,
-    showAlliant,
-    setShowAlliant
+    // showMge,
+    // setShowMge,
+    // showAlliant,
+    // setShowAlliant
   };
 
   // --- RENDER ---

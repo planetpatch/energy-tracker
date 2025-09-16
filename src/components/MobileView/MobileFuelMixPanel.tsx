@@ -1,33 +1,46 @@
 "use client";
 
+import { useMapStore } from '@/stores/mapStore';
 import React from 'react';
 import { gemunuLibre } from '@/ui/fonts';
-import type { FuelMixPanelProps, ProgressBarProps } from '../FuelMixPanel'; // Shared types
+import type { FuelMixPanelProps, ProgressBarProps } from '../FuelMixPanel';
 
-const ProgressBar: React.FC<ProgressBarProps> = ({ utilityName, renewablePercent, colorClass }) => (
-  <div className="mb-2">
-    <div className="flex justify-between mb-1">
-      <span className="text-s font-semibold text-gray-700">{utilityName}</span>
-      <span className="text-xs font-bold text-green-800">{renewablePercent.toFixed(1)}% Renewable</span>
+const ProgressBar: React.FC<ProgressBarProps> = ({ utilityName, renewablePercent, colorClass }) => {
+  const nonRenewablePercent = 100 - renewablePercent;
+
+  return (
+    <div className="mb-2">
+      <div className="flex justify-between mb-1">
+        <span className="text-s font-semibold text-gray-700">{utilityName}</span>
+        <div className="flex space-x-2"> 
+          <span className="text-xs font-bold text-green-700">{renewablePercent.toFixed(1)}% Renewable</span>
+          <span className="text-xs font-bold text-gray-800">/ {nonRenewablePercent.toFixed(1)}% Non-Renewable</span>
+        </div>
+      </div>
+      <div className="w-full bg-gray-500 rounded-full h-3.5">
+        <div
+          className={`${colorClass} h-3.5 rounded-full transition-all duration-500 ease-out`}
+          style={{ width: `${renewablePercent}%` }}
+        />
+      </div>
     </div>
-    <div className="w-full bg-gray-500 rounded-full h-3.5">
-      <div
-        className={`${colorClass} h-3.5 rounded-full transition-all duration-500 ease-out`}
-        style={{ width: `${renewablePercent}%` }}
-      />
-    </div>
-  </div>
-);
+  );
+};
 
 export const MobileFuelMixPanel: React.FC<FuelMixPanelProps> = ({
   isMounted,
   hideFuelMix,
   fuelMixData,
-  showMge,
-  setShowMge,
-  showAlliant,
-  setShowAlliant,
 }) => {
+
+    const { showMge, setShowMge, showAlliant, setShowAlliant, showDashboard, setTakeActionVisible } = useMapStore();
+  
+      const handleTakeActionClick = () => {
+      hideFuelMix();
+      showDashboard();
+      setTakeActionVisible(true);
+    };
+  
   return (
     <div
       className={`fixed bottom-12 left-0 right-0 z-[1000] w-full rounded-t-xl bg-white/90 shadow-2xl backdrop-blur-md p-4 transition-transform duration-300 ease-in-out ${
@@ -36,7 +49,6 @@ export const MobileFuelMixPanel: React.FC<FuelMixPanelProps> = ({
       role="region"
       aria-label="Fuel mix panel"
     >
-      {/* Header with a "drag handle" affordance */}
       <div className="flex flex-col items-center pb-2">
           <div className="w-10 h-1 bg-gray-300 rounded-full mb-2" />
           <div className="w-full flex items-center justify-between">
@@ -54,6 +66,7 @@ export const MobileFuelMixPanel: React.FC<FuelMixPanelProps> = ({
               </svg>
             </button>
         </div>
+        
       </div>
 
 
@@ -98,6 +111,14 @@ export const MobileFuelMixPanel: React.FC<FuelMixPanelProps> = ({
             />
             <span className="ml-2 font-medium text-gray-700">Alliant Energy</span>
           </label>
+        </div>
+                <div className="border-t border-gray-200 pt-4 mt-4">
+          <button
+            onClick={handleTakeActionClick}
+            className={`w-full h-full flex items-center rounded-sm justify-center pixel-button-base text-white bg-[#1e4f2c] text-lg py-2`}
+          >
+            Take Action! 😼
+          </button>
         </div>
       </div>
     </div>

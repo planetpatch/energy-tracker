@@ -22,12 +22,11 @@ export interface DashboardPanelProps {
   setZipCodeInput: React.Dispatch<React.SetStateAction<string>>;
   isLegendOpen: boolean;
   setIsLegendOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  // isActionsOpen: boolean;
-  // setIsActionsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   tooltip: { visible: boolean; content: string; targetRef: React.RefObject<HTMLDivElement | null> | null; };
-  // CORRECTED: The ref's current property can be null
   focusInfoRef: React.RefObject<HTMLDivElement | null>;
   followInfoRef: React.RefObject<HTMLDivElement | null>;
+  creditsInfoRef: React.RefObject<HTMLDivElement | null>;
+  learnMoreInfoRef: React.RefObject<HTMLDivElement | null>;
   showTooltip: (content: string, targetRef: React.RefObject<HTMLDivElement | null>) => void;
   hideTooltip: () => void;
   handleSubmit: (e: React.FormEvent) => void;
@@ -61,6 +60,8 @@ const DashboardPanel: React.FC<{onZipCodeSubmit: (zipCode: string) => void}> = (
 
   const focusInfoRef = useRef<HTMLDivElement>(null);
   const followInfoRef = useRef<HTMLDivElement>(null);
+  const creditsInfoRef = useRef<HTMLDivElement>(null);
+  const learnMoreInfoRef = useRef<HTMLDivElement>(null);
   const isDesktop = useMediaQuery('(min-width: 768px)');
 
   const showTooltip = (content: string, targetRef: React.RefObject<HTMLDivElement | null>) =>
@@ -97,6 +98,8 @@ const DashboardPanel: React.FC<{onZipCodeSubmit: (zipCode: string) => void}> = (
     tooltip,
     focusInfoRef,
     followInfoRef,
+        creditsInfoRef,
+    learnMoreInfoRef,
     showTooltip,
     hideTooltip,
     handleSubmit,

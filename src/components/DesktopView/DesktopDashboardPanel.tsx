@@ -18,7 +18,8 @@ export const DesktopDashboardPanel: React.FC<DashboardPanelProps> = ({
   displayZcta,
   isHovering,
   tooltipPosition,
-  focusInfoRef, followInfoRef, isZctaVisible, toggleLayerVisibility, isMgeVisible, isAlliantVisible, showTooltip, hideTooltip
+  focusInfoRef, followInfoRef,creditsInfoRef, learnMoreInfoRef,
+  isZctaVisible, toggleLayerVisibility, isMgeVisible, isAlliantVisible, showTooltip, hideTooltip
 }) => {
 
     const { isTakeActionVisible, setTakeActionVisible } = useMapStore();
@@ -29,7 +30,7 @@ export const DesktopDashboardPanel: React.FC<DashboardPanelProps> = ({
   return (
     <>
       <div
-        className="absolute top-5 right-5 z-[1000] flex w-72 max-w-sm flex-col rounded-lg bg-white/95 p-5 mt-16 shadow-2xl max-h-[calc(100vh-140px)] overflow-y-auto"
+        className="absolute top-1 right-4 z-[1000] flex w-72 max-w-sm flex-col rounded-lg bg-white/95 p-5 mt-16 shadow-2xl max-h-[calc(100vh-140px)] overflow-y-auto"
         role="region"
         aria-label="Dashboard panel"
       >
@@ -63,7 +64,7 @@ export const DesktopDashboardPanel: React.FC<DashboardPanelProps> = ({
             <button
               type="submit"
               disabled={!zipCodeInput.trim()}
-              className="font-gemunu rounded-l-none pixel-button-base pixel-button-primary text-sm px-4"
+              className="font-gemunu rounded pixel-button-base text-sm px-4"
             >
               Go
             </button>
@@ -92,7 +93,7 @@ export const DesktopDashboardPanel: React.FC<DashboardPanelProps> = ({
             onClick={() => setIsLegendOpen(!isLegendOpen)}
             className="flex justify-between items-center w-full text-left"
           >
-            <h3 className="text-lg font-gemunu font-bold text-gray-800">Legend</h3>
+            <h3 className="text-lg font-gemunu font-bold text-gray-800">Legend 📍</h3>
             <svg
               className={`w-5 h-5 transition-transform duration-200 ${isLegendOpen ? 'rotate-180' : ''}`}
               fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -124,7 +125,7 @@ export const DesktopDashboardPanel: React.FC<DashboardPanelProps> = ({
             onClick={() => setTakeActionVisible(!isTakeActionVisible)}
             className="flex justify-between items-center w-full text-left"
           >
-            <h3 className="text-lg font-gemunu font-bold text-gray-800">Take Action!</h3>
+            <h3 className="text-lg font-gemunu font-bold text-gray-800">Take Action! 😼</h3>
             <svg
               className={`w-5 h-5 transition-transform duration-200 ${isTakeActionVisible ? 'rotate-180' : ''}`}
       fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -135,48 +136,44 @@ export const DesktopDashboardPanel: React.FC<DashboardPanelProps> = ({
           {isTakeActionVisible && (
             <div className="mt-4 flex flex-col space-y-3">
                <div className="flex justify-center items-center">
-        <a href="https://focusonenergy.com/residential/simple-energy-efficiency" target="_blank" rel="noopener noreferrer"
-          className="w-full text-center text-xs font-gemunu pixel-button-base pixel-button-primary">
-                  FREE Focus on Energy Box</a>
-                
+                <a href="https://focusonenergy.com/residential/simple-energy-efficiency" target="_blank" rel="noopener noreferrer"
+                  className={`w-full h-full flex items-center rounded-sm justify-center pixel-button-base`}>
+                  FREE Energy Kit 🔋
+                </a>
+                        
                 <div ref={focusInfoRef}
-                  onMouseEnter={() => showTooltip("Focus on Energy is Wisconsin's statewide program for energy efficiency and renewables. Click to learn more and get a free energy-saving kit.", focusInfoRef)}
-                  onMouseLeave={hideTooltip} className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600">
-                  
-                  <svg
-                    className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                  </svg>
+                    onMouseEnter={() => showTooltip("Focus on Energy is Wisconsin's statewide program for energy efficiency and renewables. Click to learn more and get a free energy-saving kit.", focusInfoRef)}
+                    onMouseLeave={hideTooltip} className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600">
+                    <svg
+                      className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                    </svg>
                 </div>
+                
               </div>
 
               <div className="flex justify-center items-center">
                 <a href="https://instagram.com/planetpatch.dev" target="_blank" rel="noopener noreferrer"
-                  className="w-full text-center text-xs font-gemunu pixel-button-base pixel-button-primary">
-                  Follow PlanetPatch Instagram</a>
-                <div ref={followInfoRef} onMouseEnter={() => showTooltip("Follow us on Instagram and get a free sticker. Woot woot!", followInfoRef)}
+                  className={`w-full h-full flex items-center rounded-sm justify-center pixel-button-base`}
+                >
+                  Follow PlanetPatch 🔗
+                </a>
+                <div ref={followInfoRef}
+                  onMouseEnter={() => showTooltip("Follow us on Instagram and get a free sticker. Woot woot!",
+                  followInfoRef)}
                   onMouseLeave={hideTooltip} className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>
                 </div>
               </div>
 
               <div className="flex justify-center items-center">
-                 <a href="https://www.mge.com/smart-energy/clean-energy/renewable-energy-programs/green-power-tomorrow" target="_blank" rel="noopener noreferrer"
-                  className="w-full text-center text-xs font-gemunu pixel-button-base pixel-button-primary">
-                  MGE Renewable Energy Credits</a>
-                <div ref={followInfoRef} onMouseEnter={() => showTooltip(`MGE's Green Power Tomorrow (GPT) program offers you 1 kWh of regional renewable energy 
-                 per 1 cent you spend. This is one way you can help push MGE towards investing in more renewable energy! `, followInfoRef)}
-                  onMouseLeave={hideTooltip} className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>
-                </div>
-              </div>
-
-                            <div className="flex justify-center items-center">
-                 <a href="https://www.alliantenergy.com/ways-to-save/second-nature" target="_blank" rel="noopener noreferrer"
-                  className="w-full text-center text-xs font-gemunu pixel-button-base pixel-button-primary">
-                 Alliant Renewable Energy Credits</a>
-                <div ref={followInfoRef} onMouseEnter={() => showTooltip(`Alliant's Second Nature program offers you 1 kWh of regional renewable energy 
-                 per 1 cent you spend. This is one way you can help push Alliant towards investing in more renewable energy!  `, followInfoRef)}
+                 <a href="https://www.planetpatch.dev/projects/energy-tracker#renewable-credits" target="_blank" rel="noopener noreferrer"
+                  className={`w-full h-full flex items-center rounded-sm justify-center pixel-button-base`}>
+                  Renewable Credits ⚡️
+                </a>
+                <div ref={creditsInfoRef} onMouseEnter={() => showTooltip(`Both Alliant and MGE offer you 1 kWh of regional renewable energy 
+                 per 1 cent you spend. This is one way you can help push our utilities towards investing in more renewable energy faster! 🏎️ `,
+                  creditsInfoRef)}
                   onMouseLeave={hideTooltip} className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>
                 </div>
@@ -184,10 +181,11 @@ export const DesktopDashboardPanel: React.FC<DashboardPanelProps> = ({
 
                                           <div className="flex justify-center items-center">
                  <a href="https://www.planetpatch.dev/projects/energy-tracker/" target="_blank" rel="noopener noreferrer"
-                  className="w-full text-center text-xs font-gemunu pixel-button-base pixel-button-primary">
-                 Learn More</a>
-                <div ref={followInfoRef} onMouseEnter={() => showTooltip(`Learn more about your energy system and the steps you can take to 
-                build a resilient climate future!`, followInfoRef)}
+                  className={`w-full h-full flex items-center rounded-sm justify-center pixel-button-base`}>
+                  Learn More 🧐
+                </a>
+                <div ref={learnMoreInfoRef} onMouseEnter={() => showTooltip(`Learn more about your energy system and the steps you can take to 
+                build a resilient climate future!`, learnMoreInfoRef)}
                   onMouseLeave={hideTooltip} className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>
                 </div>
@@ -198,7 +196,7 @@ export const DesktopDashboardPanel: React.FC<DashboardPanelProps> = ({
         </div>
         <div className="text-center pt-2">
             Created by <br/>
-          <a className='underline text-blue-500 font-bold' href='https://www.planetpatch.dev' target="_blank" rel="noopener noreferrer">
+          <a className='underline text-blue-800 font-bold' href='https://www.planetpatch.dev' target="_blank" rel="noopener noreferrer">
            PlanetPatch Inc.
           </a> 
         </div>
