@@ -22,8 +22,8 @@ export interface DashboardPanelProps {
   setZipCodeInput: React.Dispatch<React.SetStateAction<string>>;
   isLegendOpen: boolean;
   setIsLegendOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  isActionsOpen: boolean;
-  setIsActionsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  // isActionsOpen: boolean;
+  // setIsActionsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   tooltip: { visible: boolean; content: string; targetRef: React.RefObject<HTMLDivElement | null> | null; };
   // CORRECTED: The ref's current property can be null
   focusInfoRef: React.RefObject<HTMLDivElement | null>;
@@ -52,7 +52,7 @@ const DashboardPanel: React.FC<{onZipCodeSubmit: (zipCode: string) => void}> = (
 
   const [zipCodeInput, setZipCodeInput] = useState<string>("");
   const [isLegendOpen, setIsLegendOpen] = useState<boolean>(false);
-  const [isActionsOpen, setIsActionsOpen] = useState<boolean>(false);
+  // const [isActionsOpen, setIsActionsOpen] = useState<boolean>(false);
   const [tooltip, setTooltip] = useState<{
     visible: boolean;
     content: string;
@@ -87,13 +87,13 @@ const DashboardPanel: React.FC<{onZipCodeSubmit: (zipCode: string) => void}> = (
     isZctaVisible,
     isMgeVisible,
     isAlliantVisible,
+    // isActionsOpen,
+    // setIsActionsOpen,
     toggleLayerVisibility,
     zipCodeInput,
     setZipCodeInput,
     isLegendOpen,
     setIsLegendOpen,
-    isActionsOpen,
-    setIsActionsOpen,
     tooltip,
     focusInfoRef,
     followInfoRef,

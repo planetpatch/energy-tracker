@@ -50,9 +50,9 @@ export default function AppShell({ mapData }: AppShellProps) {
       {/* --- A Single, Responsive Header --- */}
       <header
         className={`fixed top-0 left-0 right-0 z-[1001]
-                   flex items-center justify-between
-                   bg-white/90 backdrop-blur-md border-b border-gray-200
-                   px-4 h-16 shadow-md ${gemunuLibre.className}`}
+          flex items-center justify-between
+          bg-white/90 backdrop-blur-md border-b border-gray-200
+          px-4 h-16 shadow-md ${gemunuLibre.className}`}
       >
         {/* Left Side: Logo and Title (Visible on all screen sizes) */}
         <div className="flex items-center">

@@ -1,5 +1,7 @@
 "use client";
 
+import { useMapStore } from '@/stores/mapStore';
+
 import React from 'react';
 import { gemunuLibre } from '@/ui/fonts';
 import type { FuelMixPanelProps, ProgressBarProps } from '../FuelMixPanel'; // Shared types
@@ -11,7 +13,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ utilityName, renewablePercent
       <span className="text-xs font-semibold text-gray-700">{utilityName}</span>
       <span className="text-xs text-gray-600">{renewablePercent.toFixed(1)}% Renewable</span>
     </div>
-    <div className="w-full bg-gray-200 rounded-full h-2.5">
+    <div className="w-full bg-gray-500  rounded-full h-2.5">
       <div
         className={`${colorClass} h-2.5 rounded-full transition-all duration-500 ease-out`}
         style={{ width: `${renewablePercent}%` }}
@@ -29,6 +31,15 @@ export const DesktopFuelMixPanel: React.FC<FuelMixPanelProps> = ({
   showAlliant,
   setShowAlliant,
 }) => {
+
+  const { showDashboard, setTakeActionVisible } = useMapStore();
+
+    const handleTakeActionClick = () => {
+    // hideFuelMix();
+    showDashboard();
+    setTakeActionVisible(true);
+  };
+  
   return (
     <div
       className={`fixed bottom-4 left-4 z-[1000] w-full max-w-sm rounded-lg bg-white/90 shadow-xl backdrop-blur-md p-4 transition-transform duration-300 ease-in-out ${
@@ -96,7 +107,17 @@ export const DesktopFuelMixPanel: React.FC<FuelMixPanelProps> = ({
             <span className="ml-2 font-medium text-gray-700">Alliant Energy</span>
           </label>
         </div>
+
+        <div className="mt-3 border-t border-gray-200 pt-3">
+          <button
+            onClick={handleTakeActionClick}
+            className="w-full h-9 flex items-center justify-center font-gemunu text-base pixel-button-base pixel-button-primary"
+          >
+            Take Action!
+          </button>
+        </div>
       </div>
+      
     </div>
   );
 };
