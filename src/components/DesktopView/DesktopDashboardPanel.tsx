@@ -171,7 +171,7 @@ export const DesktopDashboardPanel: React.FC<DashboardPanelProps> = ({
                   className={`w-full h-full flex items-center rounded-sm justify-center pixel-button-base`}>
                   Renewable Credits ⚡️
                 </a>
-                <div ref={creditsInfoRef} onMouseEnter={() => showTooltip(`Both Alliant and MGE offer you 1 kWh of regional renewable energy 
+                <div ref={creditsInfoRef} onMouseEnter={() => showTooltip(`With these credits, you can actively replace fossil fuel with renewable energy! Both Alliant and MGE offer you 1 kWh of regional renewable energy 
                  per 1 cent you spend. This is one way you can help push our utilities towards investing in more renewable energy faster! 🏎️ `,
                   creditsInfoRef)}
                   onMouseLeave={hideTooltip} className="ml-2 cursor-pointer text-gray-400 hover:text-gray-600">
